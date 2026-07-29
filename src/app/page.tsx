@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Section, Placeholder } from "@/components/Section";
+import { MediaSection } from "@/components/MediaSection";
 
 const pillars = [
   "Strategic Advisory",
@@ -54,8 +56,31 @@ export default function Home() {
       </section>
 
       <Section eyebrow="Our Philosophy" title="Our Philosophy" tone="stone" />
-      <Section eyebrow="Why the Circle" title="Why the Circle Exists" />
-      <Section eyebrow="Timing" title="Why Now" tone="stone" />
+
+      <MediaSection
+        eyebrow="Why the Circle"
+        title="Why the Circle Exists"
+        image={{
+          src: "https://images.unsplash.com/photo-1663900108404-a05e8bf82cda",
+          alt: "City skyline at dusk with illuminated towers",
+        }}
+        imageSide="right"
+      >
+        <Placeholder />
+      </MediaSection>
+
+      <MediaSection
+        eyebrow="Timing"
+        title="Why Now"
+        tone="stone"
+        image={{
+          src: "https://images.unsplash.com/photo-1736528520038-015c130d0f9b",
+          alt: "Aerial view of a modern highway leading into a city",
+        }}
+        imageSide="left"
+      >
+        <Placeholder />
+      </MediaSection>
 
       {/* The Five Pillars — teaser */}
       <section className="bg-white">
@@ -86,13 +111,26 @@ export default function Home() {
       {/* Signature Experiences — teaser */}
       <section className="bg-stone">
         <div className="wrap py-20 md:py-28">
-          <p className="text-xs uppercase tracking-[0.2em] text-gold mb-4">
-            Signature Experiences
-          </p>
-          <h2 className="text-3xl md:text-5xl text-forest mb-6 max-w-2xl">
-            Signature Experiences
-          </h2>
-          <div className="divider-gold mb-10" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-gold mb-4">
+                Signature Experiences
+              </p>
+              <h2 className="text-3xl md:text-5xl text-forest mb-6">
+                Signature Experiences
+              </h2>
+              <div className="divider-gold" />
+            </div>
+            <div className="relative aspect-[4/5] md:aspect-[16/10] w-full overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1769771744699-7b73a101b318"
+                alt="Elegant private dining room set for an intimate dinner"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
             {experiences.map((e) => (
               <p key={e} className="text-ink-soft border-b border-white/60 pb-3">
