@@ -28,8 +28,8 @@ export const pillars: Pillar[] = [
     slug: "strategic-advisory",
     name: "Strategic Advisory",
     photo: {
-      src: null,
-      alt: "",
+      src: "https://images.unsplash.com/photo-1511376979163-f804dff7ad7b",
+      alt: "A working advisory session, two people in close conversation",
       note: "a working advisory session — two or three people, close in.",
     },
     summary: "Considered counsel on the decisions that carry weight.",
@@ -72,8 +72,8 @@ export const pillars: Pillar[] = [
     slug: "elite-network",
     name: "Elite Network",
     photo: {
-      src: null,
-      alt: "",
+      src: "https://images.unsplash.com/photo-1610374792793-f016b77ca51a",
+      alt: "A room of people in conversation, shot wide",
       note: "a room of people mid-conversation, shot wide.",
     },
     summary: "Introductions made with intent.",
@@ -90,7 +90,7 @@ export const pillars: Pillar[] = [
       },
       {
         title: "Discreet by instinct",
-        body: "What is said in a first conversation stays in it. Discretion is assumed, not requested.",
+        body: "Discretion is assumed rather than requested. The terms that govern it are set out in the Trust Framework.",
       },
       {
         title: "Long in outlook",
@@ -102,8 +102,8 @@ export const pillars: Pillar[] = [
     slug: "executive-forums",
     name: "Executive Forums",
     photo: {
-      src: null,
-      alt: "",
+      src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
+      alt: "A forum in session around a table",
       note: "a forum in session — seated circle or roundtable.",
     },
     summary: "Closed sessions, held in confidence, on one question at a time.",
@@ -120,7 +120,7 @@ export const pillars: Pillar[] = [
       },
       {
         title: "Able to hold confidence",
-        body: "Nothing said in a forum leaves it, including the fact of what was discussed.",
+        body: "Forums depend on members treating what is said in them as confidential. The Trust Framework sets out the terms.",
       },
       {
         title: "Present for the whole session",
@@ -146,8 +146,8 @@ export const pillars: Pillar[] = [
     slug: "knowledge-insights",
     name: "Knowledge & Insights",
     photo: {
-      src: null,
-      alt: "",
+      src: "https://images.unsplash.com/photo-1573164574572-cb89e39749b4",
+      alt: "A quiet study setting, considered and unhurried",
       note: "a quiet study or reading setting. Considered, unhurried.",
     },
     summary: "Briefings written for people who already know their sector.",
@@ -176,8 +176,8 @@ export const pillars: Pillar[] = [
     slug: "executive-councils",
     name: "Executive Councils",
     photo: {
-      src: null,
-      alt: "",
+      src: "https://images.unsplash.com/photo-1771270759486-1f7703945072",
+      alt: "A formal council table",
       note: "a formal council table, empty or mid-session.",
     },
     summary: "Standing groups that meet through the year, so context accumulates.",

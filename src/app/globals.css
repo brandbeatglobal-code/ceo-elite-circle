@@ -188,9 +188,18 @@ h1, h2, h3, h4 {
   display: none;
 }
 
-/* Keeps the footer clear of the fixed draft notice while it is on screen. */
-body.has-draft-banner {
+/* Draft notice. Server-rendered and visible by default — including without
+   JavaScript — and hidden only once the visitor dismisses it. */
+body {
   padding-bottom: 3rem;
+}
+
+.draft-dismissed .draft-banner {
+  display: none;
+}
+
+.draft-dismissed body {
+  padding-bottom: 0;
 }
 
 /* ---- Motion -----------------------------------------------------------
@@ -211,6 +220,21 @@ body.has-draft-banner {
   transition:
     opacity 460ms cubic-bezier(0.22, 0.61, 0.36, 1),
     transform 460ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Page transition — opacity only, so it does not fight the reveal's movement.
+   Scoped to `js-anim`, so no JavaScript and reduced motion both skip it. */
+.js-anim .page-enter {
+  animation: page-in 200ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Photographs lift very slightly under the cursor. */

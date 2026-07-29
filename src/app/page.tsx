@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <>
       {/* ---- Hero — full-bleed photograph, serif headline, full-width pill CTA */}
-      <section className="relative min-h-[42rem] h-[100svh] flex flex-col justify-end overflow-hidden">
+      <section className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden">
         <PhotoFrame
           photo={photos.hero}
           cover
@@ -47,7 +47,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="wrap relative pb-8">
+        <div className="wrap relative pt-36 lg:pt-44 pb-8">
           <h1 className="type-display type-hero text-white mb-10">
             A Private Circle for
             <br />

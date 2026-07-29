@@ -42,7 +42,11 @@ export const experiences: Experience[] = [
   {
     slug: "ceo-leadership-summit",
     name: "CEO Leadership Summit",
-    photo: { src: null, alt: "", note: "a summit stage or full room, shot wide." },
+    photo: {
+      src: "https://images.unsplash.com/photo-1594122230689-45899d9e6f69",
+      alt: "A summit room, shot wide",
+      note: "a summit stage or full room, shot wide.",
+    },
     summary: "The Circle's principal gathering of the year.",
     intro:
       "The one occasion on which the whole membership convenes. The programme is built from the questions members bring, and the value is as much in the margins as in the sessions themselves.",
@@ -69,7 +73,11 @@ export const experiences: Experience[] = [
   {
     slug: "chairmans-majlis",
     name: "Chairman's Majlis",
-    photo: { src: null, alt: "", note: "a majlis setting — low seating, warm light." },
+    photo: {
+      src: "https://images.unsplash.com/photo-1606836591695-4d58a73eba1e",
+      alt: "A majlis setting with low seating and warm light",
+      note: "a majlis setting — low seating, warm light.",
+    },
     summary: "An evening of open conversation, in the majlis tradition.",
     intro:
       "Held in the majlis tradition: seated in the round, no head of the table, and no agenda beyond the subject raised from the chair. Conversation moves where the room takes it.",
@@ -96,7 +104,11 @@ export const experiences: Experience[] = [
   {
     slug: "executive-leadership-retreat",
     name: "Executive Leadership Retreat",
-    photo: { src: null, alt: "", note: "a retreat setting away from the city — landscape or lodge." },
+    photo: {
+      src: "https://images.unsplash.com/photo-1774186184398-1cc2da3d029e",
+      alt: "A retreat setting away from the city",
+      note: "a retreat setting away from the city — landscape or lodge.",
+    },
     summary: "Time away from the office, and from the role.",
     intro:
       "A residential gathering held away from the working environment, where the distance is the point. Members arrive as themselves rather than as their title.",
@@ -123,7 +135,11 @@ export const experiences: Experience[] = [
   {
     slug: "future-leadership-forum",
     name: "Future Leadership Forum",
-    photo: { src: null, alt: "", note: "a younger cohort in discussion." },
+    photo: {
+      src: "https://images.unsplash.com/photo-1758691736424-4b4273948341",
+      alt: "A younger cohort in discussion",
+      note: "a younger cohort in discussion.",
+    },
     summary: "For the generation preparing to take the chair.",
     intro:
       "Convened for senior leaders approaching the top role, and for the members preparing them. The forum exists to shorten the distance between readiness and appointment.",
@@ -150,7 +166,11 @@ export const experiences: Experience[] = [
   {
     slug: "ceo-excellence-awards",
     name: "CEO Excellence Awards",
-    photo: { src: null, alt: "", note: "an awards evening — a room set formally, before or during." },
+    photo: {
+      src: "https://images.unsplash.com/photo-1632012773667-b68d7bd59cc4",
+      alt: "An awards evening, room set formally",
+      note: "an awards evening — a room set formally, before or during.",
+    },
     summary: "Recognition decided by peers.",
     intro:
       "An evening given to recognising leadership as judged by those doing the same work. Recognition is decided within the membership rather than by submission or nomination volume.",
@@ -177,7 +197,11 @@ export const experiences: Experience[] = [
   {
     slug: "international-ceo-delegation",
     name: "International CEO Delegation",
-    photo: { src: null, alt: "", note: "travel or arrival — an airport, a skyline on approach." },
+    photo: {
+      src: "https://images.unsplash.com/photo-1544531585-f14f463149ec",
+      alt: "Arrival in another market, a skyline on approach",
+      note: "travel or arrival — an airport, a skyline on approach.",
+    },
     summary: "A delegation abroad, convened around a single market.",
     intro:
       "A small group travels together to one market, with a programme built around meeting the people who actually operate in it. The delegation is convened for understanding rather than for ceremony.",
@@ -219,7 +243,7 @@ export const experiences: Experience[] = [
       },
       {
         title: "Discreet about what is said",
-        body: "Nothing said at the table is repeated outside it.",
+        body: "Members are asked to treat the table as confidential. The terms are set out in the Trust Framework.",
       },
       {
         title: "Willing to stay late",

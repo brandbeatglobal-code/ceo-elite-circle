@@ -23,7 +23,7 @@ export function SplitHero({
 }) {
   return (
     <section className="bg-ramp text-white">
-      <div className="wrap pt-28 lg:pt-32">
+      <div className="wrap pt-36 lg:pt-44">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-0 pb-10">
           <div className="lg:col-span-2 lg:pr-10 flex flex-col justify-center gap-6 order-2 lg:order-1">
             <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>

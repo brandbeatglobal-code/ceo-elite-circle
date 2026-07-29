@@ -24,7 +24,8 @@ export const metadata: Metadata = {
  * that hides revealable content is scoped to this class, so content stays
  * visible in every other case.
  */
-const motionFlag = `try{if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-anim')}}catch(e){}`;
+const motionFlag = `try{if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-anim')}}catch(e){}
+try{if(localStorage.getItem('cec-draft-banner-dismissed')==='1'){document.documentElement.classList.add('draft-dismissed')}}catch(e){}`;
 
 export default function RootLayout({
   children,

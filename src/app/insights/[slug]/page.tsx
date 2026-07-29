@@ -53,7 +53,7 @@ export default async function ArticlePage({
 
   return (
     <>
-      <section className="bg-cream text-ink pt-28">
+      <section className="bg-cream text-ink pt-32 lg:pt-40">
         <div className="wrap">
           <SectionHeader index={ordinal(0)} eyebrow="Article" />
 

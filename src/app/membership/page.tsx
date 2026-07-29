@@ -98,7 +98,7 @@ const faq = [
   },
   {
     title: "Is the membership list published?",
-    body: "No. The membership is not disclosed, and members are not identified as such without their agreement.",
+    body: "Confidentiality terms — including how members are identified — are set out in the Trust Framework, which is being finalised. We would rather point you there than summarise it here.",
   },
   {
     title: "How long does consideration take?",

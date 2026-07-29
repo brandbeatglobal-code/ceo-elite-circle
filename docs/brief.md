@@ -165,8 +165,14 @@ Two rules follow from (b) and are worth stating outright:
   else. Membership category descriptions are placeholders for the same reason.
 
 While sample copy is live, `DraftBanner` shows a dismissible work-in-progress
-notice site-wide. Removing it at launch means deleting the component and its
-mount in `layout.tsx`. That is the whole removal.
+notice site-wide. It is **server-rendered**, so it is present for a visitor
+without JavaScript — the visitor with no other signal that the copy is
+provisional. Only the dismiss button is a client component; dismissal is a
+`draft-dismissed` class on the document element, re-applied before paint by
+the inline script in `layout.tsx`.
+
+Removing it at launch: delete `DraftBanner`, `DismissDraftBanner`, their mount
+in `layout.tsx`, and the `.draft-banner` rules in `globals.css`.
 
 ### What is still empty, and why
 
@@ -201,6 +207,22 @@ Restrained: 200–500ms, gentle easing, no bounce.
   transitions; the nav's scroll transition is eased.
 - Accordion panels animate height via `grid-template-rows`.
 - Carousel scrolls smoothly, and jumps under reduced motion.
+
+Page transitions live in `src/app/template.tsx`, which re-mounts on
+navigation. Entry-only and opacity-only, 200ms: it cannot delay a route
+change, and it leaves movement to the scroll reveal. It deliberately does not
+run on first load — a module-level flag is false on the first render — so
+above-fold content settles once rather than animating twice. View Transitions
+was considered and not used: it needs a capability check plus a fallback in
+every browser that lacks it, and snapshotting the outgoing page risks the
+delay this is meant to avoid.
+
+**Heroes must use `min-h-*`, never a fixed `h-*`.** They are bottom-anchored
+(`flex flex-col justify-end`), so a fixed height compresses the content stack
+upward on a short viewport and pushes the headline behind the fixed nav. With
+`min-h` the section grows instead. Each hero also carries `pt-36 lg:pt-44`,
+which clears the nav at its tallest. When changing a hero, sweep viewport
+**height**, not width — width was never the axis that mattered.
 
 Two constraints, both enforced rather than assumed:
 

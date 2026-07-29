@@ -21,7 +21,7 @@ export function PhotoHero({
   photo: Photo;
 }) {
   return (
-    <section className="relative min-h-[40rem] h-[92svh] flex flex-col justify-end overflow-hidden bg-ramp text-white">
+    <section className="relative min-h-[92svh] flex flex-col justify-end overflow-hidden bg-ramp text-white">
       <PhotoFrame
         photo={photo}
         tone="ramp"
@@ -40,7 +40,7 @@ export function PhotoHero({
         </div>
       </div>
 
-      <div className="wrap relative pt-32 pb-14">
+      <div className="wrap relative pt-36 lg:pt-44 pb-14">
         <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
         <h1 className="type-display type-hero mt-8 mb-12 max-w-5xl">{title}</h1>
 

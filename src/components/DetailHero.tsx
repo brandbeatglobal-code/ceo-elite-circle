@@ -18,7 +18,7 @@ export function DetailHero({
   photo: Photo;
 }) {
   return (
-    <section className="relative min-h-[38rem] h-[88svh] flex flex-col overflow-hidden bg-ramp text-white">
+    <section className="relative min-h-[88svh] flex flex-col overflow-hidden bg-ramp text-white">
       <PhotoFrame photo={photo} tone="ramp" cover className="h-full" sizes="100vw" />
       <div className="absolute inset-0 bg-black/55" />
 
@@ -31,7 +31,7 @@ export function DetailHero({
         </div>
       </div>
 
-      <div className="wrap relative flex-1 flex flex-col justify-between pt-32 pb-8">
+      <div className="wrap relative flex-1 flex flex-col justify-between pt-36 lg:pt-44 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-3">
             <div data-reveal>

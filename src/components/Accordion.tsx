@@ -34,6 +34,7 @@ export function Accordion({
           <div key={i} className={`border-b ${rule}`}>
             <h3>
               <button
+                id={`${id}-trigger-${i}`}
                 onClick={() => setOpen(isOpen ? -1 : i)}
                 aria-expanded={isOpen}
                 aria-controls={`${id}-panel-${i}`}
@@ -50,11 +51,17 @@ export function Accordion({
                 </span>
               </button>
             </h3>
+            {/* A collapsed panel is zero-height but still in the DOM, so it
+                needs `inert` to leave the accessibility tree and the tab order
+                — otherwise every closed item is announced as though open. The
+                region takes its name from the trigger that controls it. */}
             <div
               id={`${id}-panel-${i}`}
               className="panel"
               data-open={isOpen}
               role="region"
+              aria-labelledby={`${id}-trigger-${i}`}
+              inert={!isOpen}
             >
               <div>
                 <div className="pb-6 max-w-xl">{item.body}</div>
