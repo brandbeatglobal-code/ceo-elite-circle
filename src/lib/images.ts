@@ -51,4 +51,21 @@ export const photos = {
     alt: "An empty conference room with a panoramic city view at sunset",
     note: "Documentary: a formal room or a single figure, quiet and composed.",
   },
+
+  /* About the Circle */
+  aboutHero: {
+    src: null,
+    alt: "",
+    note: "Interior of a considered, quiet room — the setting the Circle meets in.",
+  },
+  aboutStory: {
+    src: null,
+    alt: "",
+    note: "Wide architectural exterior, daylight. Permanence rather than motion.",
+  },
+  aboutPhilosophy: {
+    src: null,
+    alt: "",
+    note: "A real working moment — people mid-discussion, not posed to camera.",
+  },
 } satisfies Record<string, Photo>;

@@ -6,7 +6,9 @@
     Membership Selection, Testimonials (placeholder), Apply, Footer.
 02. About the Circle (`/about`) — Our Story, Our Purpose, Our Beliefs, Our
     Mission, Our Vision, Leadership Philosophy, Who We Serve, What Makes Us
-    Different.
+    Different. Built on its own reference set: photo hero, Our Story over a
+    wide photograph, Leadership Philosophy as a pull-quote over a photograph,
+    What Makes Us Different as the icon grid.
 03. The Five Pillars (`/pillars`) — Strategic Advisory, Elite Network,
     Executive Forums, Knowledge & Insights, Executive Councils. Each pillar
     needs its own full section with benefits, outcomes, and examples.
@@ -71,6 +73,17 @@ tall column, with the empty space above used deliberately.
 - CTA buttons are full pills — the only rounded element on the page.
 - Links end in a small `↗`.
 
+### Icons
+Confirmed as part of the system, and not only for the grid they debut in on
+`/about`. All icons live in `src/components/Icons.tsx` and follow one rule:
+thin single-weight hairline strokes, no fills, built from plain geometry —
+arcs, rings, diamonds, ellipses. Abstract, never illustrative or literal, and
+never decorative for its own sake. Anything added later goes in that file and
+matches that style.
+
+(The original brief's "no icons" line was about keeping the hero uncluttered,
+not a site-wide ban. There is no conflict.)
+
 ### Photography
 Mood shifts by section on purpose: dramatic low-light architecture in the
 hero, desaturated documentary in the membership rows (rendered greyscale in
@@ -97,13 +110,24 @@ one-line change.
   No marketing prose has been written. Supporting copy is the `Placeholder`
   component throughout. Do not replace placeholder text with invented claims,
   especially on `/trust`, without explicit sign-off first.
-- Two reference sections are deliberately **not built**, because they would
-  require facts the Circle does not have yet:
-  - **Impact stats** ("15+ years", "10,000+ procedures") — needs real
-    numbers: membership count, founding year, whatever is true.
+- Several reference sections are deliberately **not built**, because they
+  would require facts the Circle does not have yet:
+  - **Impact stats** ("15+ years", "10,000+ procedures") and the smaller
+    inline stat pairs ("99%", "50k+") — need real numbers: membership count,
+    founding year, whatever is true.
   - **Awards & press** — needs real awards. Placeholder award names could
     later be mistaken for real ones.
-  Both patterns are in the reference if and when real content exists.
+  - **Leadership / profile card grid** — needs real people, real photographs
+    and real bios. Stock headshots with invented names would misrepresent
+    people as the Circle's leadership. Not built even as an empty shell: an
+    empty "our leadership" section still implies a roster that does not exist.
+  - **Year-by-year timeline** — needs a real founding history. If there is a
+    true story (when the Circle was conceived, when it launches, real
+    near-term milestones) this becomes a strong section.
+  All these patterns are in the reference if and when real content exists.
+- The Leadership Philosophy pull-quote is built as structure only. Its slot
+  carries an explicit note: it must hold real words from a real, named person,
+  never something written on their behalf.
 - Testimonials render as an empty carousel shell. No photo and no quote is
   shown, because pairing a stock portrait with invented words would read as
   a real member.

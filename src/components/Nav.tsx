@@ -23,9 +23,9 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  // Only the homepage opens on a full-bleed photo, so only there does the bar
-  // start transparent — and it takes a solid background once you leave the hero.
-  const overHero = pathname === "/";
+  // Routes that open on a full-bleed photo hero: the bar starts transparent
+  // there, and takes a solid background once you scroll past the hero.
+  const overHero = pathname === "/" || pathname === "/about";
 
   useEffect(() => {
     if (!overHero) return;

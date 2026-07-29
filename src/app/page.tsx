@@ -43,7 +43,8 @@ export default function Home() {
       <section className="relative min-h-[42rem] h-[100svh] flex flex-col justify-end overflow-hidden">
         <PhotoFrame
           photo={photos.hero}
-          className="absolute inset-0 h-full"
+          cover
+          className="h-full"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/45" />

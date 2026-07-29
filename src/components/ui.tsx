@@ -159,18 +159,28 @@ export function PhotoFrame({
   sizes = "(max-width: 1024px) 100vw, 50vw",
   greyscale = false,
   tone = "cream",
+  cover = false,
 }: {
   photo: Photo;
   className?: string;
   sizes?: string;
   greyscale?: boolean;
   tone?: Tone;
+  /**
+   * Fill the nearest positioned ancestor, for photographs used as a section
+   * background. Owns the `position` utility either way — callers must not pass
+   * `relative`/`absolute` in `className`, or the two collide and Tailwind
+   * resolves it by stylesheet order rather than by intent.
+   */
+  cover?: boolean;
 }) {
+  const position = cover ? "absolute inset-0" : "relative";
+
   if (!photo.src) {
     const dark = isDark(tone);
     return (
       <div
-        className={`relative w-full overflow-hidden border border-dashed flex items-end p-4 ${
+        className={`${position} w-full overflow-hidden border border-dashed flex items-end p-4 ${
           dark ? "border-white/25 bg-white/[0.04]" : "border-hair bg-mint/40"
         } ${className}`}
       >
@@ -187,7 +197,7 @@ export function PhotoFrame({
   // so a bad URL degrades to a quiet block rather than a white hole.
   return (
     <div
-      className={`relative w-full overflow-hidden ${
+      className={`${position} w-full overflow-hidden ${
         isDark(tone) ? "bg-white/[0.05]" : "bg-mint/40"
       } ${className}`}
     >
@@ -210,9 +220,12 @@ export function PhotoFrame({
 export function Placeholder({
   tone = "cream",
   lead = false,
+  note,
 }: {
   tone?: Tone;
   lead?: boolean;
+  /** Replaces the default sentence when a slot has a stricter requirement. */
+  note?: string;
 }) {
   const dark = isDark(tone);
   return (
@@ -221,8 +234,8 @@ export function Placeholder({
         lead ? "max-w-sm" : "max-w-md"
       } ${dark ? "border-white/25 text-white/55" : "border-hair text-olive"}`}
     >
-      Content placeholder — copy for this section is still to be drafted and
-      reviewed.
+      {note ??
+        "Content placeholder — copy for this section is still to be drafted and reviewed."}
     </p>
   );
 }
