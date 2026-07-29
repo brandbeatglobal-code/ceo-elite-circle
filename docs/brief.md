@@ -28,6 +28,24 @@
     Benefits, Annual Calendar, Expert Advisors.
 08. Contact / Apply (`/contact`) — Application Form, Selection Process,
     Timeline, Interview, Review, Acceptance.
+09. Insights (`/insights`) — list page. `/insights/[slug]` is the long-form
+    article template.
+
+### Detail routes
+- `/pillars/[slug]` — one page per pillar (`strategic-advisory`,
+  `elite-network`, `executive-forums`, `knowledge-insights`,
+  `executive-councils`), linked from the list page.
+- `/experiences/[slug]` — one page per experience (`ceo-leadership-summit`,
+  `chairmans-majlis`, `executive-leadership-retreat`,
+  `future-leadership-forum`, `ceo-excellence-awards`,
+  `international-ceo-delegation`, `ceo-private-dinners`), linked from the
+  list page.
+- `/about/leadership/[slug]` — leadership profile template. Built and
+  visitable, **deliberately unlinked** (see Current status).
+
+Note: the pillar "Executive Councils" (`/pillars/executive-councils`) and the
+top-level page `/councils` share a name but are different pages. That comes
+from the original site brief and is not a mistake to fix.
 
 ## Design direction
 
@@ -73,6 +91,25 @@ tall column, with the empty space above used deliberately.
 - A `•` bullet precedes short labels and CTA button text.
 - CTA buttons are full pills — the only rounded element on the page.
 - Links end in a small `↗`.
+
+### Detail-page patterns
+Taken from the Service / Doctor / Blog reference set. Each is a component,
+reused rather than re-cut per page:
+- `CandidacyChecklist` — 2×2 icon grid answering "who is this for".
+- `NumberedSteps` — hairline-divided numbered sequence. No dates.
+- `VariantCards` — three named variants, no photos, no prices.
+- `Accordion` — one item open, the rest collapsed to a title and `+`.
+- `CvTimeline` — alternating centre-line timeline. Collapses to one column
+  below `lg`, where alternating only hurts readability.
+- `AttributedQuote` — pull-quote with a circular portrait and attribution.
+- `SplitHero` / `DetailHero` — profile split-screen, and title-over-photo.
+
+Patterns are applied per item, not stamped: pillars carry `VariantCards` only
+where named formats plausibly exist (`variants` in `src/lib/pillars.ts`), and
+carry no preparation steps at all — "Elite Network" has nothing to prepare
+for. Experiences all carry `NumberedSteps`, since each is something a member
+attends. Revisit both once real content exists; structure should follow
+content.
 
 ### Icons
 Confirmed as part of the system, and not only for the grid they debut in on
@@ -130,6 +167,17 @@ one-line change.
 - The Leadership Philosophy pull-quote is built as structure only. Its slot
   carries an explicit note: it must hold real words from a real, named person,
   never something written on their behalf.
+- **The leadership profile template** (`/about/leadership/[slug]`) exists and
+  works when visited directly, driven by `src/lib/leadership.ts`, whose one
+  entry has every field null. It is **not linked from anywhere** — the About
+  cards have no names, and minting a slug would mean inventing a person to
+  hang it on. Adding a real member means filling the name, credentials, role,
+  timeline and quote together, then linking the card.
+- **Insights** has no real articles. `/insights` shows three labelled
+  "article pending" cards that link nowhere, and `/insights/[slug]` exists as
+  a structural template at `template`, unlinked, on the same reasoning. No
+  invented statistics or claims anywhere in it — the reference article's
+  "70% of adults" style line has no equivalent here.
 - **Leadership** (`/about`, section Two) is built as honest empty structure,
   the same way Testimonials is on the homepage: four profile cards with the
   card shape intact — portrait, name/credentials slot, one-line description —

@@ -8,6 +8,7 @@ const columns = [
       { href: "/pillars", label: "The Five Pillars" },
       { href: "/experiences", label: "Signature Experiences" },
       { href: "/councils", label: "Executive Councils" },
+      { href: "/insights", label: "Insights" },
     ],
   },
   {

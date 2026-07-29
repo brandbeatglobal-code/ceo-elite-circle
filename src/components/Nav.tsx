@@ -8,6 +8,7 @@ const groupOne = [
   { href: "/about", label: "About the Circle" },
   { href: "/pillars", label: "The Five Pillars" },
   { href: "/experiences", label: "Signature Experiences" },
+  { href: "/insights", label: "Insights" },
 ];
 
 const groupTwo = [
