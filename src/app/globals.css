@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  /* CEO Elite Circle — design tokens (per client brief, pending palette confirmation) */
+  --color-white: #ffffff;
+  --color-stone: #eeece6;       /* Light Grey — sophistication, balance */
+  --color-forest: #0e3b2f;      /* Deep Green — trust, heritage, leadership */
+  --color-forest-dark: #082820; /* Deep Green, hover/depth variant */
+  --color-gold: #b08d46;        /* Gold — prestige, legacy */
+  --color-gold-soft: #d9c48f;   /* Gold, tint for dividers/backgrounds */
+  --color-ink: #14201b;         /* Primary text — near-black with a green cast */
+  --color-ink-soft: #4a5550;    /* Secondary/muted text */
+}
+
+@theme inline {
+  --color-white: var(--color-white);
+  --color-stone: var(--color-stone);
+  --color-forest: var(--color-forest);
+  --color-forest-dark: var(--color-forest-dark);
+  --color-gold: var(--color-gold);
+  --color-gold-soft: var(--color-gold-soft);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Inter", Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+/* Gold divider — per style direction ("Gold dividers") */
+.divider-gold {
+  width: 64px;
+  height: 1px;
+  background: var(--color-gold);
+}
+
+/* Wide container used across all pages for consistent margins */
+.wrap {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .wrap {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
