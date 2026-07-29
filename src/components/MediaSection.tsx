@@ -43,7 +43,7 @@ export function MediaSection({
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div
-          className={`wrap lg:pr-14 py-20 lg:py-32 flex flex-col justify-end ${
+          className={`wrap lg:pr-14 py-14 lg:py-32 flex flex-col justify-end ${
             flip ? "lg:order-2 lg:pl-14" : ""
           }`}
           data-reveal

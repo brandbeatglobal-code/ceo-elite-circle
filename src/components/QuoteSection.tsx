@@ -39,7 +39,7 @@ export function QuoteSection({
       <div className="wrap relative">
         <SectionHeader index={index} eyebrow={eyebrow} tone="ramp" />
 
-        <div className="pt-24 pb-24 lg:pt-36 lg:pb-40">
+        <div className="pt-16 pb-16 lg:pt-36 lg:pb-40">
           <h2 className="type-h2 max-w-5xl lg:[text-indent:22%] mb-16 lg:mb-28">
             {title}
           </h2>

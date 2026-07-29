@@ -62,7 +62,7 @@ export default function TrustPage() {
       <section className="bg-black text-white">
         <div className="wrap">
           <SectionHeader index={ordinal(0)} eyebrow="Status" tone="black" />
-          <div className="grid grid-cols-1 lg:grid-cols-4 py-16 lg:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-28">
             <h2
               className="type-h2 lg:col-span-2 lg:pr-10 mb-8 lg:mb-0"
               data-reveal
@@ -96,13 +96,13 @@ export default function TrustPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
             <h2
-              className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10"
+              className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10"
               data-reveal
             >
               The ten areas
             </h2>
             <div
-              className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-16 lg:py-24 flex flex-col gap-4 items-start"
+              className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-24 flex flex-col gap-4 items-start"
               data-reveal
               style={{ transitionDelay: "80ms" }}
             >
@@ -125,7 +125,7 @@ export default function TrustPage() {
         </div>
       </section>
 
-      <RequestSection index={ordinal(2)} />
+      <RequestSection index={ordinal(2)} variant="governance" />
     </>
   );
 }

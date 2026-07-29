@@ -53,7 +53,7 @@ export default async function ArticlePage({
 
   return (
     <>
-      <section className="bg-cream text-ink pt-32 lg:pt-40">
+      <section className="bg-cream text-ink pt-40 lg:pt-48">
         <div className="wrap">
           <SectionHeader index={ordinal(0)} eyebrow="Article" />
 
@@ -161,7 +161,7 @@ export default async function ArticlePage({
           </div>
 
           {/* Closing statement */}
-          <div className="border-t border-hair py-24 lg:py-36">
+          <div className="border-t border-hair py-16 lg:py-36">
             <div className="lg:[text-indent:22%] max-w-5xl">
               <p className="type-h2">
                 The scarcest thing at this level is not information. It is a
@@ -178,7 +178,7 @@ export default async function ArticlePage({
           <SectionHeader index={ordinal(1)} eyebrow="Related articles" tone="black" />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
-            <div className="lg:col-span-1 flex flex-col justify-end py-16 lg:py-28 lg:pr-8">
+            <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-28 lg:pr-8">
               <h2 className="type-h2 mb-8">Further reading</h2>
               <p className="type-body text-white/55 italic max-w-xs">
                 No other articles have been published yet, so none are linked —
@@ -218,7 +218,7 @@ export default async function ArticlePage({
         </div>
       </section>
 
-      <RequestSection index={ordinal(2)} />
+      <RequestSection index={ordinal(2)} variant="briefings" />
     </>
   );
 }

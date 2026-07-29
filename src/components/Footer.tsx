@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+/* Mirrors the nav's three groups exactly, so the two never drift apart, plus
+   the closing CTA column. */
 const columns = [
   {
     heading: "The Circle",
@@ -7,21 +9,23 @@ const columns = [
       { href: "/about", label: "About the Circle" },
       { href: "/pillars", label: "The Five Pillars" },
       { href: "/experiences", label: "Signature Experiences" },
-      { href: "/councils", label: "Executive Councils" },
-      { href: "/insights", label: "Insights" },
     ],
   },
   {
     heading: "Membership",
     links: [
-      { href: "/membership", label: "Membership Categories" },
+      { href: "/membership", label: "Membership" },
       { href: "/trust", label: "Trust Framework" },
-      { href: "/contact", label: "Request Membership Consideration" },
+      { href: "/councils", label: "Executive Councils" },
     ],
   },
   {
+    heading: "Insights",
+    links: [{ href: "/insights", label: "Insights" }],
+  },
+  {
     heading: "Begin",
-    links: [{ href: "/contact", label: "Begin Your Membership Journey" }],
+    links: [{ href: "/contact", label: "Request Membership Consideration" }],
   },
 ];
 
@@ -29,7 +33,7 @@ export default function Footer() {
   return (
     <footer className="bg-cream text-ink border-t border-hair">
       <div className="wrap">
-        <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 border-b border-hair">
           <div className="py-16 lg:pr-10">
             <div className="text-lg font-semibold tracking-tight mb-5">
               CEO Elite Circle

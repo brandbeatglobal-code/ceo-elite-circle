@@ -68,7 +68,11 @@ export default async function PillarPage({
         tone={pillar.variants ? "cream" : "black"}
       />
 
-      <RequestSection index={next()} />
+      <RequestSection
+        index={next()}
+        variant="pillar"
+        context={{ label: "Pillar", value: pillar.name }}
+      />
     </>
   );
 }

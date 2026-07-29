@@ -29,7 +29,7 @@ export function AttributedQuote({
       <div className="wrap">
         <SectionHeader index={index} eyebrow={eyebrow} tone="black" />
 
-        <div className="pt-24 pb-24 lg:pt-36 lg:pb-40">
+        <div className="pt-16 pb-16 lg:pt-36 lg:pb-40">
           <div className="max-w-5xl lg:[text-indent:18%] mb-16">{quote}</div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4">

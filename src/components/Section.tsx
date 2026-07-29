@@ -45,7 +45,7 @@ export function Section({
         />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-8">
           <h2
-            className={`type-h2 py-16 lg:py-28 lg:col-span-2 lg:pr-10 ${
+            className={`type-h2 py-12 lg:py-28 lg:col-span-2 lg:pr-10 ${
               dark ? "text-white" : "text-ink"
             }`}
             data-reveal
@@ -55,7 +55,7 @@ export function Section({
           <div
             className={`lg:col-span-2 lg:border-l ${
               dark ? "border-hair-dark" : "border-hair"
-            } lg:pl-10 pb-16 lg:py-28 flex flex-col items-start gap-8 max-w-2xl`}
+            } lg:pl-10 pb-12 lg:py-28 flex flex-col items-start gap-8 max-w-2xl`}
             data-reveal
             style={{ transitionDelay: "90ms" }}
           >

@@ -40,7 +40,7 @@ export function PhotoHero({
         </div>
       </div>
 
-      <div className="wrap relative pt-36 lg:pt-44 pb-14">
+      <div className="wrap relative pt-36 lg:pt-44 hero-foot">
         <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
         <h1 className="type-display type-hero mt-8 mb-12 max-w-5xl">{title}</h1>
 

@@ -10,10 +10,11 @@ import type { Photo } from "@/lib/images";
  * where there is no hover, the image is shown by default (see `.photo-card`
  * in globals.css) rather than being unreachable.
  *
- * The overlay is deliberately heavy. White text over a photograph at 15%
- * effective luminance clears 4.5:1 even where the photograph is pure white,
- * which is the case that usually fails — an average-luminance overlay does
- * not survive a blown-out highlight sitting behind a line of text.
+ * The scrim (see `.photo-card-scrim` in globals.css) is heavy where text sits
+ * and light through the empty middle band. A flat overlay dark enough to
+ * survive a white photograph behind text would leave the photograph invisible
+ * everywhere else; this keeps both. Behind text, white type clears roughly
+ * 14:1 even against a pure-white photograph.
  */
 export function PhotoCard({
   label,
@@ -36,7 +37,7 @@ export function PhotoCard({
 }) {
   return (
     <article
-      className="photo-card group relative overflow-hidden flex flex-col justify-between min-h-[26rem] lg:min-h-[34rem] pt-10 pb-12 px-6 lg:px-7"
+      className="photo-card group relative overflow-hidden flex flex-col justify-between min-h-[20rem] lg:min-h-[34rem] pt-8 pb-10 lg:pt-10 lg:pb-12 px-6 lg:px-7"
       data-reveal
       style={{ transitionDelay: `${delay}ms` }}
     >
@@ -51,8 +52,7 @@ export function PhotoCard({
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-black/85" />
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/60 to-transparent" />
+          <div className="photo-card-scrim" />
         </div>
       )}
 

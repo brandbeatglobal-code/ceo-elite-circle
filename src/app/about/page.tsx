@@ -98,7 +98,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
             <h2
-              className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10"
+              className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10"
               data-reveal
             >
               Our Story

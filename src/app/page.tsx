@@ -48,7 +48,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="wrap relative pt-36 lg:pt-44 pb-8">
+        <div className="wrap relative pt-36 lg:pt-44 hero-foot">
           <h1 className="type-display type-hero text-white mb-10">
             A Private Circle for
             <br />
@@ -86,7 +86,7 @@ export default function Home() {
             tone="ramp"
           />
 
-          <div className="pt-32 pb-24 lg:pt-52 lg:pb-40">
+          <div className="pt-24 pb-16 lg:pt-52 lg:pb-40">
             {/* Staggered headline — begins mid-grid, then runs full width */}
             <h2 className="type-h2 lg:[text-indent:44%] max-w-6xl">
               Why the Circle Exists
@@ -129,10 +129,10 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
-            <h2 className="type-h2 col-span-1 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
+            <h2 className="type-h2 col-span-1 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
               The Five Pillars
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24">
+            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-white max-w-lg">
                 Five pillars carry the work of the Circle: counsel, connection,
                 closed conversation, considered analysis, and standing groups
@@ -187,10 +187,10 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
-            <h2 className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
+            <h2 className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
               Membership Categories
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-16 lg:py-24">
+            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-ink max-w-lg">
                 {membershipCategoriesIntro}
               </p>
@@ -216,7 +216,7 @@ export default function Home() {
                 <PhotoFrame
                   photo={tier.photo}
                   greyscale
-                  className="h-52 lg:h-44"
+                  className="h-40 lg:h-44"
                   sizes="(max-width: 1024px) 100vw, 25vw"
                 />
               </div>
@@ -234,7 +234,7 @@ export default function Home() {
             link={{ href: "/trust", label: "Trust framework" }}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-24 pb-24 lg:pt-44 lg:pb-36">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-16 pb-16 lg:pt-44 lg:pb-36">
             <div className="flex flex-col items-start gap-8 lg:pr-8 order-2 lg:order-1 lg:justify-end">
               <p className="type-lead max-w-xs">
                 A closed room is only as good as the terms that hold it.
@@ -270,10 +270,10 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
-            <h2 className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
+            <h2 className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
               Signature Experiences
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24">
+            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-white max-w-lg">
                 Seven occasions across the year, each built for a different kind
                 of conversation — from the whole membership in one room to a
@@ -291,7 +291,7 @@ export default function Home() {
                 </h3>
                 <p className="type-body text-white/70">{featured.summary}</p>
               </div>
-              <ArrowLink href="/experiences" tone="black">
+              <ArrowLink href={`/experiences/${featured.slug}`} tone="black">
                 Discover the Circle
               </ArrowLink>
             </div>
@@ -315,7 +315,11 @@ export default function Home() {
                   <h3 className="type-display text-xl md:text-2xl text-white">
                     {experience.name}
                   </h3>
-                  <ArrowLink href="/experiences" tone="black" className="shrink-0">
+                  <ArrowLink
+                    href={`/experiences/${experience.slug}`}
+                    tone="black"
+                    className="shrink-0"
+                  >
                     Discover
                   </ArrowLink>
                 </div>
@@ -335,7 +339,7 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
-            <div className="lg:col-span-1 flex flex-col justify-end py-16 lg:py-28 lg:pr-8">
+            <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-28 lg:pr-8">
               <h2 className="type-h2 mb-8">What Members Say</h2>
               <p className="type-body text-white/55 italic max-w-xs">
                 No member quotes have been given or approved yet, so none are

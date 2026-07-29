@@ -134,13 +134,13 @@ export default function MembershipPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
             <h2
-              className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10"
+              className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10"
               data-reveal
             >
               Membership Categories
             </h2>
             <div
-              className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24"
+              className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-24"
               data-reveal
               style={{ transitionDelay: "80ms" }}
             >
@@ -177,7 +177,7 @@ export default function MembershipPage() {
                   tone="black"
                   greyscale
                   hover
-                  className="h-52 lg:h-44"
+                  className="h-40 lg:h-44"
                   sizes="(max-width: 1024px) 100vw, 25vw"
                 />
               </div>
@@ -212,7 +212,7 @@ export default function MembershipPage() {
       <section className="bg-cream text-ink">
         <div className="wrap">
           <SectionHeader index={ordinal(4)} eyebrow="Questions" />
-          <div className="grid grid-cols-1 lg:grid-cols-4 py-16 lg:py-24 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-24 gap-10">
             <div className="lg:col-span-2 lg:pr-10" data-reveal>
               <h2 className="type-h2 mb-8">Frequently Asked Questions</h2>
               <p className="type-lead max-w-md">
@@ -236,7 +236,7 @@ export default function MembershipPage() {
         </div>
       </section>
 
-      <RequestSection index={ordinal(5)} />
+      <RequestSection index={ordinal(5)} variant="application" />
     </>
   );
 }

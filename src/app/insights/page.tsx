@@ -25,10 +25,10 @@ export default function InsightsPage() {
           <SectionHeader index={ordinal(0)} eyebrow="Articles" />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
-            <h2 className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
+            <h2 className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
               Latest writing
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-16 lg:py-24">
+            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-ink max-w-lg">
                 Briefings, notes and short essays from members and from the
                 people who convene them. Published sparingly, and only when
@@ -43,7 +43,7 @@ export default function InsightsPage() {
             {[0, 1, 2].map((i) => (
               <article
                 key={i}
-                className={`flex flex-col gap-6 py-14 md:px-8 first:md:pl-0 ${
+                className={`flex flex-col gap-6 py-10 lg:py-14 md:px-8 first:md:pl-0 ${
                   i > 0 ? "md:border-l border-hair" : ""
                 } border-t md:border-t-0 border-hair`}
               >
@@ -72,7 +72,7 @@ export default function InsightsPage() {
         </div>
       </section>
 
-      <RequestSection index={ordinal(1)} />
+      <RequestSection index={ordinal(1)} variant="briefings" />
     </>
   );
 }

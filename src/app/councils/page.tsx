@@ -160,7 +160,7 @@ export default function CouncilsPage() {
         />
       </Section>
 
-      <RequestSection index={ordinal(6)} />
+      <RequestSection index={ordinal(6)} variant="council" />
     </>
   );
 }

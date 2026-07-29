@@ -37,13 +37,13 @@ export function VariantCards({
 
         <div className={`grid grid-cols-1 lg:grid-cols-4 border-b ${rule}`}>
           <h2
-            className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10"
+            className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10"
             data-reveal
           >
             {title}
           </h2>
           <div
-            className={`lg:col-span-2 lg:border-l ${rule} lg:pl-8 pb-16 lg:py-24`}
+            className={`lg:col-span-2 lg:border-l ${rule} lg:pl-8 pb-12 lg:py-24`}
             data-reveal
             style={{ transitionDelay: "80ms" }}
           >
@@ -61,7 +61,7 @@ export function VariantCards({
           {cards.map((variant, i) => (
             <div
               key={i}
-              className={`flex flex-col gap-6 py-14 md:px-8 first:md:pl-0 ${
+              className={`flex flex-col gap-6 py-10 lg:py-14 md:px-8 first:md:pl-0 ${
                 i > 0 ? `md:border-l ${rule}` : ""
               } border-t md:border-t-0 ${rule}`}
               data-reveal

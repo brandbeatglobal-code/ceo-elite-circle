@@ -153,6 +153,42 @@ renders a labelled "photography pending" frame instead of an image, so a
 missing photo reads as deliberate rather than broken. Filling one is a
 one-line change.
 
+## Closing forms
+
+Every page ends with `RequestSection`, which takes a `variant` — one component,
+not copies. A governance page and a briefings index must not both close with a
+membership application.
+
+| Route | Variant |
+|---|---|
+| `/`, `/about`, `/pillars`, `/experiences` | `membership` |
+| `/membership` | `application` |
+| `/pillars/[slug]` | `pillar` — inert context chip naming the pillar |
+| `/experiences/[slug]` | `experience` — inert context chip naming the occasion |
+| `/trust` | `governance` — explicitly not an application |
+| `/councils` | `council` |
+| `/insights`, `/insights/[slug]` | `briefings` — name and email only |
+| `/about/leadership/[slug]` | `enquiry` |
+| `/contact` | none; its own form is the real one |
+
+Rules: no field implies a capability that does not exist (no upload,
+scheduling or payment); pre-filled context is rendered inert rather than as an
+editable field; only the two application variants may call themselves an
+application.
+
+## Verification
+
+Measurement and screenshots catch different failures, so do both on any visual
+change. Capture at desktop **and** mobile, capture both states for anything
+hover-dependent, and capture with reduced motion — otherwise you photograph
+the animation instead of the page.
+
+Two failures that prove the point: the hero/nav overlap passed a width sweep
+while being visibly broken (height was the axis that mattered), and the fixed
+draft notice overlapping the hero CTA was invisible in full-page captures,
+because fixed elements render at the capture origin rather than the viewport
+bottom. Both needed the other method to find.
+
 ## Microcopy conventions (client-specified, use verbatim)
 - "Learn More" → **Discover the Circle**
 - "Contact" → **Begin Your Membership Journey**
