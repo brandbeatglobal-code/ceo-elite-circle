@@ -1,11 +1,19 @@
 import { FeatureGrid } from "@/components/FeatureGrid";
 import { IconArcs, IconOrbit, IconRings, IconStack } from "@/components/Icons";
 import { PhotoHero } from "@/components/PhotoHero";
+import { ProfileGrid } from "@/components/ProfileGrid";
 import { QuoteSection } from "@/components/QuoteSection";
 import { Section } from "@/components/Section";
 import { PhotoFrame, Placeholder, SectionHeader } from "@/components/ui";
 import { photos } from "@/lib/images";
 import { ordinal } from "@/lib/ordinal";
+
+const leadership = [
+  photos.leadershipOne,
+  photos.leadershipTwo,
+  photos.leadershipThree,
+  photos.leadershipFour,
+];
 
 /** Structural labels only — the differentiators themselves are still to be written. */
 const differences = [
@@ -55,14 +63,23 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Section index={ordinal(1)} title="Our Purpose" />
-      <Section index={ordinal(2)} title="Our Beliefs" />
-      <Section index={ordinal(3)} title="Our Mission" />
-      <Section index={ordinal(4)} title="Our Vision" />
+      {/* Two — Leadership: honest empty structure until there are real people */}
+      <ProfileGrid
+        index={ordinal(1)}
+        eyebrow="Leadership"
+        title="Leadership"
+        intro={<Placeholder lead />}
+        photos={leadership}
+      />
 
-      {/* Six — Leadership Philosophy: pull-quote over a photograph */}
+      <Section index={ordinal(2)} title="Our Purpose" />
+      <Section index={ordinal(3)} title="Our Beliefs" />
+      <Section index={ordinal(4)} title="Our Mission" />
+      <Section index={ordinal(5)} title="Our Vision" />
+
+      {/* Seven — Leadership Philosophy: pull-quote over a photograph */}
       <QuoteSection
-        index={ordinal(5)}
+        index={ordinal(6)}
         eyebrow="Philosophy"
         title="Leadership Philosophy"
         photo={photos.aboutPhilosophy}
@@ -76,11 +93,11 @@ export default function AboutPage() {
         support={<Placeholder tone="ramp" />}
       />
 
-      <Section index={ordinal(6)} title="Who We Serve" />
+      <Section index={ordinal(7)} title="Who We Serve" />
 
-      {/* Eight — What Makes Us Different: icon grid */}
+      {/* Nine — What Makes Us Different: icon grid */}
       <FeatureGrid
-        index={ordinal(7)}
+        index={ordinal(8)}
         eyebrow="Difference"
         title="What Makes Us Different"
         intro={<Placeholder tone="black" lead />}

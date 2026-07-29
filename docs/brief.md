@@ -4,11 +4,12 @@
 01. Homepage — Hero, Our Philosophy, Why the Circle Exists, Why Now, The Five
     Pillars, Signature Experiences, Membership Categories, Trust Framework,
     Membership Selection, Testimonials (placeholder), Apply, Footer.
-02. About the Circle (`/about`) — Our Story, Our Purpose, Our Beliefs, Our
-    Mission, Our Vision, Leadership Philosophy, Who We Serve, What Makes Us
-    Different. Built on its own reference set: photo hero, Our Story over a
-    wide photograph, Leadership Philosophy as a pull-quote over a photograph,
-    What Makes Us Different as the icon grid.
+02. About the Circle (`/about`) — Our Story, Leadership, Our Purpose, Our
+    Beliefs, Our Mission, Our Vision, Leadership Philosophy, Who We Serve,
+    What Makes Us Different. Built on its own reference set: photo hero, Our
+    Story over a wide photograph, Leadership as a profile card row, Leadership
+    Philosophy as a pull-quote over a photograph, What Makes Us Different as
+    the icon grid.
 03. The Five Pillars (`/pillars`) — Strategic Advisory, Elite Network,
     Executive Forums, Knowledge & Insights, Executive Councils. Each pillar
     needs its own full section with benefits, outcomes, and examples.
@@ -117,10 +118,6 @@ one-line change.
     founding year, whatever is true.
   - **Awards & press** — needs real awards. Placeholder award names could
     later be mistaken for real ones.
-  - **Leadership / profile card grid** — needs real people, real photographs
-    and real bios. Stock headshots with invented names would misrepresent
-    people as the Circle's leadership. Not built even as an empty shell: an
-    empty "our leadership" section still implies a roster that does not exist.
   - **Year-by-year timeline** — needs a real founding history. If there is a
     true story (when the Circle was conceived, when it launches, real
     near-term milestones) this becomes a strong section.
@@ -128,6 +125,14 @@ one-line change.
 - The Leadership Philosophy pull-quote is built as structure only. Its slot
   carries an explicit note: it must hold real words from a real, named person,
   never something written on their behalf.
+- **Leadership** (`/about`, section Two) is built as honest empty structure,
+  the same way Testimonials is on the homepage: four profile cards with the
+  card shape intact — portrait, name/credentials slot, one-line description —
+  and every slot a labelled placeholder. No stand-in names, no stock
+  headshots, and no "learn more" link, since there is no roster page to point
+  at. Filling a leadership portrait means naming a real person, so the card's
+  name and bio have to be written in the same pass: a real face beside
+  placeholder text reads as an unnamed real member.
 - Testimonials render as an empty carousel shell. No photo and no quote is
   shown, because pairing a stock portrait with invented words would read as
   a real member.

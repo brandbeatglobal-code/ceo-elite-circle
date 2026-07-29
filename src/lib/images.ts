@@ -68,4 +68,28 @@ export const photos = {
     alt: "",
     note: "A real working moment — people mid-discussion, not posed to camera.",
   },
+
+  /* Leadership portraits. Filling one of these means naming a real person, so
+     the card's name and bio must be written at the same time — a portrait with
+     placeholder text beside it would read as an unnamed real member. */
+  leadershipOne: {
+    src: null,
+    alt: "",
+    note: "a member of Circle leadership.",
+  },
+  leadershipTwo: {
+    src: null,
+    alt: "",
+    note: "a member of Circle leadership.",
+  },
+  leadershipThree: {
+    src: null,
+    alt: "",
+    note: "a member of Circle leadership.",
+  },
+  leadershipFour: {
+    src: null,
+    alt: "",
+    note: "a member of Circle leadership.",
+  },
 } satisfies Record<string, Photo>;
