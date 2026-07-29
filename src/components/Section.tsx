@@ -48,6 +48,7 @@ export function Section({
             className={`type-h2 py-12 lg:py-20 lg:col-span-2 lg:pr-10 ${
               dark ? "text-white" : "text-ink"
             }`}
+            data-reveal
           >
             {title}
           </h2>
@@ -55,6 +56,8 @@ export function Section({
             className={`lg:col-span-2 lg:border-l ${
               dark ? "border-hair-dark" : "border-hair"
             } lg:pl-10 pb-12 lg:py-20 flex flex-col items-start gap-6 max-w-2xl`}
+            data-reveal
+            style={{ transitionDelay: "90ms" }}
           >
             {children ?? <Placeholder tone={tone} />}
           </div>

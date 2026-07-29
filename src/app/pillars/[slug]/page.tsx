@@ -30,22 +30,31 @@ export default async function PillarPage({
   const pillar = pillarBySlug(slug);
   if (!pillar) notFound();
 
-  // Sections are numbered in the order they actually render, so a pillar
-  // without the variants section still runs One, Two, Three.
+  // Numbered in the order they actually render, so a pillar without the
+  // variants section still runs One, Two, Three.
   let n = 0;
   const next = () => ordinal(n++);
 
   return (
     <>
-      <DetailHero eyebrow="Pillar" title={pillar.name} photo={pillar.photo} />
+      <DetailHero
+        eyebrow="Pillar"
+        title={pillar.name}
+        summary={pillar.summary}
+        photo={pillar.photo}
+      />
 
-      <Section index={next()} eyebrow="About" title={pillar.name} />
+      <Section index={next()} eyebrow="About" title={pillar.name}>
+        <p className="type-lead text-ink">{pillar.intro}</p>
+      </Section>
 
       {pillar.variants && (
         <VariantCards
           index={next()}
           eyebrow="Formats"
           title="How it is offered"
+          intro={`${pillar.name} runs in more than one shape, so members can take it in the form that suits the question.`}
+          variants={pillar.variants}
           tone="black"
         />
       )}
@@ -54,6 +63,8 @@ export default async function PillarPage({
         index={next()}
         eyebrow="Who it is for"
         title="Who this pillar serves"
+        intro="Membership is broad, but each pillar suits a particular disposition more than others."
+        criteria={pillar.criteria}
         tone={pillar.variants ? "cream" : "black"}
       />
 

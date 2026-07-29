@@ -138,6 +138,60 @@ one-line change.
 - "Contact" → **Begin Your Membership Journey**
 - "Apply" → **Request Membership Consideration**
 
+## Copy rule — sample text vs. verifiable claims
+
+The site carries **sample copy** at design stage, under one guardrail. Two
+categories, treated differently:
+
+**(a) Descriptive copy — written freely.** Section intros, pillar and
+experience descriptions, benefits, candidacy criteria, FAQ answers, meeting
+formats, "who should join". It reads as plausible, it will be replaced, and
+nobody is harmed by reading it early.
+
+**(b) Verifiable claims — never invented.** Named people (leadership,
+advisors, authors), attributed quotes and testimonials, statistics and member
+counts, awards, dates and founding history, named partner organisations,
+prices and fees, and Trust Framework policy text. These stay labelled
+placeholders.
+
+Two rules follow from (b) and are worth stating outright:
+
+- **Sample copy contains no numerals**, deliberately. A figure reads as a
+  statistic even in draft.
+- **The Trust Framework carries no sample copy at all.** Confidentiality,
+  Member Conduct, Conflict Resolution and Removal Policy are commitments a
+  prospective member could rely on; draft wording there reads as binding. The
+  page gets visual treatment — numbering, accordion, two columns — and nothing
+  else. Membership category descriptions are placeholders for the same reason.
+
+While sample copy is live, `DraftBanner` shows a dismissible work-in-progress
+notice site-wide. Removing it at launch means deleting the component and its
+mount in `layout.tsx`. That is the whole removal.
+
+## Motion
+
+Restrained: 200–500ms, gentle easing, no bounce.
+
+- Scroll-reveal on sections and grid items, with a small stagger. Fires once.
+- Hero text settles in on load, staggered.
+- Photographs lift slightly on hover; links and pills keep their existing
+  transitions; the nav's scroll transition is eased.
+- Accordion panels animate height via `grid-template-rows`.
+- Carousel scrolls smoothly, and jumps under reduced motion.
+
+Two constraints, both enforced rather than assumed:
+
+1. **`prefers-reduced-motion: reduce` disables it entirely.** The inline
+   script in `layout.tsx` only sets `js-anim` when motion is wanted, and all
+   the hiding CSS is scoped to that class. Reduced motion means content is
+   never hidden in the first place.
+2. **Content is visible by default.** Nothing is hidden without JavaScript,
+   because the class that hides it is only ever added by JavaScript. The
+   observer in `Reveal.tsx` also shows anything already scrolled past when it
+   attaches — otherwise browser scroll restoration or a fast scroll during
+   load would strand that content invisible, since the observer only fires on
+   entry.
+
 ## Current status
 - Every page above exists as a real route with working navigation.
 - Every page except `/contact` closes with the shared `RequestSection` —

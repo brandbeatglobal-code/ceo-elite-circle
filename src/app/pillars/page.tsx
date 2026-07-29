@@ -1,9 +1,10 @@
+import { MediaSection } from "@/components/MediaSection";
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
-import { Section } from "@/components/Section";
-import { ArrowLink, Placeholder } from "@/components/ui";
 import { pillars } from "@/lib/pillars";
 import { ordinal } from "@/lib/ordinal";
+
+export const metadata = { title: "The Five Pillars — CEO Elite Circle" };
 
 export default function PillarsPage() {
   return (
@@ -11,27 +12,37 @@ export default function PillarsPage() {
       <PageHero
         eyebrow="Structure"
         title="The Five Pillars"
-        intro="Each pillar below will expand into its own full section, with benefits, outcomes, and examples once the content pass begins."
+        intro="Five pillars carry the work of the Circle. Each stands on its own, and each is available to every member."
       />
-      {pillars.map((pillar, i) => {
-        const tone = i % 2 === 1 ? "black" : "cream";
-        return (
-          <Section
-            key={pillar.slug}
-            index={ordinal(i)}
-            eyebrow={`Pillar ${ordinal(i)}`}
-            title={pillar.name}
-            tone={tone}
+
+      {pillars.map((pillar, i) => (
+        <MediaSection
+          key={pillar.slug}
+          index={ordinal(i)}
+          eyebrow={`Pillar ${ordinal(i)}`}
+          title={pillar.name}
+          photo={pillar.photo}
+          tone={i % 2 === 1 ? "black" : "cream"}
+          flip={i % 2 === 1}
+          link={{ href: `/pillars/${pillar.slug}`, label: "Discover the Circle" }}
+        >
+          <p
+            className={`type-lead ${
+              i % 2 === 1 ? "text-white" : "text-ink"
+            } max-w-md`}
           >
-            <Placeholder tone={tone} />
-            {/* In the body rather than the header row: the header's arrow link
-                is hidden below lg, and this is the only route to the page. */}
-            <ArrowLink href={`/pillars/${pillar.slug}`} tone={tone}>
-              Discover the Circle
-            </ArrowLink>
-          </Section>
-        );
-      })}
+            {pillar.summary}
+          </p>
+          <p
+            className={`type-body ${
+              i % 2 === 1 ? "text-white/70" : "text-olive"
+            } max-w-md`}
+          >
+            {pillar.intro}
+          </p>
+        </MediaSection>
+      ))}
+
       <RequestSection index={ordinal(pillars.length)} />
     </>
   );

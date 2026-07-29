@@ -9,12 +9,22 @@ import "@fontsource/fraunces/400.css";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { DraftBanner } from "@/components/DraftBanner";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "CEO Elite Circle",
   description:
     "A private circle for distinguished business leaders. Built on trust, guided by integrity, and united by a shared commitment to excellence.",
 };
+
+/**
+ * Runs synchronously before first paint, so nothing flashes. Adds the motion
+ * flag only when JavaScript runs and reduced motion is not requested — the CSS
+ * that hides revealable content is scoped to this class, so content stays
+ * visible in every other case.
+ */
+const motionFlag = `try{if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-anim')}}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -23,10 +33,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionFlag }} />
+      </head>
       <body>
         <Nav />
         <main>{children}</main>
         <Footer />
+        <DraftBanner />
+        <Reveal />
       </body>
     </html>
   );

@@ -1,32 +1,51 @@
+import { MediaSection } from "@/components/MediaSection";
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
-import { Section } from "@/components/Section";
-import { ArrowLink, Placeholder } from "@/components/ui";
 import { experiences } from "@/lib/experiences";
 import { ordinal } from "@/lib/ordinal";
+
+export const metadata = { title: "Signature Experiences — CEO Elite Circle" };
 
 export default function ExperiencesPage() {
   return (
     <>
-      <PageHero eyebrow="Signature Experiences" title="Signature Experiences" />
-      {experiences.map((experience, i) => {
-        const tone = i % 2 === 1 ? "black" : "cream";
-        return (
-          <Section
-            key={experience.slug}
-            index={ordinal(i)}
-            title={experience.name}
-            tone={tone}
+      <PageHero
+        eyebrow="Signature Experiences"
+        title="Signature Experiences"
+        intro="The occasions on which the Circle convenes. Each is built for a different kind of conversation."
+      />
+
+      {experiences.map((experience, i) => (
+        <MediaSection
+          key={experience.slug}
+          index={ordinal(i)}
+          eyebrow="Experience"
+          title={experience.name}
+          photo={experience.photo}
+          tone={i % 2 === 1 ? "black" : "cream"}
+          flip={i % 2 === 1}
+          link={{
+            href: `/experiences/${experience.slug}`,
+            label: "Discover the Circle",
+          }}
+        >
+          <p
+            className={`type-lead ${
+              i % 2 === 1 ? "text-white" : "text-ink"
+            } max-w-md`}
           >
-            <Placeholder tone={tone} />
-            {/* In the body rather than the header row: the header's arrow link
-                is hidden below lg, and this is the only route to the page. */}
-            <ArrowLink href={`/experiences/${experience.slug}`} tone={tone}>
-              Discover the Circle
-            </ArrowLink>
-          </Section>
-        );
-      })}
+            {experience.summary}
+          </p>
+          <p
+            className={`type-body ${
+              i % 2 === 1 ? "text-white/70" : "text-olive"
+            } max-w-md`}
+          >
+            {experience.intro}
+          </p>
+        </MediaSection>
+      ))}
+
       <RequestSection index={ordinal(experiences.length)} />
     </>
   );

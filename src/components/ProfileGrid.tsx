@@ -47,6 +47,8 @@ export function ProfileGrid({
               className={`flex flex-col gap-6 py-10 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 border-t sm:border-t-0 border-hair ${
                 i > 0 ? "sm:border-l border-hair" : ""
               }`}
+              data-reveal
+              style={{ transitionDelay: `${i * 70}ms` }}
             >
               {/* Fixed height, not an aspect ratio: the first card sits flush
                   to the grid edge and so is wider, which an aspect ratio would

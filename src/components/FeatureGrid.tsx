@@ -55,6 +55,8 @@ export function FeatureGrid({
               className={`flex flex-col gap-6 py-10 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 border-t sm:border-t-0 border-hair-dark ${
                 i > 0 ? "sm:border-l border-hair-dark" : ""
               }`}
+              data-reveal
+              style={{ transitionDelay: `${i * 70}ms` }}
             >
               <div className="text-white w-16 h-16 lg:w-20 lg:h-20">
                 {f.icon}

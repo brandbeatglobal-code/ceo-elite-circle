@@ -1,14 +1,36 @@
+import { NumberedSteps } from "@/components/NumberedSteps";
 import { PageHero } from "@/components/PageHero";
-import { Section } from "@/components/Section";
 import { SectionHeader } from "@/components/ui";
 import { ordinal } from "@/lib/ordinal";
 
-const steps = [
-  "Selection Process",
-  "Timeline",
-  "Interview",
-  "Review",
-  "Acceptance",
+export const metadata = {
+  title: "Request Membership Consideration — CEO Elite Circle",
+};
+
+/* SAMPLE COPY. Deliberately free of durations and dates — how long
+   consideration takes is a commitment, not a description. */
+
+const selection = [
+  {
+    title: "Enquiry",
+    body: "You write, or a member writes on your behalf. Either route is considered on the same footing.",
+  },
+  {
+    title: "First conversation",
+    body: "An unhurried discussion about what you are working on and what you would want from the membership. There is nothing to prepare.",
+  },
+  {
+    title: "Interview",
+    body: "A longer conversation with members of the Circle. It runs in both directions — you are assessing the fit as much as we are.",
+  },
+  {
+    title: "Review",
+    body: "Your candidacy is considered within the Circle. The question is whether the room is right for you and you for it, rather than whether you are qualified.",
+  },
+  {
+    title: "Acceptance",
+    body: "Where consideration is favourable, an invitation follows with the terms of membership. Where it is not, you are told directly.",
+  },
 ];
 
 export default function ContactPage() {
@@ -17,7 +39,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Begin"
         title="Request Membership Consideration"
-        intro="The form below is a structural placeholder. Fields, validation, and submission handling will be built once the application questions are confirmed."
+        intro="Membership is by invitation and consideration. Share your details below and the Circle will be in touch."
       />
 
       {/* The application form — plain underlined fields, no boxes */}
@@ -32,7 +54,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-4 py-14 lg:py-20">
             <div className="hidden lg:block" />
 
-            <div className="lg:pr-8">
+            <div className="lg:pr-8" data-reveal>
               <p className="type-link text-white mb-7">Contact information</p>
               <div className="flex flex-col gap-6">
                 {["Name", "Surname", "Phone number", "Email"].map((f) => (
@@ -47,7 +69,11 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="lg:border-l border-hair-dark lg:pl-8 mt-12 lg:mt-0">
+            <div
+              className="lg:border-l border-hair-dark lg:pl-8 mt-12 lg:mt-0"
+              data-reveal
+              style={{ transitionDelay: "90ms" }}
+            >
               <p className="type-link text-white mb-7">Membership details</p>
               <div className="flex flex-col gap-6">
                 {[
@@ -87,9 +113,16 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {steps.map((title, i) => (
-        <Section key={title} index={ordinal(i + 1)} title={title} />
-      ))}
+      {/* Selection Process, Timeline, Interview, Review and Acceptance were
+          five flat sections. They are one sequence, which is what they are. */}
+      <NumberedSteps
+        index={ordinal(1)}
+        eyebrow="Selection process"
+        title="How consideration works"
+        intro="Five steps, from first enquiry to invitation. How long each takes varies with the enquiry, and is not fixed to a schedule."
+        steps={selection}
+        tone="cream"
+      />
     </>
   );
 }

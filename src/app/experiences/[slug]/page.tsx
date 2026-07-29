@@ -42,26 +42,31 @@ export default async function ExperiencePage({
       <DetailHero
         eyebrow="Signature Experience"
         title={experience.name}
+        summary={experience.summary}
         photo={experience.photo}
       />
 
-      <Section index={next()} eyebrow="About" title={experience.name} />
+      <Section index={next()} eyebrow="About" title={experience.name}>
+        <p className="type-lead text-ink">{experience.intro}</p>
+      </Section>
 
       <CandidacyChecklist
         index={next()}
         eyebrow="Who it is for"
         title="Who attends"
+        intro="Every signature experience suits a particular frame of mind as much as a particular seniority."
+        criteria={experience.criteria}
         tone="black"
       />
 
-      {experience.steps && (
-        <NumberedSteps
-          index={next()}
-          eyebrow="Taking part"
-          title="Before you attend"
-          tone="cream"
-        />
-      )}
+      <NumberedSteps
+        index={next()}
+        eyebrow="Taking part"
+        title="Before you attend"
+        intro="A short sequence, so that the time in the room is spent well."
+        steps={experience.steps}
+        tone="cream"
+      />
 
       <RequestSection index={next()} />
     </>

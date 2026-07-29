@@ -160,6 +160,7 @@ export function PhotoFrame({
   greyscale = false,
   tone = "cream",
   cover = false,
+  hover = false,
 }: {
   photo: Photo;
   className?: string;
@@ -173,6 +174,8 @@ export function PhotoFrame({
    * resolves it by stylesheet order rather than by intent.
    */
   cover?: boolean;
+  /** Slight scale and brightness lift on hover. Off for background photos. */
+  hover?: boolean;
 }) {
   const position = cover ? "absolute inset-0" : "relative";
 
@@ -198,8 +201,8 @@ export function PhotoFrame({
   return (
     <div
       className={`${position} w-full overflow-hidden ${
-        isDark(tone) ? "bg-white/[0.05]" : "bg-mint/40"
-      } ${className}`}
+        hover ? "hover-media" : ""
+      } ${isDark(tone) ? "bg-white/[0.05]" : "bg-mint/40"} ${className}`}
     >
       <Image
         src={photo.src}

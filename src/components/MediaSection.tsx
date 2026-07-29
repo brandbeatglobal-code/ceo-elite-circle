@@ -8,8 +8,10 @@ import {
 import type { Photo } from "@/lib/images";
 
 /**
- * Split section: headline and copy held in the left columns, one large photo
- * running full-bleed down the right half to the section's bottom edge.
+ * Split section: headline and copy held in one half, a large photograph
+ * running full-bleed down the other to the section's bottom edge.
+ *
+ * `flip` puts the photograph on the left, so a run of these alternates.
  */
 export function MediaSection({
   index,
@@ -18,6 +20,7 @@ export function MediaSection({
   photo,
   tone = "cream",
   link,
+  flip = false,
   children,
 }: {
   index: string;
@@ -26,19 +29,25 @@ export function MediaSection({
   photo: Photo;
   tone?: Tone;
   link?: { href: string; label: string };
+  flip?: boolean;
   children?: ReactNode;
 }) {
   const dark = tone !== "cream";
   const rule = dark ? "border-hair-dark" : "border-hair";
 
   return (
-    <section className={`${dark ? "bg-black text-white" : "bg-cream text-ink"}`}>
+    <section className={dark ? "bg-black text-white" : "bg-cream text-ink"}>
       <div className="wrap">
         <SectionHeader index={index} eyebrow={eyebrow} tone={tone} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="wrap lg:pr-14 py-14 lg:py-24 flex flex-col justify-end">
+        <div
+          className={`wrap lg:pr-14 py-14 lg:py-24 flex flex-col justify-end ${
+            flip ? "lg:order-2 lg:pl-14" : ""
+          }`}
+          data-reveal
+        >
           <h2 className="type-h2 mb-10 max-w-xl">{title}</h2>
           <div className="flex flex-col items-start gap-6 max-w-md">
             {children}
@@ -50,10 +59,15 @@ export function MediaSection({
           </div>
         </div>
 
-        <div className={`lg:border-l ${rule}`}>
+        <div
+          className={flip ? `lg:order-1 lg:border-r ${rule}` : `lg:border-l ${rule}`}
+          data-reveal
+          style={{ transitionDelay: "110ms" }}
+        >
           <PhotoFrame
             photo={photo}
             tone={tone}
+            hover
             className="h-72 sm:h-96 lg:h-full lg:min-h-[38rem]"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />

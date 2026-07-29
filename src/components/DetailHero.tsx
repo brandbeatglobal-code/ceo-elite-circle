@@ -9,10 +9,12 @@ import type { Photo } from "@/lib/images";
 export function DetailHero({
   eyebrow,
   title,
+  summary,
   photo,
 }: {
   eyebrow: string;
   title: string;
+  summary?: string;
   photo: Photo;
 }) {
   return (
@@ -32,17 +34,35 @@ export function DetailHero({
       <div className="wrap relative flex-1 flex flex-col justify-between pt-32 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-3">
-            <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
-            <h1 className="type-display type-hero mt-6 max-w-4xl">{title}</h1>
+            <div data-reveal>
+              <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
+            </div>
+            <h1
+              className="type-display type-hero mt-6 max-w-4xl"
+              data-reveal
+              style={{ transitionDelay: "90ms" }}
+            >
+              {title}
+            </h1>
           </div>
-          <div className="flex items-end">
-            <Placeholder tone="ramp" />
+          <div
+            className="flex items-end"
+            data-reveal
+            style={{ transitionDelay: "200ms" }}
+          >
+            {summary ? (
+              <p className="type-body text-white/80 max-w-xs">{summary}</p>
+            ) : (
+              <Placeholder tone="ramp" />
+            )}
           </div>
         </div>
 
-        <PillButton href="/contact" variant="outline" className="w-full mt-12">
-          Request Membership Consideration
-        </PillButton>
+        <div data-reveal style={{ transitionDelay: "280ms" }}>
+          <PillButton href="/contact" variant="outline" className="w-full mt-12">
+            Request Membership Consideration
+          </PillButton>
+        </div>
       </div>
     </section>
   );

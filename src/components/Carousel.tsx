@@ -9,7 +9,13 @@ export function Carousel({ children }: { children: ReactNode }) {
   const scrollBy = (dir: 1 | -1) => {
     const el = rail.current;
     if (!el) return;
-    el.scrollBy({ left: dir * el.clientWidth * 0.6, behavior: "smooth" });
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    el.scrollBy({
+      left: dir * el.clientWidth * 0.6,
+      behavior: reduced ? "auto" : "smooth",
+    });
   };
 
   return (
