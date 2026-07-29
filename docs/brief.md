@@ -168,6 +168,29 @@ While sample copy is live, `DraftBanner` shows a dismissible work-in-progress
 notice site-wide. Removing it at launch means deleting the component and its
 mount in `layout.tsx`. That is the whole removal.
 
+### What is still empty, and why
+
+Sample copy now fills the site. Five things stay pending, all for the same
+reason — each would require inventing a specific real person or a published
+artefact that does not exist:
+
+1. **Leadership cards** (`/about`, 4 cards) — a name, face and bio would be a
+   fictional person presented as running a real company.
+2. **The leadership profile template** (`/about/leadership/template`) — same,
+   and it is unlinked.
+3. **Testimonials** (homepage, 3 cards) — an invented quote is manufactured
+   social proof.
+4. **The Leadership Philosophy pull-quote** (`/about`) — an attributed quote
+   needs a real named person. Its supporting paragraph is filled.
+5. **Expert Advisors** (`/councils`) — named individuals.
+
+Plus **Trust Framework policy text** (ten areas), which is a commitment rather
+than a description, and the **"article pending" cards** on `/insights` and in
+the article template's related row — an invented headline implies published
+writing that does not exist.
+
+One real bio and one real quote close most of this.
+
 ## Motion
 
 Restrained: 200–500ms, gentle easing, no bounce.

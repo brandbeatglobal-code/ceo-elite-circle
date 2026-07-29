@@ -25,7 +25,10 @@ export type Article = {
 export const articles: Article[] = [
   {
     slug: "template",
-    title: null,
+    // Sample title and body, so the template reads as a page rather than a
+    // skeleton. The metadata below stays null on purpose: an author, publisher
+    // and date are verifiable claims, and this is not a published article.
+    title: "The problem with good advice",
     photo: {
       src: null,
       alt: "",

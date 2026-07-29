@@ -9,22 +9,21 @@ import {
   ArrowLink,
   BulletLabel,
   PhotoFrame,
-  Placeholder,
   SectionHeader,
 } from "@/components/ui";
 import { photos } from "@/lib/images";
+import { membershipCategoriesIntro, tiers as tierCopy } from "@/lib/copy";
 import { ordinal } from "@/lib/ordinal";
 
 export const metadata = { title: "Membership — CEO Elite Circle" };
 
-/* SAMPLE COPY throughout, except the category descriptions, which stay
-   placeholder: what each category actually confers is closer to a commitment
-   than a description, and fees are never invented. */
+/* SAMPLE COPY throughout. Category descriptions say what each category
+   involves; they state no fee and no entitlement that reads as a term. */
 
 const tiers = [
-  { name: "Executive Circle", photo: photos.tierExecutive },
-  { name: "Elite Circle", photo: photos.tierElite },
-  { name: "Chairman's Circle", photo: photos.tierChairman },
+  { ...tierCopy[0], photo: photos.tierExecutive },
+  { ...tierCopy[1], photo: photos.tierElite },
+  { ...tierCopy[2], photo: photos.tierChairman },
 ];
 
 const criteria = [
@@ -146,8 +145,7 @@ export default function MembershipPage() {
               style={{ transitionDelay: "80ms" }}
             >
               <p className="type-lead text-white max-w-lg">
-                Membership is held in one of three categories. What each confers
-                is being confirmed, and is not described here until it is.
+                {membershipCategoriesIntro}
               </p>
             </div>
           </div>
@@ -167,7 +165,7 @@ export default function MembershipPage() {
               </div>
 
               <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-8 lg:py-10 flex flex-col justify-between gap-8">
-                <Placeholder tone="black" lead />
+                <p className="type-lead text-white max-w-md">{tier.body}</p>
                 <h3 className="type-display text-2xl md:text-3xl text-white">
                   {tier.name}
                 </h3>

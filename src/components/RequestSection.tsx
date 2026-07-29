@@ -1,4 +1,4 @@
-import { PillButton, Placeholder, SectionHeader } from "@/components/ui";
+import { PillButton, SectionHeader } from "@/components/ui";
 
 /**
  * The closing "Request Membership Consideration" section.
@@ -22,7 +22,10 @@ export function RequestSection({ index }: { index: string }) {
                 Membership in the CEO Elite Circle is by invitation and
                 consideration only.
               </p>
-              <Placeholder tone="ramp-low" />
+              <p className="type-body text-white/70 max-w-xs">
+                Tell us who you are and what you are working on. Someone from
+                the Circle will read it, and you will hear back either way.
+              </p>
             </div>
           </div>
         </div>

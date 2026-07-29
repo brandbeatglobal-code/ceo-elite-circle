@@ -11,31 +11,18 @@ import {
 } from "@/components/ui";
 import { photos } from "@/lib/images";
 import { ordinal } from "@/lib/ordinal";
-
-const pillars = [
-  "Strategic Advisory",
-  "Elite Network",
-  "Executive Forums",
-  "Knowledge & Insights",
-  "Executive Councils",
-];
+import { pillars } from "@/lib/pillars";
+import { experiences } from "@/lib/experiences";
+import { membershipCategoriesIntro, tiers as tierCopy } from "@/lib/copy";
 
 const tiers = [
-  { name: "Executive Circle", photo: photos.tierExecutive },
-  { name: "Elite Circle", photo: photos.tierElite },
-  { name: "Chairman's Circle", photo: photos.tierChairman },
+  { ...tierCopy[0], photo: photos.tierExecutive },
+  { ...tierCopy[1], photo: photos.tierElite },
+  { ...tierCopy[2], photo: photos.tierChairman },
 ];
 
-const featuredExperience = "CEO Private Dinners";
-
-const otherExperiences = [
-  "CEO Leadership Summit",
-  "Chairman's Majlis",
-  "Executive Leadership Retreat",
-  "Future Leadership Forum",
-  "CEO Excellence Awards",
-  "International CEO Delegation",
-];
+const featured = experiences.find((e) => e.slug === "ceo-private-dinners")!;
+const otherExperiences = experiences.filter((e) => e !== featured);
 
 export default function Home() {
   return (
@@ -107,10 +94,19 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 mt-20 lg:mt-40">
               <div className="hidden lg:block" />
               <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-6">
-                <Placeholder tone="ramp" lead />
+                <p className="type-lead text-white max-w-sm">
+                  Leadership at this level is unusually well supplied with
+                  advice, and unusually short of counsel.
+                </p>
               </div>
               <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-6">
-                <Placeholder tone="ramp" />
+                <p className="type-body text-white/75 max-w-sm">
+                  Boards want reassurance, executives want direction, advisers
+                  want a mandate. Very few rooms want nothing at all. The Circle
+                  exists to be one of them — somewhere a chief executive can
+                  think aloud among people who have carried the same weight, and
+                  where the conversation is not also a transaction.
+                </p>
                 <ArrowLink href="/about" tone="ramp">
                   Discover the Circle
                 </ArrowLink>
@@ -136,14 +132,18 @@ export default function Home() {
               The Five Pillars
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-16">
-              <Placeholder tone="black" lead />
+              <p className="type-lead text-white max-w-lg">
+                Five pillars carry the work of the Circle: counsel, connection,
+                closed conversation, considered analysis, and standing groups
+                that meet through the year.
+              </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
-            {pillars.map((name, i) => (
+            {pillars.map((pillar, i) => (
               <article
-                key={name}
+                key={pillar.slug}
                 className={`flex flex-col pt-8 pb-10 px-0 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 ${
                   i > 0 ? "sm:border-l border-hair-dark" : ""
                 } border-t sm:border-t-0 border-hair-dark`}
@@ -152,10 +152,10 @@ export default function Home() {
                 <p className="type-body text-white mt-2 pb-4 mb-6 border-b border-hair-dark">
                   {ordinal(i)}
                 </p>
-                <Placeholder tone="black" />
+                <p className="type-body text-white/70">{pillar.summary}</p>
                 <div className="mt-16 lg:mt-24">
                   <h3 className="type-display type-h3 text-white mb-4">
-                    {name}
+                    {pillar.name}
                   </h3>
                   <ArrowLink href="/pillars" tone="black">
                     Discover the Circle
@@ -175,7 +175,14 @@ export default function Home() {
         photo={photos.whyNow}
         link={{ href: "/about", label: "Discover the Circle" }}
       >
-        <Placeholder lead />
+        <p className="type-lead text-ink max-w-md">
+          The demands on a chief executive have rarely shifted faster, and the
+          rooms in which to think about them properly have rarely been fewer.
+        </p>
+        <p className="type-body text-olive max-w-md">
+          Conferences have grown; conversations have not. The Circle was formed
+          in the gap between the two.
+        </p>
       </MediaSection>
 
       {/* ---- Four — Membership Categories */}
@@ -192,7 +199,9 @@ export default function Home() {
               Membership Categories
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-16">
-              <Placeholder lead />
+              <p className="type-lead text-ink max-w-lg">
+                {membershipCategoriesIntro}
+              </p>
             </div>
           </div>
 
@@ -207,7 +216,7 @@ export default function Home() {
               </div>
 
               <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-8 lg:py-10 flex flex-col justify-between gap-8">
-                <Placeholder lead />
+                <p className="type-lead text-ink max-w-md">{tier.body}</p>
                 <h3 className="type-body text-ink">{tier.name}</h3>
               </div>
 
@@ -235,12 +244,19 @@ export default function Home() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-16 pb-16 lg:pt-32 lg:pb-24">
             <div className="flex flex-col items-start gap-6 lg:pr-8 order-2 lg:order-1 lg:justify-end">
-              <Placeholder lead />
+              <p className="type-lead max-w-xs">
+                A closed room is only as good as the terms that hold it.
+              </p>
               <ArrowLink href="/trust">Discover the Circle</ArrowLink>
             </div>
 
             <div className="flex flex-col items-start gap-6 lg:border-l border-hair lg:pl-8 order-3 lg:order-2 lg:justify-end">
-              <Placeholder />
+              <p className="type-body text-olive max-w-xs">
+                The Trust Framework sets out how the Circle is governed, what
+                members undertake, and how membership is reviewed. Selection
+                follows from it: fit is considered before qualification, and the
+                answer is given plainly either way.
+              </p>
               <ArrowLink href="/membership">Membership Selection</ArrowLink>
             </div>
 
@@ -266,7 +282,11 @@ export default function Home() {
               Signature Experiences
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-16">
-              <Placeholder tone="black" lead />
+              <p className="type-lead text-white max-w-lg">
+                Seven occasions across the year, each built for a different kind
+                of conversation — from the whole membership in one room to a
+                single table of twelve.
+              </p>
             </div>
           </div>
 
@@ -275,9 +295,9 @@ export default function Home() {
             <div className="py-10 lg:pr-8 flex flex-col justify-between gap-10">
               <div>
                 <h3 className="type-display type-h3 text-white mb-5">
-                  {featuredExperience}
+                  {featured.name}
                 </h3>
-                <Placeholder tone="black" />
+                <p className="type-body text-white/70">{featured.summary}</p>
               </div>
               <ArrowLink href="/experiences" tone="black">
                 Discover the Circle
@@ -295,13 +315,13 @@ export default function Home() {
 
             {/* The remaining six, as a hairline list */}
             <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-10">
-              {otherExperiences.map((name) => (
+              {otherExperiences.map((experience) => (
                 <div
-                  key={name}
+                  key={experience.slug}
                   className="flex items-baseline justify-between gap-6 border-b border-hair-dark py-5 first:pt-0"
                 >
                   <h3 className="type-display text-xl md:text-2xl text-white">
-                    {name}
+                    {experience.name}
                   </h3>
                   <ArrowLink href="/experiences" tone="black" className="shrink-0">
                     Discover

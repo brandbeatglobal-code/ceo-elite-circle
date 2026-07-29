@@ -4,20 +4,31 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const groupOne = [
-  { href: "/about", label: "About the Circle" },
-  { href: "/pillars", label: "The Five Pillars" },
-  { href: "/experiences", label: "Signature Experiences" },
-  { href: "/insights", label: "Insights" },
+/** Grouped by meaning rather than split to balance the count. */
+const groups = [
+  {
+    heading: "The Circle",
+    links: [
+      { href: "/about", label: "About the Circle" },
+      { href: "/pillars", label: "The Five Pillars" },
+      { href: "/experiences", label: "Signature Experiences" },
+    ],
+  },
+  {
+    heading: "Membership",
+    links: [
+      { href: "/membership", label: "Membership" },
+      { href: "/trust", label: "Trust Framework" },
+      { href: "/councils", label: "Executive Councils" },
+    ],
+  },
+  {
+    heading: "Insights",
+    links: [{ href: "/insights", label: "Insights" }],
+  },
 ];
 
-const groupTwo = [
-  { href: "/membership", label: "Membership" },
-  { href: "/trust", label: "Trust Framework" },
-  { href: "/councils", label: "Executive Councils" },
-];
-
-const allLinks = [...groupOne, ...groupTwo];
+const allLinks = groups.flatMap((g) => g.links);
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -53,22 +64,33 @@ export default function Nav() {
           CEO Elite Circle
         </Link>
 
-        <nav className="hidden lg:flex gap-12 pt-0.5">
-          {[groupOne, groupTwo].map((group, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              {group.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className={`type-label transition-colors ${
-                    transparent
-                      ? "text-white/85 hover:text-white"
-                      : "text-olive hover:text-sage"
-                  }`}
-                >
-                  {l.label}
-                </Link>
-              ))}
+        {/* Three equal columns, so the single-item group does not read as
+            orphaned next to two full ones. */}
+        <nav className="hidden lg:flex gap-8 pt-0.5">
+          {groups.map((group) => (
+            <div key={group.heading} className="flex flex-col gap-2 w-44">
+              <span
+                className={`type-link ${
+                  transparent ? "text-white/50" : "text-ink/45"
+                }`}
+              >
+                {group.heading}
+              </span>
+              <div className="flex flex-col gap-1">
+                {group.links.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    className={`type-label transition-colors ${
+                      transparent
+                        ? "text-white/85 hover:text-white"
+                        : "text-olive hover:text-sage"
+                    }`}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           ))}
         </nav>

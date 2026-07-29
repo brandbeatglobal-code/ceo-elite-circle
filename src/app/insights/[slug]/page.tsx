@@ -28,6 +28,13 @@ export async function generateMetadata({
   };
 }
 
+const listItems = [
+  "A question can be described accurately, rather than in the version prepared for the board.",
+  "Disagreement costs nothing, so the strongest objection actually gets voiced.",
+  "Nobody is performing for a promotion, an investor, or the room itself.",
+  "Being wrong out loud carries no consequence beyond the conversation.",
+];
+
 const meta = [
   { label: "Reading time", key: "readingTime" },
   { label: "Author", key: "author" },
@@ -83,9 +90,21 @@ export default async function ArticlePage({
             {/* Body */}
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-10 flex flex-col gap-10">
               <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">Subheading</h2>
-                <Placeholder />
-                <Placeholder />
+                <h2 className="type-display type-h3">
+                  The problem with good advice
+                </h2>
+                <p className="type-body text-olive">
+                  A chief executive is rarely short of input. Boards offer
+                  direction, advisers offer options, and the market offers an
+                  opinion whether or not one was sought. What is scarce is the
+                  conversation that asks nothing in return.
+                </p>
+                <p className="type-body text-olive">
+                  The distinction matters more than it sounds. Advice arrives
+                  with a position already taken. Counsel begins by establishing
+                  what the question actually is, which is often not the question
+                  that was brought into the room.
+                </p>
               </div>
 
               <PhotoFrame
@@ -95,28 +114,37 @@ export default async function ArticlePage({
               />
 
               <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">Subheading</h2>
-                <Placeholder />
+                <h2 className="type-display type-h3">What a closed room allows</h2>
+                <p className="type-body text-olive">
+                  Once a conversation is genuinely private, several things
+                  become possible that are not possible anywhere else:
+                </p>
 
                 {/* Plain bulleted list — not a card grid */}
                 <ul className="flex flex-col gap-2.5">
-                  {[0, 1, 2, 3].map((i) => (
+                  {listItems.map((item, i) => (
                     <li key={i} className="flex gap-3 items-baseline">
                       <span className="text-sage shrink-0" aria-hidden="true">
                         •
                       </span>
-                      <span className="type-body italic text-olive">
-                        List item placeholder — still to be drafted.
-                      </span>
+                      <span className="type-body text-olive">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">Subheading</h2>
-                <Placeholder />
-                <Placeholder />
+                <h2 className="type-display type-h3">Where this leaves a chair</h2>
+                <p className="type-body text-olive">
+                  None of this removes the weight of the decision. The chief
+                  executive still signs, still answers for it, and still carries
+                  the consequence alone. What changes is the quality of thinking
+                  that precedes the signature.
+                </p>
+                <p className="type-body text-olive">
+                  That is the whole of the argument for a room like this one,
+                  and it is a narrower claim than most gatherings make.
+                </p>
               </div>
             </div>
 
@@ -124,7 +152,10 @@ export default async function ArticlePage({
             <div className="lg:border-l border-hair lg:pl-8 py-10">
               <BulletLabel className="text-olive">Note</BulletLabel>
               <div className="mt-4">
-                <Placeholder />
+                <p className="type-body text-olive">
+                  Members raise questions ahead of each forum, so the session is
+                  shaped by the room rather than presented to it.
+                </p>
               </div>
             </div>
           </div>
@@ -132,7 +163,10 @@ export default async function ArticlePage({
           {/* Closing statement */}
           <div className="border-t border-hair py-16 lg:py-24">
             <div className="lg:[text-indent:22%] max-w-5xl">
-              <Placeholder lead />
+              <p className="type-h2">
+                The scarcest thing at this level is not information. It is a
+                room with nothing to sell.
+              </p>
             </div>
           </div>
         </div>

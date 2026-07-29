@@ -29,7 +29,11 @@ export default function InsightsPage() {
               Latest writing
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-16">
-              <Placeholder lead />
+              <p className="type-lead text-ink max-w-lg">
+                Briefings, notes and short essays from members and from the
+                people who convene them. Published sparingly, and only when
+                there is something worth a member&rsquo;s attention.
+              </p>
             </div>
           </div>
 
