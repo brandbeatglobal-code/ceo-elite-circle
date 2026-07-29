@@ -103,6 +103,11 @@ one-line change.
 
 ## Current status
 - Every page above exists as a real route with working navigation.
+- Every page except `/contact` closes with the shared `RequestSection` —
+  the two-column request form, disabled, taking the next number in that
+  page's own running index. `/contact` is excluded because its own form is
+  the real, wired-up version rather than a teaser of itself. Wiring the
+  fields up is a change in one component, not seven pages.
 - The homepage is built on the confirmed system above: photo hero, then
   eight indexed sections (Our Philosophy, Structure, Timing, Membership,
   Governance, Experiences, Testimonials, Begin), then the footer.

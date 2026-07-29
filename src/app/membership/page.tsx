@@ -1,10 +1,10 @@
 import { PageHero } from "@/components/PageHero";
+import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
 import {
   ArrowLink,
   BulletLabel,
   PhotoFrame,
-  PillButton,
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
@@ -78,16 +78,9 @@ export default function MembershipPage() {
         <Section key={title} index={ordinal(i + 2)} title={title} />
       ))}
 
-      <section className="bg-ramp-low text-white">
-        <div className="wrap py-24 lg:py-32 flex flex-col items-center gap-10">
-          <h2 className="type-h2 text-center max-w-3xl">
-            Request Membership Consideration
-          </h2>
-          <PillButton href="/contact" variant="light" className="w-full max-w-2xl">
-            Begin Your Membership Journey
-          </PillButton>
-        </div>
-      </section>
+      {/* Replaces the earlier headline-and-button block: this page ends with the
+          same closing section as every other, rather than a second variant. */}
+      <RequestSection index={ordinal(tail.length + 2)} />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { PageHero } from "@/components/PageHero";
+import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
 import { ordinal } from "@/lib/ordinal";
 
@@ -26,6 +27,7 @@ export default function TrustPage() {
       {sections.map((title, i) => (
         <Section key={title} index={ordinal(i)} title={title} />
       ))}
+      <RequestSection index={ordinal(sections.length)} />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { IconArcs, IconOrbit, IconRings, IconStack } from "@/components/Icons";
 import { PhotoHero } from "@/components/PhotoHero";
 import { ProfileGrid } from "@/components/ProfileGrid";
 import { QuoteSection } from "@/components/QuoteSection";
+import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
 import { PhotoFrame, Placeholder, SectionHeader } from "@/components/ui";
 import { photos } from "@/lib/images";
@@ -106,6 +107,8 @@ export default function AboutPage() {
           body: <Placeholder tone="black" />,
         }))}
       />
+
+      <RequestSection index={ordinal(9)} />
     </>
   );
 }
