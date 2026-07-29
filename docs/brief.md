@@ -87,6 +87,20 @@ flush right. Thin hairline rules at the quarter and the half, drawn with
 `--color-hair` / `--color-hair-dark`. Content is often bottom-aligned in a
 tall column, with the empty space above used deliberately.
 
+### Spacing
+Rhythm was widened site-wide in one pass, through the class scale rather than
+per-page nudges, so it stays consistent. The mapping: section blocks
+`py-12 lg:py-16` → `py-16 lg:py-24`, bodies `py-12 lg:py-20` → `py-16 lg:py-28`,
+the tallest `pt-24 pb-16 lg:pt-40 lg:pb-28` → `pt-32 pb-24 lg:pt-52 lg:pb-40`,
+cards `py-10` → `py-14`, header rules `py-4` → `py-6`, section body gaps
+`gap-6` → `gap-8`. Plus `.wrap` padding 1.25→1.5rem (2→2.75rem at md), and
+looser copy: `.type-body` 1.62→1.75, `.type-lead` 1.42→1.52.
+
+Mobile scales with it because the mapping raises the base value as well as the
+`lg:` value. **The Tailwind `--spacing` token was deliberately not changed** —
+it drives `w-*`/`h-*` as well as padding, so it would have resized icon boxes
+and photo heights, which is layout rather than spacing.
+
 ### Motifs
 - A `•` bullet precedes short labels and CTA button text.
 - CTA buttons are full pills — the only rounded element on the page.
@@ -103,6 +117,12 @@ reused rather than re-cut per page:
   below `lg`, where alternating only hurts readability.
 - `AttributedQuote` — pull-quote with a circular portrait and attribution.
 - `SplitHero` / `DetailHero` — profile split-screen, and title-over-photo.
+- `PhotoCard` — tall card with a photograph behind it, revealed on hover. The
+  photograph is decorative: every word is legible with or without it, and on
+  touch (`@media (hover: none)`) it simply shows, so nothing is unreachable.
+  The `black/85` overlay is set so white text clears 4.5:1 even against a
+  pure-white region of the photograph — an average-luminance overlay fails
+  exactly where a blown-out highlight sits behind a line of text.
 
 Patterns are applied per item, not stamped: pillars carry `VariantCards` only
 where named formats plausibly exist (`variants` in `src/lib/pillars.ts`), and

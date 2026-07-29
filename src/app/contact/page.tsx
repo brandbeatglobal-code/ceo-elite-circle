@@ -51,7 +51,7 @@ export default function ContactPage() {
             tone="ramp-low"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 py-14 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-4 py-20 lg:py-28">
             <div className="hidden lg:block" />
 
             <div className="lg:pr-8" data-reveal>

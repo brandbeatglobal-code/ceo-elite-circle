@@ -134,13 +134,13 @@ export default function MembershipPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
             <h2
-              className="type-h2 lg:col-span-2 py-12 lg:py-16 lg:pr-10"
+              className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10"
               data-reveal
             >
               Membership Categories
             </h2>
             <div
-              className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-16"
+              className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24"
               data-reveal
               style={{ transitionDelay: "80ms" }}
             >
@@ -157,21 +157,21 @@ export default function MembershipPage() {
               data-reveal
               style={{ transitionDelay: `${i * 70}ms` }}
             >
-              <div className="flex flex-col justify-between py-8 lg:py-10 lg:pr-8 gap-8">
+              <div className="flex flex-col justify-between py-16 lg:py-14 lg:pr-8 gap-8">
                 <BulletLabel className="text-white/60">Category</BulletLabel>
                 <ArrowLink href="/contact" tone="black">
                   Request Membership Consideration
                 </ArrowLink>
               </div>
 
-              <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-8 lg:py-10 flex flex-col justify-between gap-8">
+              <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14 flex flex-col justify-between gap-8">
                 <p className="type-lead text-white max-w-md">{tier.body}</p>
                 <h3 className="type-display text-2xl md:text-3xl text-white">
                   {tier.name}
                 </h3>
               </div>
 
-              <div className="lg:border-l border-hair-dark lg:pl-8 py-8 lg:py-10">
+              <div className="lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14">
                 <PhotoFrame
                   photo={tier.photo}
                   tone="black"
@@ -212,7 +212,7 @@ export default function MembershipPage() {
       <section className="bg-cream text-ink">
         <div className="wrap">
           <SectionHeader index={ordinal(4)} eyebrow="Questions" />
-          <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-16 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-4 py-16 lg:py-24 gap-10">
             <div className="lg:col-span-2 lg:pr-10" data-reveal>
               <h2 className="type-h2 mb-8">Frequently Asked Questions</h2>
               <p className="type-lead max-w-md">

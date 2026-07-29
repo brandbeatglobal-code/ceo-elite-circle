@@ -38,11 +38,11 @@ export function FeatureGrid({
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
-          <h2 className="type-h2 lg:col-span-2 py-12 lg:py-16 lg:pr-10">
+          <h2 className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
             {title}
           </h2>
           {intro && (
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-16">
+            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24">
               {intro}
             </div>
           )}
@@ -52,7 +52,7 @@ export function FeatureGrid({
           {features.map((f, i) => (
             <article
               key={f.label}
-              className={`flex flex-col gap-6 py-10 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 border-t sm:border-t-0 border-hair-dark ${
+              className={`flex flex-col gap-6 py-14 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 border-t sm:border-t-0 border-hair-dark ${
                 i > 0 ? "sm:border-l border-hair-dark" : ""
               }`}
               data-reveal

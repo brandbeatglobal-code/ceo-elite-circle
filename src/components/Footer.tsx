@@ -30,7 +30,7 @@ export default function Footer() {
     <footer className="bg-cream text-ink border-t border-hair">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
-          <div className="py-12 lg:pr-10">
+          <div className="py-16 lg:pr-10">
             <div className="text-lg font-semibold tracking-tight mb-5">
               CEO Elite Circle
             </div>
@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           {columns.map((col) => (
-            <div key={col.heading} className="py-12 lg:border-l border-hair lg:pl-8">
+            <div key={col.heading} className="py-16 lg:border-l border-hair lg:pl-8">
               <div className="type-link text-ink mb-5">{col.heading}</div>
               <ul className="space-y-2.5">
                 {col.links.map((l) => (

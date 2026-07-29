@@ -43,13 +43,13 @@ export function MediaSection({
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div
-          className={`wrap lg:pr-14 py-14 lg:py-24 flex flex-col justify-end ${
+          className={`wrap lg:pr-14 py-20 lg:py-32 flex flex-col justify-end ${
             flip ? "lg:order-2 lg:pl-14" : ""
           }`}
           data-reveal
         >
           <h2 className="type-h2 mb-10 max-w-xl">{title}</h2>
-          <div className="flex flex-col items-start gap-6 max-w-md">
+          <div className="flex flex-col items-start gap-8 max-w-md">
             {children}
             {link && (
               <ArrowLink href={link.href} tone={tone}>

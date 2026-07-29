@@ -42,12 +42,12 @@ export function SectionHeader({
 
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-4 border-b ${rule}`}>
-      <div className={`type-label ${muted} py-4 pr-4`}>{index}</div>
+      <div className={`type-label ${muted} py-6 pr-4`}>{index}</div>
       <div className={`hidden lg:block border-l ${rule}`} />
-      <div className={`type-label ${muted} py-4 lg:border-l ${rule} lg:pl-6`}>
+      <div className={`type-label ${muted} py-6 lg:border-l ${rule} lg:pl-6`}>
         <span className="text-sage">•</span> {eyebrow}
       </div>
-      <div className="hidden lg:flex items-center justify-end py-4">
+      <div className="hidden lg:flex items-center justify-end py-6">
         {link && <ArrowLink href={link.href} tone={tone}>{link.label}</ArrowLink>}
       </div>
     </div>

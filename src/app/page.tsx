@@ -1,5 +1,6 @@
 import { MediaSection } from "@/components/MediaSection";
 import { Carousel } from "@/components/Carousel";
+import { PhotoCard } from "@/components/PhotoCard";
 import { RequestSection } from "@/components/RequestSection";
 import {
   ArrowLink,
@@ -85,21 +86,21 @@ export default function Home() {
             tone="ramp"
           />
 
-          <div className="pt-24 pb-16 lg:pt-40 lg:pb-28">
+          <div className="pt-32 pb-24 lg:pt-52 lg:pb-40">
             {/* Staggered headline — begins mid-grid, then runs full width */}
             <h2 className="type-h2 lg:[text-indent:44%] max-w-6xl">
               Why the Circle Exists
             </h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 mt-20 lg:mt-40">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-14 mt-24 lg:mt-48">
               <div className="hidden lg:block" />
-              <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-6">
+              <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-8">
                 <p className="type-lead text-white max-w-sm">
                   Leadership at this level is unusually well supplied with
                   advice, and unusually short of counsel.
                 </p>
               </div>
-              <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-6">
+              <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-8">
                 <p className="type-body text-white/75 max-w-sm">
                   Boards want reassurance, executives want direction, advisers
                   want a mandate. Very few rooms want nothing at all. The Circle
@@ -128,10 +129,10 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
-            <h2 className="type-h2 col-span-1 lg:col-span-2 py-12 lg:py-16 lg:pr-10">
+            <h2 className="type-h2 col-span-1 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
               The Five Pillars
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-16">
+            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24">
               <p className="type-lead text-white max-w-lg">
                 Five pillars carry the work of the Circle: counsel, connection,
                 closed conversation, considered analysis, and standing groups
@@ -140,28 +141,19 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-hair-dark">
             {pillars.map((pillar, i) => (
-              <article
+              <PhotoCard
                 key={pillar.slug}
-                className={`flex flex-col pt-8 pb-10 px-0 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 ${
-                  i > 0 ? "sm:border-l border-hair-dark" : ""
-                } border-t sm:border-t-0 border-hair-dark`}
-              >
-                <BulletLabel className="text-white/60">Pillar</BulletLabel>
-                <p className="type-body text-white mt-2 pb-4 mb-6 border-b border-hair-dark">
-                  {ordinal(i)}
-                </p>
-                <p className="type-body text-white/70">{pillar.summary}</p>
-                <div className="mt-16 lg:mt-24">
-                  <h3 className="type-display type-h3 text-white mb-4">
-                    {pillar.name}
-                  </h3>
-                  <ArrowLink href="/pillars" tone="black">
-                    Discover the Circle
-                  </ArrowLink>
-                </div>
-              </article>
+                label="Pillar"
+                index={ordinal(i)}
+                title={pillar.name}
+                body={pillar.summary}
+                photo={pillar.photo}
+                href={`/pillars/${pillar.slug}`}
+                linkLabel="Discover the Circle"
+                delay={i * 70}
+              />
             ))}
           </div>
         </div>
@@ -195,10 +187,10 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
-            <h2 className="type-h2 lg:col-span-2 py-12 lg:py-16 lg:pr-10">
+            <h2 className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
               Membership Categories
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-16">
+            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-16 lg:py-24">
               <p className="type-lead text-ink max-w-lg">
                 {membershipCategoriesIntro}
               </p>
@@ -210,17 +202,17 @@ export default function Home() {
               key={tier.name}
               className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair"
             >
-              <div className="flex flex-col justify-between py-8 lg:py-10 lg:pr-8 gap-8">
+              <div className="flex flex-col justify-between py-16 lg:py-14 lg:pr-8 gap-8">
                 <BulletLabel className="text-olive">Category</BulletLabel>
                 <ArrowLink href="/membership">Discover the Circle</ArrowLink>
               </div>
 
-              <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-8 lg:py-10 flex flex-col justify-between gap-8">
+              <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-16 lg:py-14 flex flex-col justify-between gap-8">
                 <p className="type-lead text-ink max-w-md">{tier.body}</p>
                 <h3 className="type-body text-ink">{tier.name}</h3>
               </div>
 
-              <div className="lg:border-l border-hair lg:pl-8 py-8 lg:py-10">
+              <div className="lg:border-l border-hair lg:pl-8 py-16 lg:py-14">
                 <PhotoFrame
                   photo={tier.photo}
                   greyscale
@@ -242,15 +234,15 @@ export default function Home() {
             link={{ href: "/trust", label: "Trust framework" }}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-16 pb-16 lg:pt-32 lg:pb-24">
-            <div className="flex flex-col items-start gap-6 lg:pr-8 order-2 lg:order-1 lg:justify-end">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-24 pb-24 lg:pt-44 lg:pb-36">
+            <div className="flex flex-col items-start gap-8 lg:pr-8 order-2 lg:order-1 lg:justify-end">
               <p className="type-lead max-w-xs">
                 A closed room is only as good as the terms that hold it.
               </p>
               <ArrowLink href="/trust">Discover the Circle</ArrowLink>
             </div>
 
-            <div className="flex flex-col items-start gap-6 lg:border-l border-hair lg:pl-8 order-3 lg:order-2 lg:justify-end">
+            <div className="flex flex-col items-start gap-8 lg:border-l border-hair lg:pl-8 order-3 lg:order-2 lg:justify-end">
               <p className="type-body text-olive max-w-xs">
                 The Trust Framework sets out how the Circle is governed, what
                 members undertake, and how membership is reviewed. Selection
@@ -278,10 +270,10 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
-            <h2 className="type-h2 lg:col-span-2 py-12 lg:py-16 lg:pr-10">
+            <h2 className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10">
               Signature Experiences
             </h2>
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-16">
+            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-16 lg:py-24">
               <p className="type-lead text-white max-w-lg">
                 Seven occasions across the year, each built for a different kind
                 of conversation — from the whole membership in one room to a
@@ -292,7 +284,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
             {/* Featured experience — text beside its photograph */}
-            <div className="py-10 lg:pr-8 flex flex-col justify-between gap-10">
+            <div className="py-14 lg:pr-8 flex flex-col justify-between gap-10">
               <div>
                 <h3 className="type-display type-h3 text-white mb-5">
                   {featured.name}
@@ -304,7 +296,7 @@ export default function Home() {
               </ArrowLink>
             </div>
 
-            <div className="lg:border-l border-hair-dark lg:pl-8 py-10">
+            <div className="lg:border-l border-hair-dark lg:pl-8 py-14">
               <PhotoFrame
                 photo={photos.privateDinners}
                 className="h-72 lg:h-full lg:min-h-[24rem]"
@@ -314,7 +306,7 @@ export default function Home() {
             </div>
 
             {/* The remaining six, as a hairline list */}
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-10">
+            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-14">
               {otherExperiences.map((experience) => (
                 <div
                   key={experience.slug}
@@ -343,7 +335,7 @@ export default function Home() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
-            <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-20 lg:pr-8">
+            <div className="lg:col-span-1 flex flex-col justify-end py-16 lg:py-28 lg:pr-8">
               <h2 className="type-h2 mb-8">What Members Say</h2>
               <p className="type-body text-white/55 italic max-w-xs">
                 No member quotes have been given or approved yet, so none are

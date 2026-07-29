@@ -44,13 +44,13 @@ export function CandidacyChecklist({
 
         <div className={`grid grid-cols-1 lg:grid-cols-4 border-b ${rule}`}>
           <h2
-            className="type-h2 lg:col-span-2 py-12 lg:py-16 lg:pr-10"
+            className="type-h2 lg:col-span-2 py-16 lg:py-24 lg:pr-10"
             data-reveal
           >
             {title}
           </h2>
           <div
-            className={`lg:col-span-2 lg:border-l ${rule} lg:pl-8 pb-12 lg:py-16`}
+            className={`lg:col-span-2 lg:border-l ${rule} lg:pl-8 pb-16 lg:py-24`}
             data-reveal
             style={{ transitionDelay: "80ms" }}
           >
@@ -73,7 +73,7 @@ export function CandidacyChecklist({
               return (
                 <div
                   key={i}
-                  className={`flex flex-col gap-5 py-8 md:px-8 first:md:pl-0 border-t ${rule} ${
+                  className={`flex flex-col gap-6 py-8 md:px-8 first:md:pl-0 border-t ${rule} ${
                     i % 2 === 1 ? "md:border-l" : ""
                   } ${i === 2 ? "md:pl-0" : ""}`}
                   data-reveal

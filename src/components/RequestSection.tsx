@@ -15,7 +15,7 @@ export function RequestSection({ index }: { index: string }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
           <div className="hidden lg:block lg:col-span-2" />
-          <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-14 lg:py-20">
+          <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-20 lg:py-28">
             <h2 className="type-h2 mb-10">Request Membership Consideration</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <p className="type-lead text-white max-w-xs">
@@ -30,7 +30,7 @@ export function RequestSection({ index }: { index: string }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 py-14 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-4 py-20 lg:py-28">
           <div className="hidden lg:block" />
 
           <div className="lg:pr-8">

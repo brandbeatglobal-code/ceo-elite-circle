@@ -58,14 +58,14 @@ h1, h2, h3, h4 {
   max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 @media (min-width: 768px) {
   .wrap {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 2.75rem;
+    padding-right: 2.75rem;
   }
 }
 
@@ -95,19 +95,19 @@ h1, h2, h3, h4 {
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: clamp(1.0625rem, 1.35vw, 1.3125rem);
-  line-height: 1.42;
+  line-height: 1.52;
   letter-spacing: -0.005em;
 }
 
 .type-body {
   font-size: 0.8125rem;
-  line-height: 1.62;
+  line-height: 1.75;
   letter-spacing: 0.002em;
 }
 
 .type-label {
   font-size: 0.6875rem;
-  line-height: 1.4;
+  line-height: 1.5;
   letter-spacing: 0.01em;
 }
 
@@ -233,6 +233,26 @@ body {
     opacity: 0;
   }
   to {
+    opacity: 1;
+  }
+}
+
+/* Photo-backed cards. The image fades in on hover where hover exists, and is
+   simply shown on touch — never a state where anything is unreachable. */
+.photo-card-media {
+  opacity: 0;
+  transition: opacity 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .photo-card:hover .photo-card-media,
+  .photo-card:focus-within .photo-card-media {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .photo-card-media {
     opacity: 1;
   }
 }

@@ -59,7 +59,7 @@ export default async function ArticlePage({
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
             {/* Metadata sidebar */}
-            <aside className="lg:pr-8 py-10 lg:sticky lg:top-28 lg:self-start">
+            <aside className="lg:pr-8 py-14 lg:sticky lg:top-28 lg:self-start">
               {article.title ? (
                 <h1 className="type-display type-h3 mb-8">{article.title}</h1>
               ) : (
@@ -88,7 +88,7 @@ export default async function ArticlePage({
             </aside>
 
             {/* Body */}
-            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-10 flex flex-col gap-10">
+            <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-14 flex flex-col gap-10">
               <div className="flex flex-col gap-5">
                 <h2 className="type-display type-h3">
                   The problem with good advice
@@ -149,7 +149,7 @@ export default async function ArticlePage({
             </div>
 
             {/* Side-note callout */}
-            <div className="lg:border-l border-hair lg:pl-8 py-10">
+            <div className="lg:border-l border-hair lg:pl-8 py-14">
               <BulletLabel className="text-olive">Note</BulletLabel>
               <div className="mt-4">
                 <p className="type-body text-olive">
@@ -161,7 +161,7 @@ export default async function ArticlePage({
           </div>
 
           {/* Closing statement */}
-          <div className="border-t border-hair py-16 lg:py-24">
+          <div className="border-t border-hair py-24 lg:py-36">
             <div className="lg:[text-indent:22%] max-w-5xl">
               <p className="type-h2">
                 The scarcest thing at this level is not information. It is a
@@ -178,7 +178,7 @@ export default async function ArticlePage({
           <SectionHeader index={ordinal(1)} eyebrow="Related articles" tone="black" />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
-            <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-20 lg:pr-8">
+            <div className="lg:col-span-1 flex flex-col justify-end py-16 lg:py-28 lg:pr-8">
               <h2 className="type-h2 mb-8">Further reading</h2>
               <p className="type-body text-white/55 italic max-w-xs">
                 No other articles have been published yet, so none are linked —

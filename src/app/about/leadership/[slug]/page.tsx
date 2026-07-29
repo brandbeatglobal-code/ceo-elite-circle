@@ -113,7 +113,7 @@ export default async function LeadershipMemberPage({
       <section className="bg-cream text-ink">
         <div className="wrap">
           <SectionHeader index={next()} eyebrow="Expertise" />
-          <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-16 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-4 py-16 lg:py-24 gap-10">
             <div className="lg:col-span-2 lg:pr-10">
               <h2 className="type-h2 mb-8">Areas of expertise</h2>
               <Placeholder lead />
