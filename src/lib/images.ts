@@ -37,18 +37,18 @@ export const photos = {
      black-and-white packages row. Rendered greyscale in CSS, so a colour
      photograph is fine here. */
   tierExecutive: {
-    src: null,
-    alt: "",
+    src: "https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13",
+    alt: "Executives in conversation during a working meeting",
     note: "Documentary: a working session or boardroom, mid-conversation.",
   },
   tierElite: {
-    src: null,
-    alt: "",
+    src: "https://images.unsplash.com/photo-1573166364839-1bfe9196c23e",
+    alt: "A small group in candid discussion around a table",
     note: "Documentary: a small group in discussion, candid rather than posed.",
   },
   tierChairman: {
-    src: null,
-    alt: "",
+    src: "https://images.unsplash.com/photo-1779700210487-a01758a3c55a",
+    alt: "An empty conference room with a panoramic city view at sunset",
     note: "Documentary: a formal room or a single figure, quiet and composed.",
   },
 } satisfies Record<string, Photo>;
