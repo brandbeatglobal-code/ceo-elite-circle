@@ -1,41 +1,65 @@
 import { ReactNode } from "react";
+import { SectionHeader, Placeholder, type Tone } from "@/components/ui";
 
+export { Placeholder };
+
+/**
+ * The standard inner-page section: header row (index / eyebrow / link) over a
+ * two-column body — sans headline on the left, copy on the right.
+ */
 export function Section({
+  index,
   eyebrow,
   title,
   children,
-  tone = "light",
+  tone = "cream",
+  link,
 }: {
+  index: string;
   eyebrow?: string;
   title: string;
   children?: ReactNode;
-  tone?: "light" | "stone";
+  tone?: Tone;
+  link?: { href: string; label: string };
 }) {
+  const dark = tone !== "cream";
+
   return (
-    <section className={tone === "stone" ? "bg-stone" : "bg-white"}>
-      <div className="wrap py-20 md:py-28">
-        {eyebrow && (
-          <p className="text-xs uppercase tracking-[0.2em] text-gold mb-4">
-            {eyebrow}
-          </p>
-        )}
-        <h2 className="text-3xl md:text-5xl text-forest mb-6 max-w-2xl">
-          {title}
-        </h2>
-        <div className="divider-gold mb-8" />
-        <div className="text-ink-soft leading-relaxed max-w-2xl">
-          {children ?? <Placeholder />}
+    <section
+      className={`${
+        tone === "black"
+          ? "bg-black"
+          : tone === "ramp"
+            ? "bg-ramp"
+            : tone === "ramp-low"
+              ? "bg-ramp-low"
+              : "bg-cream"
+      } ${dark ? "text-white" : "text-ink"}`}
+    >
+      <div className="wrap">
+        <SectionHeader
+          index={index}
+          eyebrow={eyebrow ?? title}
+          link={link}
+          tone={tone}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-8">
+          <h2
+            className={`type-h2 py-12 lg:py-20 lg:col-span-2 lg:pr-10 ${
+              dark ? "text-white" : "text-ink"
+            }`}
+          >
+            {title}
+          </h2>
+          <div
+            className={`lg:col-span-2 lg:border-l ${
+              dark ? "border-hair-dark" : "border-hair"
+            } lg:pl-10 pb-12 lg:py-20 flex flex-col items-start gap-6 max-w-2xl`}
+          >
+            {children ?? <Placeholder tone={tone} />}
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-export function Placeholder() {
-  return (
-    <p className="italic text-sm text-ink-soft/70 border border-dashed border-stone px-4 py-3 max-w-md">
-      Content placeholder — copy for this section is still to be drafted and
-      reviewed.
-    </p>
   );
 }

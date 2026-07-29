@@ -1,60 +1,189 @@
 @import "tailwindcss";
 
 :root {
-  /* CEO Elite Circle — design tokens (per client brief, pending palette confirmation) */
+  /* CEO Elite Circle — confirmed palette. Replaces the original
+     green/gold/white/stone tokens entirely. */
   --color-white: #ffffff;
-  --color-stone: #eeece6;       /* Light Grey — sophistication, balance */
-  --color-forest: #0e3b2f;      /* Deep Green — trust, heritage, leadership */
-  --color-forest-dark: #082820; /* Deep Green, hover/depth variant */
-  --color-gold: #b08d46;        /* Gold — prestige, legacy */
-  --color-gold-soft: #d9c48f;   /* Gold, tint for dividers/backgrounds */
-  --color-ink: #14201b;         /* Primary text — near-black with a green cast */
-  --color-ink-soft: #4a5550;    /* Secondary/muted text */
+  --color-cream: #f3f3f1;       /* Light section backgrounds */
+  --color-mint: #d8e1df;        /* Gradient step / subtle tint */
+  --color-grey: #bcbcbc;        /* Gradient step / muted UI */
+  --color-sage: #628c6c;        /* The one accent — links, rules, details */
+  --color-olive: #6f7161;       /* Gradient step / muted text on cream */
+  --color-ink: #3e4032;         /* Near-black olive — primary text on cream */
+  --color-black: #000000;       /* Solid black section backgrounds */
+
+  /* Hairlines — the grid is drawn with these, never with heavy borders */
+  --color-hair: rgba(62, 64, 50, 0.16);
+  --color-hair-dark: rgba(255, 255, 255, 0.14);
 }
 
 @theme inline {
   --color-white: var(--color-white);
-  --color-stone: var(--color-stone);
-  --color-forest: var(--color-forest);
-  --color-forest-dark: var(--color-forest-dark);
-  --color-gold: var(--color-gold);
-  --color-gold-soft: var(--color-gold-soft);
+  --color-cream: var(--color-cream);
+  --color-mint: var(--color-mint);
+  --color-grey: var(--color-grey);
+  --color-sage: var(--color-sage);
+  --color-olive: var(--color-olive);
   --color-ink: var(--color-ink);
-  --color-ink-soft: var(--color-ink-soft);
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-body: "Inter", Arial, Helvetica, sans-serif;
+  --color-black: var(--color-black);
+  --color-hair: var(--color-hair);
+  --color-hair-dark: var(--color-hair-dark);
+
+  /* Sora stands in for TT Neoris — the workhorse.
+     Fraunces stands in for Ivy Presto Headline — premium moments only. */
+  --font-sans: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
 }
 
 body {
-  background: var(--color-white);
+  background: var(--color-cream);
   color: var(--color-ink);
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Headings default to the sans workhorse. The serif is opt-in via
+   .type-display, reserved for hero, card titles and list names. */
 h1, h2, h3, h4 {
-  font-family: var(--font-display), Georgia, serif;
-  letter-spacing: 0.01em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
 }
 
-/* Gold divider — per style direction ("Gold dividers") */
-.divider-gold {
-  width: 64px;
-  height: 1px;
-  background: var(--color-gold);
-}
-
-/* Wide container used across all pages for consistent margins */
+/* ---- Container -------------------------------------------------------- */
+/* Near full-bleed: the hairline grid runs close to the viewport edges. */
 .wrap {
-  max-width: 1180px;
+  width: 100%;
+  max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 @media (min-width: 768px) {
   .wrap {
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
+}
+
+/* ---- Type scale ------------------------------------------------------- */
+.type-display {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 0.98;
+}
+
+.type-hero {
+  font-size: clamp(2.75rem, 7.4vw, 7rem);
+}
+
+.type-h2 {
+  font-size: clamp(2rem, 4.4vw, 4.25rem);
+}
+
+.type-h3 {
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+}
+
+/* The serif lead paragraph — the lyrical one. Sits beside, not instead of,
+   the smaller sans paragraph. */
+.type-lead {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  line-height: 1.42;
+  letter-spacing: -0.005em;
+}
+
+.type-body {
+  font-size: 0.8125rem;
+  line-height: 1.62;
+  letter-spacing: 0.002em;
+}
+
+.type-label {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.type-link {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+/* ---- Section backgrounds --------------------------------------------- */
+/* The dark gradient runs the whole ramp: mint through grey and sage,
+   into olive, down to near-black. Not a flat two-colour fade. */
+.bg-ramp {
+  background:
+    radial-gradient(
+      118% 88% at 22% 6%,
+      rgba(216, 225, 223, 0.17) 0%,
+      rgba(188, 188, 188, 0.14) 14%,
+      rgba(98, 140, 108, 0.26) 32%,
+      rgba(111, 113, 97, 0.3) 52%,
+      rgba(62, 64, 50, 0.72) 74%,
+      rgba(0, 0, 0, 0.96) 100%
+    ),
+    linear-gradient(174deg, #3e4032 0%, #26271e 48%, #0a0b08 100%);
+}
+
+.bg-ramp-low {
+  background:
+    radial-gradient(
+      104% 96% at 44% 96%,
+      rgba(216, 225, 223, 0.14) 0%,
+      rgba(98, 140, 108, 0.24) 26%,
+      rgba(111, 113, 97, 0.26) 48%,
+      rgba(62, 64, 50, 0.74) 72%,
+      rgba(0, 0, 0, 0.97) 100%
+    ),
+    linear-gradient(186deg, #14150f 0%, #2b2c22 56%, #0a0b08 100%);
+}
+
+/* ---- Motifs ----------------------------------------------------------- */
+/* Pill CTAs are the only rounded element on the page. */
+.pill {
+  border-radius: 9999px;
+}
+
+/* Plain underlined form fields — no boxes. */
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-hair-dark);
+  padding: 0.6rem 0 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-white);
+  outline: none;
+}
+
+.field::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.field:focus {
+  border-bottom-color: var(--color-sage);
+}
+
+.field:disabled {
+  cursor: not-allowed;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

@@ -1,17 +1,29 @@
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
+import { ordinal } from "@/lib/ordinal";
+
+const experiences = [
+  "CEO Leadership Summit",
+  "Chairman's Majlis",
+  "Executive Leadership Retreat",
+  "Future Leadership Forum",
+  "CEO Excellence Awards",
+  "International CEO Delegation",
+  "CEO Private Dinners",
+];
 
 export default function ExperiencesPage() {
   return (
     <>
       <PageHero eyebrow="Signature Experiences" title="Signature Experiences" />
-      <Section title="CEO Leadership Summit" tone="stone" />
-      <Section title="Chairman's Majlis" />
-      <Section title="Executive Leadership Retreat" tone="stone" />
-      <Section title="Future Leadership Forum" />
-      <Section title="CEO Excellence Awards" tone="stone" />
-      <Section title="International CEO Delegation" />
-      <Section title="CEO Private Dinners" tone="stone" />
+      {experiences.map((title, i) => (
+        <Section
+          key={title}
+          index={ordinal(i)}
+          title={title}
+          tone={i % 2 === 1 ? "black" : "cream"}
+        />
+      ))}
     </>
   );
 }

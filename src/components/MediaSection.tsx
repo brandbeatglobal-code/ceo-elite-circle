@@ -1,50 +1,62 @@
-import Image from "next/image";
 import { ReactNode } from "react";
+import {
+  ArrowLink,
+  PhotoFrame,
+  SectionHeader,
+  type Tone,
+} from "@/components/ui";
+import type { Photo } from "@/lib/images";
 
+/**
+ * Split section: headline and copy held in the left columns, one large photo
+ * running full-bleed down the right half to the section's bottom edge.
+ */
 export function MediaSection({
+  index,
   eyebrow,
   title,
-  image,
-  imageSide = "right",
-  tone = "light",
+  photo,
+  tone = "cream",
+  link,
   children,
 }: {
-  eyebrow?: string;
+  index: string;
+  eyebrow: string;
   title: string;
-  image: { src: string; alt: string };
-  imageSide?: "left" | "right";
-  tone?: "light" | "stone";
+  photo: Photo;
+  tone?: Tone;
+  link?: { href: string; label: string };
   children?: ReactNode;
 }) {
+  const dark = tone !== "cream";
+  const rule = dark ? "border-hair-dark" : "border-hair";
+
   return (
-    <section className={tone === "stone" ? "bg-stone" : "bg-white"}>
-      <div className="wrap py-20 md:py-28">
-        <div
-          className={`grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center ${
-            imageSide === "left" ? "" : "lg:[&>*:first-child]:order-2"
-          }`}
-        >
-          <div className="relative aspect-[4/5] md:aspect-[4/3] w-full overflow-hidden">
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
-          <div>
-            {eyebrow && (
-              <p className="text-xs uppercase tracking-[0.2em] text-gold mb-4">
-                {eyebrow}
-              </p>
+    <section className={`${dark ? "bg-black text-white" : "bg-cream text-ink"}`}>
+      <div className="wrap">
+        <SectionHeader index={index} eyebrow={eyebrow} tone={tone} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div className="wrap lg:pr-14 py-14 lg:py-24 flex flex-col justify-end">
+          <h2 className="type-h2 mb-10 max-w-xl">{title}</h2>
+          <div className="flex flex-col items-start gap-6 max-w-md">
+            {children}
+            {link && (
+              <ArrowLink href={link.href} tone={tone}>
+                {link.label}
+              </ArrowLink>
             )}
-            <h2 className="text-3xl md:text-5xl text-forest mb-6">{title}</h2>
-            <div className="divider-gold mb-8" />
-            <div className="text-ink-soft leading-relaxed max-w-md">
-              {children}
-            </div>
           </div>
+        </div>
+
+        <div className={`lg:border-l ${rule}`}>
+          <PhotoFrame
+            photo={photo}
+            tone={tone}
+            className="h-72 sm:h-96 lg:h-full lg:min-h-[38rem]"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
         </div>
       </div>
     </section>

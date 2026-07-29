@@ -1,16 +1,23 @@
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
+import { ordinal } from "@/lib/ordinal";
+
+const sections = [
+  "Purpose",
+  "Councils",
+  "Meeting Format",
+  "Benefits",
+  "Annual Calendar",
+  "Expert Advisors",
+];
 
 export default function CouncilsPage() {
   return (
     <>
       <PageHero eyebrow="Executive Councils" title="Executive Councils" />
-      <Section title="Purpose" tone="stone" />
-      <Section title="Councils" />
-      <Section title="Meeting Format" tone="stone" />
-      <Section title="Benefits" />
-      <Section title="Annual Calendar" tone="stone" />
-      <Section title="Expert Advisors" />
+      {sections.map((title, i) => (
+        <Section key={title} index={ordinal(i)} title={title} />
+      ))}
     </>
   );
 }

@@ -1,18 +1,25 @@
 import { PageHero } from "@/components/PageHero";
 import { Section } from "@/components/Section";
+import { ordinal } from "@/lib/ordinal";
+
+const sections = [
+  "Our Story",
+  "Our Purpose",
+  "Our Beliefs",
+  "Our Mission",
+  "Our Vision",
+  "Leadership Philosophy",
+  "Who We Serve",
+  "What Makes Us Different",
+];
 
 export default function AboutPage() {
   return (
     <>
       <PageHero eyebrow="The Circle" title="About the Circle" />
-      <Section title="Our Story" tone="stone" />
-      <Section title="Our Purpose" />
-      <Section title="Our Beliefs" tone="stone" />
-      <Section title="Our Mission" />
-      <Section title="Our Vision" tone="stone" />
-      <Section title="Leadership Philosophy" />
-      <Section title="Who We Serve" tone="stone" />
-      <Section title="What Makes Us Different" />
+      {sections.map((title, i) => (
+        <Section key={title} index={ordinal(i)} title={title} />
+      ))}
     </>
   );
 }
