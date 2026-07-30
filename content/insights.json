@@ -35,7 +35,8 @@
       "photo": {
         "src": null,
         "alt": "",
-        "note": "the article's lead image, breaking the body copy."
+        "note": "the article's lead image, breaking the body copy.",
+        "brightness": null
       },
       "readingTime": null,
       "author": null,

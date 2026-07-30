@@ -20,7 +20,8 @@
       "photo": {
         "src": null,
         "alt": "",
-        "note": "a member of Circle leadership."
+        "note": "a member of Circle leadership.",
+        "brightness": null
       },
       "name": null,
       "credentials": null,

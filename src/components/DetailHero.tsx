@@ -1,5 +1,5 @@
 import { BulletLabel, PhotoFrame, PillButton, Placeholder } from "@/components/ui";
-import type { Photo } from "@/lib/images";
+import { scrimVars, type Photo } from "@/lib/images";
 
 /**
  * Detail-page hero: serif title held high over a full-bleed photograph, a
@@ -20,7 +20,10 @@ export function DetailHero({
   // No photograph, no scrim — see `PhotoHero` for the reasoning.
   const scrim = photo.src !== null;
   return (
-    <section className="relative min-h-[calc(88svh-var(--banner-h))] flex flex-col overflow-hidden bg-ramp text-white">
+    <section
+      className="relative min-h-[calc(88svh-var(--banner-h))] flex flex-col overflow-hidden bg-ramp text-white"
+      style={scrim ? scrimVars(photo) : undefined}
+    >
       <PhotoFrame photo={photo} tone="ramp" cover className="h-full" sizes="100vw" />
       {scrim && <div className="photo-scrim" />}
 

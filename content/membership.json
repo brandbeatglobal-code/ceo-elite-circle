@@ -11,18 +11,22 @@
     "intro": "The Circle is deliberately narrow. It suits a particular kind of leader more than a particular kind of company.",
     "criteria": [
       {
+        "icon": "converge",
         "title": "Leading an established organisation",
         "body": "Membership is held by those carrying final responsibility, rather than by those advising on it."
       },
       {
+        "icon": "stack",
         "title": "Long past needing an audience",
         "body": "The Circle suits leaders who have nothing left to prove in public and a great deal still to work out in private."
       },
       {
+        "icon": "arcs",
         "title": "Prepared to contribute",
         "body": "Members are expected to give counsel as readily as they take it. A quiet year is fine; a passive one is not."
       },
       {
+        "icon": "chamber",
         "title": "Discreet by disposition",
         "body": "Everything within the Circle depends on confidence being kept without being asked for."
       }
@@ -41,7 +45,8 @@
         "photo": {
           "src": "https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13",
           "alt": "Executives in conversation during a working meeting",
-          "note": "Documentary: a working session or boardroom, mid-conversation."
+          "note": "Documentary: a working session or boardroom, mid-conversation.",
+          "brightness": null
         }
       },
       {
@@ -50,7 +55,8 @@
         "photo": {
           "src": "https://images.unsplash.com/photo-1573166364839-1bfe9196c23e",
           "alt": "A small group in candid discussion around a table",
-          "note": "Documentary: a small group in discussion, candid rather than posed."
+          "note": "Documentary: a small group in discussion, candid rather than posed.",
+          "brightness": null
         }
       },
       {
@@ -59,7 +65,8 @@
         "photo": {
           "src": "https://images.unsplash.com/photo-1779700210487-a01758a3c55a",
           "alt": "An empty conference room with a panoramic city view at sunset",
-          "note": "Documentary: a formal room or a single figure, quiet and composed."
+          "note": "Documentary: a formal room or a single figure, quiet and composed.",
+          "brightness": null
         }
       }
     ]
@@ -70,17 +77,17 @@
     "intro": "What membership provides, stated plainly. Nothing here depends on volume — the Circle is built to be small.",
     "features": [
       {
-        "icon": "rings",
+        "icon": "arcs",
         "label": "Counsel",
         "body": "Access to peers who have faced comparable decisions, in settings built for candour rather than display."
       },
       {
-        "icon": "arcs",
+        "icon": "weave",
         "label": "Introductions",
         "body": "Considered introductions made by the Circle, in both directions, and only where both parties stand to gain."
       },
       {
-        "icon": "stack",
+        "icon": "crest",
         "label": "Standing",
         "body": "A place within a membership that is closed, and whose value rests on remaining so."
       },

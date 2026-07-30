@@ -51,7 +51,9 @@ export type PillarsContent = {
   items: Pillar[];
 };
 
-export const pillarsContent: PillarsContent = data;
+// `as`, like the other loaders carrying an `IconKey`: TypeScript widens
+// the JSON's icon strings to `string`, which no literal union accepts.
+export const pillarsContent = data as PillarsContent;
 export const pillars = pillarsContent.items;
 
 export function pillarBySlug(slug: string) {

@@ -59,12 +59,12 @@
     "intro": "What a standing group offers that a one-off gathering cannot.",
     "features": [
       {
-        "icon": "rings",
+        "icon": "cycle",
         "label": "Continuity",
         "body": "The same people, across a year. Context accumulates instead of resetting at each gathering."
       },
       {
-        "icon": "arcs",
+        "icon": "converge",
         "label": "Depth",
         "body": "One question at a time, taken further than a single meeting would allow."
       },

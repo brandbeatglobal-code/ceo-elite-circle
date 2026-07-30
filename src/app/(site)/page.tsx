@@ -11,6 +11,7 @@ import {
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
+import { scrimVars } from "@/lib/images";
 import { home } from "@/lib/home";
 import { ordinal } from "@/lib/ordinal";
 import { pillars } from "@/lib/pillars";
@@ -41,7 +42,10 @@ export default function Home() {
   return (
     <>
       {/* ---- Hero — full-bleed photograph, serif headline, full-width pill CTA */}
-      <section className="relative min-h-[calc(100svh-var(--banner-h))] flex flex-col justify-end overflow-hidden">
+      <section
+        className="relative min-h-[calc(100svh-var(--banner-h))] flex flex-col justify-end overflow-hidden"
+        style={hero.photo.src ? scrimVars(hero.photo) : undefined}
+      >
         <PhotoFrame
           photo={hero.photo}
           cover

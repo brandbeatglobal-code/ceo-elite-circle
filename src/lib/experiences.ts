@@ -47,7 +47,9 @@ export type ExperiencesContent = {
   items: Experience[];
 };
 
-export const experiencesContent: ExperiencesContent = data;
+// `as`, like the other loaders carrying an `IconKey`: TypeScript widens
+// the JSON's icon strings to `string`, which no literal union accepts.
+export const experiencesContent = data as ExperiencesContent;
 export const experiences = experiencesContent.items;
 
 export function experienceBySlug(slug: string) {

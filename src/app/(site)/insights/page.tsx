@@ -53,6 +53,7 @@ export default function InsightsPage() {
                     src: null,
                     alt: "",
                     note: page.pendingCardPhotoNote,
+                    brightness: null,
                   }}
                   className="h-56"
                   sizes="(max-width: 768px) 100vw, 33vw"

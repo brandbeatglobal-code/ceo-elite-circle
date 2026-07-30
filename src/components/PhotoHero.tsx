@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { BulletLabel, PhotoFrame } from "@/components/ui";
-import type { Photo } from "@/lib/images";
+import { scrimVars, type Photo } from "@/lib/images";
 
 /**
  * Page hero on a photograph: serif headline over the image, with two short
@@ -26,7 +26,10 @@ export function PhotoHero({
   // that is not there.
   const scrim = photo.src !== null;
   return (
-    <section className="relative min-h-[calc(92svh-var(--banner-h))] flex flex-col justify-end overflow-hidden bg-ramp text-white">
+    <section
+      className="relative min-h-[calc(92svh-var(--banner-h))] flex flex-col justify-end overflow-hidden bg-ramp text-white"
+      style={scrim ? scrimVars(photo) : undefined}
+    >
       <PhotoFrame
         photo={photo}
         tone="ramp"

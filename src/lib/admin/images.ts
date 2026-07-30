@@ -38,6 +38,8 @@ export type ProcessedImage = {
   height: number;
   /** What the upload actually was, for the confirmation message. */
   sourceFormat: string;
+  /** 0–1: how bright the brightest region is. See `measureBrightness`. */
+  brightness: number;
 };
 export type ProcessError = { ok: false; error: string };
 
@@ -151,12 +153,58 @@ export async function processUpload(input: Buffer): Promise<ProcessedImage | Pro
       width: info.width,
       height: info.height,
       sourceFormat: format,
+      // Measured on the stored bytes, so it describes what the site will
+      // actually serve rather than what was uploaded.
+      brightness: await measureBrightness(data),
     };
   } catch {
     // Magic bytes said image, but it would not decode — truncated, corrupt,
     // or dressed up. Nothing gets stored on a failed decode.
     return { ok: false, error: REJECT_UNRECOGNISED };
   }
+}
+
+/** Rows and columns the brightness probe reduces an image to. */
+const PROBE_W = 32;
+const PROBE_H = 20;
+
+function toLinear(channel: number): number {
+  const s = channel / 255;
+  return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+}
+
+/**
+ * How bright the photograph is, as the relative luminance of its brightest
+ * *region* — 0 for black, 1 for white.
+ *
+ * Not the mean. A mean is exactly wrong for the case that matters: a dark
+ * photograph with a blown-out window in it averages dark, and the headline
+ * lands on the window. Not the single brightest pixel either, which is a
+ * specular highlight in almost every photograph and would report 1.0 for all
+ * of them.
+ *
+ * Instead the image is reduced to a coarse grid — each cell is a few per cent
+ * of the frame, about the area a line of type covers — and the brightest cell
+ * decides. Averaging happens inside a cell, which is the scale at which text
+ * legibility is actually decided.
+ */
+export async function measureBrightness(image: Buffer): Promise<number> {
+  const { data } = await sharp(image)
+    .resize(PROBE_W, PROBE_H, { fit: "fill" })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  let max = 0;
+  for (let i = 0; i < data.length; i += 3) {
+    const l =
+      0.2126 * toLinear(data[i]) +
+      0.7152 * toLinear(data[i + 1]) +
+      0.0722 * toLinear(data[i + 2]);
+    if (l > max) max = l;
+  }
+  // Rounded: this is stored in a content file that a human reads.
+  return Math.min(1, Math.round(max * 1000) / 1000);
 }
 
 /**

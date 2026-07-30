@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { SectionHeader } from "@/components/ui";
 import { PhotoFrame } from "@/components/ui";
-import type { Photo } from "@/lib/images";
+import { scrimVars, type Photo } from "@/lib/images";
 
 /**
  * Pull-quote over a photograph: a large headline across the upper half, with
@@ -28,7 +28,10 @@ export function QuoteSection({
   // No photograph, no scrim — see `PhotoHero` for the reasoning.
   const scrim = photo.src !== null;
   return (
-    <section className="relative bg-ramp text-white overflow-hidden">
+    <section
+      className="relative bg-ramp text-white overflow-hidden"
+      style={scrim ? scrimVars(photo) : undefined}
+    >
       <PhotoFrame
         photo={photo}
         tone="ramp"

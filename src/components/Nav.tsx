@@ -21,7 +21,20 @@ export default function Nav() {
 
   useEffect(() => {
     if (!overHero) return;
-    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.82);
+    // A fixed distance, not a fraction of the viewport. The bar has to go
+    // solid before any hero copy can travel up behind it, and a percentage of
+    // viewport height cannot promise that: a tall headline, a short viewport
+    // or hero content that overflows all put white text under a transparent
+    // white bar long before the old 82% threshold was reached.
+    //
+    // 32px is not arbitrary. The gap between the bar and the first line of
+    // hero copy is 176px on a tall desktop window but bottoms out at 52px
+    // once the hero content overflows — from about 800px of viewport height
+    // down, it stops shrinking because the copy cannot rise past its own top
+    // padding. So the trigger has to sit under 52px whatever the screen, and
+    // this leaves 20px of margin. See `navtest2.mjs`, which measures both
+    // numbers rather than assuming either.
+    const onScroll = () => setScrolled(window.scrollY > 32);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

@@ -264,9 +264,28 @@ That is what makes the Phase 2+ admin panel a file edit rather than a code
 change. Keep them thin.
 
 Structure stays in code and is deliberately *not* in the JSON: section order
-and numbering, tone/`flip`/grid props, route paths, and which icon sits above a
-feature label (the JSON names an icon by key; `Icon` in `Icons.tsx` resolves
-it).
+and numbering, tone/`flip`/grid props, and route paths.
+
+### Icons
+
+`src/components/Icons.tsx` holds sixteen marks, and **each one carries a
+written meaning above its definition**. That is what makes an assignment
+checkable: a mark is chosen because it says what its label says. Reuse across
+sections is fine where the concepts really are the same; what is not fine is
+the same sequence appearing under unrelated words, which is what four marks
+spread over sixteen sections produced.
+
+**Every icon is named by content, resolved by the component** — `"icon": "…"`
+in the JSON, `Icon` in `Icons.tsx` looks it up. `CandidacyChecklist` used to
+hardcode a positional array instead, so all thirteen candidacy sections showed
+the same four shapes in the same order whatever their criteria said. There is
+now one pattern, not two.
+
+The key is design rather than copy, so the admin shows it read-only
+(`kind: "icon"` in `schema.ts`) and `validateEdit` refuses it: a key outside
+the set is a page with no mark to resolve. `Icon` also falls back to `rings`
+for an unknown key rather than throwing, because a wrong mark is a far better
+failure than a page that will not render.
 
 Membership categories live only in `content/membership.json`; the homepage
 teaser reads them from there, so a teaser and its full page cannot drift. An
@@ -299,13 +318,28 @@ not a bug. It also means a wrong photo ID cannot be caught locally.
 ### Text over a photograph is never calibrated to the photograph
 
 Every full-bleed photo section uses the scrim classes in `globals.css`, not a
-flat `bg-black/NN`: a light `black/42` wash on the section so the picture
-reads, plus a heavy `black/86` field on the copy itself, feathered in over the
-container's own padding. Against a *pure white* photograph the copy therefore
-sits on 0.081 luminance — about 8:1 for white text — and that number does not
-depend on the image. A flat overlay dark enough to survive a white photograph
-behind text leaves the photograph invisible everywhere else, which is why the
-field belongs to the copy rather than to the section.
+flat `bg-black/NN`: a wash on the section so the picture reads, plus a heavier
+field on the copy itself, feathered in over the container's own padding. A
+flat overlay dark enough to survive a white photograph behind text leaves the
+photograph invisible everywhere else, which is why the field belongs to the
+copy rather than to the section.
+
+**Both alphas are computed from the photograph, not fixed.** `scrimVars()` in
+`src/lib/images.ts` reads `photo.brightness` — measured on upload — and solves
+for the pair that brings the background behind the copy to 0.081 luminance,
+about 8:1 for white text. That ceiling is absolute, so the guarantee is the
+same for every image, but what it costs the picture is not: a white photograph
+gets 0.42 and 0.86 (the measured worst case, unchanged), while the homepage's
+night skyline at brightness 0.369 gets 0.35 and 0.66 and keeps 2.7× more of
+itself. Two layers each calibrated for a white photograph compound to ~0.92
+where they overlap, which is most of a hero — that is what crushed the
+skyline, and why the ceiling is enforced on the composite rather than on each
+layer.
+
+`brightness: null` means unmeasured — an Unsplash slot, or anything stored
+before this existed — and is treated exactly as a white photograph. Guessing
+light on an unknown image is the one failure that puts unreadable text on the
+page.
 
 Three consequences worth knowing before editing one of these sections:
 

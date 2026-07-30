@@ -261,14 +261,18 @@ body:not(:has(.draft-banner)) {
    not — a hero must stay legible whatever gets put behind it.
 
    So the wash on the section stays light enough to see the picture, and the
-   copy carries its own field. Composited against a *pure white* photograph:
+   copy carries its own field, sized to bring the background behind the copy
+   to 0.081 luminance — about 8.0:1 for white text and 5.4:1 for the 75% white
+   used for secondary lines.
 
-     transmittance = (1 − 0.86)(1 − 0.42) = 0.081
-
-   which is luminance 0.081 behind the copy — about 8.0:1 for white text and
-   5.4:1 for the 75% white used for secondary lines. None of that depends on
-   the image. Where there is no copy the photograph reads at 0.42, lighter
-   than the flat overlays these replaced.
+   Both alphas come from the photograph itself: `scrimVars()` in
+   `src/lib/images.ts` reads the brightness measured on upload and solves for
+   the pair that reaches that ceiling. A white photograph gets 0.42 and 0.86 —
+   `(1 − 0.86)(1 − 0.42) = 0.081`, the measured worst case. A dark photograph
+   gets only what it needs to reach the same ceiling, rather than being
+   multiplied into black by an overlay calibrated for a case it is nowhere
+   near. The literals below are the fallback for a section that sets no
+   variables: full strength, which is the safe direction.
 
    Nothing over a photograph may be dimmer than 70% white; `Placeholder`
    takes `onPhoto` for that reason. */
@@ -276,7 +280,7 @@ body:not(:has(.draft-banner)) {
 .photo-scrim-nav {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0, 0, 0, var(--scrim-base, 0.42));
 }
 
 /* Heroes on `/` and `/about` carry a transparent navigation bar, so the head
@@ -285,17 +289,17 @@ body:not(:has(.draft-banner)) {
   background:
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.86) 0%,
-      rgba(0, 0, 0, 0.86) 8rem,
+      rgba(0, 0, 0, var(--scrim-copy, 0.86)) 0%,
+      rgba(0, 0, 0, var(--scrim-copy, 0.86)) 8rem,
       rgba(0, 0, 0, 0) 14rem
     ),
-    rgba(0, 0, 0, 0.42);
+    rgba(0, 0, 0, var(--scrim-base, 0.42));
 }
 
 .copy-scrim,
 .copy-scrim-top,
 .copy-scrim-band {
-  --scrim: rgba(0, 0, 0, 0.86);
+  --scrim: rgba(0, 0, 0, var(--scrim-copy, 0.86));
   --scrim-feather: 7rem;
 }
 
