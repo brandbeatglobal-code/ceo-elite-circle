@@ -207,6 +207,13 @@ body {
   padding-bottom: var(--banner-h);
 }
 
+/* The padding exists to clear the fixed notice, so a document without the
+   notice (the admin) should not carry it. Progressive: a browser without
+   :has() keeps the padding everywhere, which is today's behaviour. */
+body:not(:has(.draft-banner)) {
+  padding-bottom: 0;
+}
+
 .draft-dismissed .draft-banner {
   display: none;
 }
