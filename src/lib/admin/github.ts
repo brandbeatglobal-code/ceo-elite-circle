@@ -41,6 +41,139 @@ function headers(token: string): HeadersInit {
   };
 }
 
+export type CommitEntry = {
+  /** Repo-relative path, e.g. `content/about.json`. */
+  path: string;
+  /** UTF-8 text or binary content. */
+  content: Buffer | string;
+};
+
+/**
+ * Create one commit carrying several file changes — and, optionally, file
+ * deletions — atomically, via the Git Data API. The Contents API can only
+ * touch one file per commit, and a photo save must never leave a moment
+ * where the JSON references an image that is not in the repository yet (or a
+ * replaced image lingers after nothing points at it). Blobs, then a tree on
+ * top of the branch head, then a commit, then a fast-forward ref update; a
+ * non-fast-forward means someone else pushed first, and maps to the same
+ * "changed while you were editing" error the single-file path reports.
+ */
+export async function commitFiles(
+  entries: CommitEntry[],
+  deletions: string[],
+  message: string,
+): Promise<CommitResult> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) {
+    return {
+      ok: false,
+      error:
+        "Saving is not configured yet: this site has no GitHub token set, so there is nowhere to commit the change. Nothing has been altered.",
+    };
+  }
+  const h = headers(token);
+  const base = `${API_BASE}/repos/${REPO}/git`;
+
+  const call = async (
+    method: string,
+    url: string,
+    body?: unknown,
+  ): Promise<{ status: number; json: Record<string, unknown> }> => {
+    const res = await fetch(url, {
+      method,
+      headers: h,
+      cache: "no-store",
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+    let json: Record<string, unknown> = {};
+    try {
+      json = (await res.json()) as Record<string, unknown>;
+    } catch {
+      // Some error responses carry no body; the status is enough.
+    }
+    return { status: res.status, json };
+  };
+
+  try {
+    const ref = await call("GET", `${base}/ref/${encodeURIComponent(`heads/${BRANCH}`)}`);
+    if (ref.status === 401 || ref.status === 403) {
+      return {
+        ok: false,
+        error:
+          "GitHub refused the saved credentials. The token may have expired or lost access to this repository. Nothing has been changed.",
+      };
+    }
+    if (ref.status !== 200) {
+      return { ok: false, error: `GitHub could not be read (HTTP ${ref.status}). Nothing has been changed.` };
+    }
+    const headSha = (ref.json.object as { sha?: string })?.sha;
+    if (!headSha) return { ok: false, error: "GitHub returned an unexpected reply. Nothing has been changed." };
+
+    const headCommit = await call("GET", `${base}/commits/${headSha}`);
+    const baseTree = (headCommit.json.tree as { sha?: string })?.sha;
+    if (headCommit.status !== 200 || !baseTree) {
+      return { ok: false, error: "GitHub could not be read. Nothing has been changed." };
+    }
+
+    const tree: { path: string; mode: string; type: string; sha: string | null }[] = [];
+    for (const entry of entries) {
+      const blob = await call("POST", `${base}/blobs`, {
+        content: Buffer.isBuffer(entry.content)
+          ? entry.content.toString("base64")
+          : Buffer.from(entry.content, "utf8").toString("base64"),
+        encoding: "base64",
+      });
+      const blobSha = blob.json.sha as string | undefined;
+      if (blob.status !== 201 || !blobSha) {
+        return { ok: false, error: "GitHub rejected the file upload. Nothing has been committed." };
+      }
+      tree.push({ path: entry.path, mode: "100644", type: "blob", sha: blobSha });
+    }
+    // `sha: null` against a base tree removes the path in the new tree.
+    for (const path of deletions) {
+      tree.push({ path, mode: "100644", type: "blob", sha: null });
+    }
+
+    const newTree = await call("POST", `${base}/trees`, { base_tree: baseTree, tree });
+    const treeSha = newTree.json.sha as string | undefined;
+    if (newTree.status !== 201 || !treeSha) {
+      return { ok: false, error: "GitHub rejected the change. Nothing has been committed." };
+    }
+
+    const commit = await call("POST", `${base}/commits`, {
+      message,
+      tree: treeSha,
+      parents: [headSha],
+    });
+    const commitSha = commit.json.sha as string | undefined;
+    if (commit.status !== 201 || !commitSha) {
+      return { ok: false, error: "GitHub rejected the change. Nothing has been committed." };
+    }
+
+    const updated = await call("PATCH", `${base}/refs/${encodeURIComponent(`heads/${BRANCH}`)}`, {
+      sha: commitSha,
+    });
+    if (updated.status === 409 || updated.status === 422) {
+      return {
+        ok: false,
+        error:
+          "The repository changed while you were editing. Reload the page and make the change again.",
+      };
+    }
+    if (updated.status !== 200) {
+      return { ok: false, error: `GitHub rejected the change (HTTP ${updated.status}). Nothing has been committed.` };
+    }
+
+    return {
+      ok: true,
+      sha: commitSha.slice(0, 7),
+      commitUrl: `https://github.com/${REPO}/commit/${commitSha}`,
+    };
+  } catch {
+    return { ok: false, error: "GitHub could not be reached. Nothing has been committed." };
+  }
+}
+
 /**
  * Create or update one file on the branch. Reads the current blob SHA first,
  * because the Contents API requires it to replace an existing file — and a

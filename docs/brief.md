@@ -372,8 +372,16 @@ Two constraints, both enforced rather than assumed:
   API, and published by the existing deploy. Fields whose absence changes what
   renders — a form's `ctaHref`, a pillar's `variants`, the nullable leadership
   and Insights fields — carry a visible note saying so, so clearing one never
-  feels like clearing a sentence. Photographs are shown but not editable until
-  Phase 4. Adding or removing whole list entries is deferred.
+  feels like clearing a sentence. Adding or removing whole list entries is
+  deferred.
+- **Image upload works** (Phase 4). A photo, its alt text and its note are
+  edited together, as one unit. Uploads are validated by magic bytes (JPEG,
+  PNG, WebP, HEIC only — HEIC converts to JPEG server-side, since iPhones
+  default to it), re-encoded with metadata stripped, stored under
+  `public/uploads/` with generated names, and committed in the same commit as
+  the JSON pointing at them; a replaced upload is deleted in that commit too.
+  The editor previews the crop inside the slot's real proportions before
+  saving, and clearing a slot returns it to the standard pending frame.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

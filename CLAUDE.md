@@ -74,7 +74,7 @@ The body's banner-clearing `padding-bottom` is scoped with
 don't carry it; browsers without `:has()` keep the padding everywhere, which
 is the old behaviour.
 
-### The admin panel (Phases 2–3 — login, shell, text editing)
+### The admin panel (Phases 2–4 — login, shell, text editing, image upload)
 
 `/admin` is the content admin. Access model, in order:
 
@@ -152,6 +152,39 @@ Testing the commit path needs no real token: `GITHUB_API_BASE` points the
 client at a stand-in API (see the Phase 3 verification), which is how the
 request shape was checked without writing to the repository.
 
+#### Image upload (Phase 4)
+
+A photo, its alt text and its note are edited **together, as one unit**
+(`PhotoEditor`) — alt text describes the image that is actually there, so it
+is never unlocked separately. The in-slot preview renders at the slot's real
+proportions with `object-cover` (ratios per slot in `schema.ts`'s `PREVIEWS`;
+multi-use slots get a frame per treatment), so a bad crop is visible before
+saving. Clearing a slot returns it to the labelled pending frame — the JSON
+deep-equals a never-filled slot.
+
+Nothing about an upload is trusted (`src/lib/admin/images.ts`): format is
+decided by **magic bytes** (never extension or MIME), the set is JPEG / PNG /
+WebP / HEIC only, and everything is decoded and re-encoded through sharp —
+which applies EXIF orientation and strips metadata, including the GPS
+coordinates a phone photo would otherwise carry into a public repo. HEIC
+(iPhone default) converts to JPEG via a WASM libheif decode, because sharp's
+prebuilt binaries lack HEIF; `heic-decode`/`libheif-js` are in
+`serverExternalPackages`, without which the tracer sweeps the whole project
+into the bundle. Stored filenames are generated (slot slug + content hash) —
+an uploaded filename is never used. Uploads land in `public/uploads/`.
+
+The image file and the JSON pointing at it go to GitHub **in one commit**, via
+the Git Data API (`commitFiles` — the Contents API can only touch one file per
+commit); replacing or clearing an upload deletes the old file in that same
+commit, but only paths matching `isOwnUpload` — Unsplash slots have nothing
+local to clean up. Client-side the browser resizes/re-encodes before sending
+where it can decode (HEIC on desktop passes through raw, with an honest
+no-preview note); `serverActions.bodySizeLimit` is raised for that raw case.
+In production a freshly saved image is not servable until its deploy lands —
+the editor shows a labelled "preview appears once the deploy finishes" frame
+rather than a broken image, and `next start` behaves the same way locally for
+files added after startup.
+
 ### Pages are composed from section components
 
 `src/app/**/page.tsx` files are thin: they assemble section-level components
@@ -220,8 +253,9 @@ accident, including from the admin panel.
 Photo slots live on the page or item they belong to, in that section's JSON
 file. `src/lib/images.ts` holds only the `Photo` type. A `Photo` with
 `src: null` renders a labelled "photography pending" frame rather than a broken
-image, so a missing photograph reads as deliberate. Filling one is a one-line
-edit to the JSON.
+image, so a missing photograph reads as deliberate. Slots are filled through
+the admin's photo editor (uploads land in `public/uploads/`), or by hand as a
+one-line edit; several slots still carry Unsplash URLs from the design stage.
 
 `images.unsplash.com` is allow-listed in `next.config.ts`. **In a sandbox the
 proxy blocks it (403)** — images will not render locally, and that is expected,

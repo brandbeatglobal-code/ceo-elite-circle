@@ -40,8 +40,8 @@ export default async function ContentFilePage({
           </p>
           <p className="type-label italic text-olive mt-2 max-w-xl">
             Editing one field at a time. Saving commits the change to the
-            repository, which publishes it — allow about a minute. Photographs
-            are not editable yet.
+            repository, which publishes it — allow about a minute. A
+            photograph, its alt text and its note are saved together.
           </p>
         </div>
 

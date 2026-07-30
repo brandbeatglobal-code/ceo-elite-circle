@@ -15,7 +15,10 @@ export type FieldKind =
   | "text"
   /** An internal route. Validated to start with `/`. */
   | "path"
-  /** Shown, never editable — image upload is Phase 4. */
+  /**
+   * A leaf of a photo slot. Never edited individually — the photo, its alt
+   * text and its note change together through the photo editor.
+   */
   | "image"
   /**
    * A whole list or record rather than a value — including when it is
@@ -50,14 +53,12 @@ const NULLABLE_NOTE =
  * the wildcards at the end.
  */
 const RULES: [RegExp, FieldRule][] = [
-  // ---- Photographs. Read-only until Phase 4 brings upload.
+  // ---- Photograph leaves. Reaching one individually is refused: a photo,
+  // its alt text and its note are edited together, as one unit, through the
+  // photo editor — alt text describes the image that is actually there.
   [
     /^[a-z]+:.*\bphoto\.(src|alt|note)$/,
     { kind: "image", nullable: true },
-  ],
-  [
-    /^insights:(page\.pendingCardPhotoNote|detail\.relatedCardPhotoNote)$/,
-    { kind: "image", nullable: false },
   ],
 
   // ---- Structural: absence changes what renders, not just what it says.
@@ -203,4 +204,50 @@ export function fieldRule(
 export function isEditableLeaf(value: unknown, rule: FieldRule): boolean {
   if (rule.kind === "image" || rule.kind === "group") return false;
   return typeof value === "string" || value === null;
+}
+
+/**
+ * How a slot's photograph actually renders on the site, for the in-slot
+ * preview. Every photo displays through `object-cover`, so what an editor
+ * needs to see before saving is the crop — a preview at the slot's real
+ * proportions, not the raw file. Slots whose photo renders in more than one
+ * place get a frame per treatment.
+ *
+ * Ratios are width/height, read from the components' actual geometry.
+ */
+export type PhotoPreview = { label: string; ratio: number };
+
+const PREVIEWS: [RegExp, PhotoPreview[]][] = [
+  [
+    /^pillars:items\.\*\.photo$/,
+    [
+      { label: "Detail-page hero (full-bleed)", ratio: 16 / 9 },
+      { label: "Homepage pillar card (tall)", ratio: 2 / 3 },
+    ],
+  ],
+  [
+    /^experiences:items\.\*\.photo$/,
+    [
+      { label: "Detail-page hero (full-bleed)", ratio: 16 / 9 },
+      { label: "Experiences page (half-width)", ratio: 4 / 5 },
+    ],
+  ],
+  [/^homepage:hero\.photo$/, [{ label: "Homepage hero (full-bleed)", ratio: 16 / 9 }]],
+  [/^homepage:whyNow\.photo$/, [{ label: "Half-width media section", ratio: 4 / 5 }]],
+  [/^about:hero\.photo$/, [{ label: "About hero (full-bleed)", ratio: 16 / 9 }]],
+  [/^about:story\.photo$/, [{ label: "Full-width band", ratio: 21 / 9 }]],
+  [/^about:philosophy\.photo$/, [{ label: "Section background (wide)", ratio: 16 / 9 }]],
+  [/^about:leadership\.cards\.\*\.photo$/, [{ label: "Leadership portrait", ratio: 3 / 4 }]],
+  [/^leadership:members\.\*\.photo$/, [{ label: "Profile portrait", ratio: 3 / 4 }]],
+  [/^membership:categories\.items\.\*\.photo$/, [{ label: "Category row (short, wide)", ratio: 2 / 1 }]],
+  [/^insights:articles\.\*\.photo$/, [{ label: "Article lead image", ratio: 2 / 1 }]],
+];
+
+export function photoPreviews(file: string, path: string[]): PhotoPreview[] {
+  const key = `${file}:${genericPath(path)}`;
+  return (
+    PREVIEWS.find(([re]) => re.test(key))?.[1] ?? [
+      { label: "As it renders on the page", ratio: 3 / 2 },
+    ]
+  );
 }
