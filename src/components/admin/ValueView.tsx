@@ -1,6 +1,8 @@
 import { keyLabel } from "@/lib/admin/registry";
-import { fieldRule, isEditableLeaf } from "@/lib/admin/schema";
+import { fieldRule, isEditableLeaf, photoPreviews } from "@/lib/admin/schema";
+import { isPhotoObject } from "@/lib/admin/validate";
 import { FieldEditor } from "@/components/admin/FieldEditor";
+import { PhotoEditor } from "@/components/admin/PhotoEditor";
 
 /**
  * Walks a content file and renders each leaf.
@@ -26,19 +28,28 @@ export function ValueView({
 }) {
   const rule = fieldRule(file, path, value);
 
+  // A whole photo slot — image, alt and note edited together, as one unit.
+  if (isPhotoObject(value)) {
+    return (
+      <PhotoEditor
+        file={file}
+        path={path.join(".")}
+        photo={value}
+        previews={photoPreviews(file, path)}
+      />
+    );
+  }
+
   if (rule.kind === "image") {
+    // A stray photo leaf outside a full slot — display only; the unit above
+    // is where photographs are edited.
     return (
       <div className="flex flex-col gap-1.5">
         {label && <p className="type-label text-olive">{label}</p>}
         <p className="type-body text-olive border border-dashed border-hair bg-mint/30 px-3 py-2.5 max-w-xl">
-          {value === null || value === "" ? (
-            <span className="italic">Not set — the page shows a labelled &ldquo;photography pending&rdquo; frame.</span>
-          ) : (
-            <span className="break-all">{String(value)}</span>
-          )}
-        </p>
-        <p className="type-label text-olive/70 italic">
-          Photographs are not editable yet — upload arrives in the next phase.
+          <span className="break-all">
+            {value === null || value === "" ? "—" : String(value)}
+          </span>
         </p>
       </div>
     );

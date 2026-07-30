@@ -81,6 +81,133 @@ function shapeOf(value: unknown): string[] {
   return out;
 }
 
+/** Is this value a photo slot — exactly `{ src, alt, note }`? */
+export function isPhotoObject(
+  value: unknown,
+): value is { src: string | null; alt: string; note: string } {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
+  const keys = Object.keys(value).sort().join(",");
+  if (keys !== "alt,note,src") return false;
+  const v = value as Record<string, unknown>;
+  return (
+    (typeof v.src === "string" || v.src === null) &&
+    typeof v.alt === "string" &&
+    typeof v.note === "string"
+  );
+}
+
+const BAD_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/;
+
+export type PhotoEditOk = {
+  ok: true;
+  json: string;
+  photo: { src: string | null; alt: string; note: string };
+};
+
+/**
+ * Validate a whole photo-slot edit — src, alt and note together, as the one
+ * unit they are. Same discipline as a text edit: the path must resolve to an
+ * existing photo object, the texts are checked, the file's shape after the
+ * edit must match its shape before everywhere except this slot's three
+ * leaves, and the serialised bytes must re-parse to what was validated.
+ *
+ * `src` is not free text: it is either null (cleared, the pending frame), the
+ * slot's current value (text-only edit), or a path the server itself just
+ * generated for a processed upload — the caller decides which, never the form.
+ */
+export function validatePhotoEdit(
+  data: Record<string, unknown>,
+  rawPath: string,
+  next: { src: string | null; alt: string; note: string },
+): PhotoEditOk | ValidationError {
+  const path = parsePath(rawPath);
+  if (!path) return { ok: false, error: "That photo slot could not be identified." };
+
+  const current = getAtPath(data, path);
+  if (!isPhotoObject(current)) {
+    return {
+      ok: false,
+      error: "That is not a photo slot. Reload the page and try again.",
+    };
+  }
+
+  for (const [label, text] of [
+    ["alt text", next.alt],
+    ["note", next.note],
+  ] as const) {
+    if (text.length > 1000) {
+      return { ok: false, error: `The ${label} is too long — keep it under a thousand characters.` };
+    }
+    if (BAD_CHARS.test(text) || text.includes("\n")) {
+      return { ok: false, error: `The ${label} contains characters that are not allowed.` };
+    }
+  }
+
+  if (next.note.trim() === "") {
+    return {
+      ok: false,
+      error:
+        "The note cannot be empty — it is the label on the pending frame, and the brief to whoever fills the slot.",
+    };
+  }
+  if (next.src !== null && next.alt.trim() === "") {
+    return {
+      ok: false,
+      error:
+        "A photograph needs its alt text — the description a visitor hears instead of seeing the image.",
+    };
+  }
+  if (next.src === null && next.alt.trim() !== "") {
+    return {
+      ok: false,
+      error: "An empty slot carries no alt text — there is no image for it to describe.",
+    };
+  }
+
+  const cleaned = {
+    src: next.src,
+    alt: next.alt.trim(),
+    note: next.note.trim(),
+  };
+
+  let updated = data as unknown;
+  for (const [leaf, value] of Object.entries(cleaned)) {
+    updated = setAtPath(updated, [...path, leaf], value);
+  }
+
+  const before = shapeOf(data);
+  const after = shapeOf(updated);
+  if (before.length !== after.length) {
+    return { ok: false, error: "That change would alter the structure of the file." };
+  }
+  const allowedTargets = new Set(
+    ["src", "alt", "note"].map((leaf) => `.${[...path, leaf].join(".")}=`),
+  );
+  for (let i = 0; i < before.length; i++) {
+    if (before[i] === after[i]) continue;
+    const target = [...allowedTargets].find(
+      (t) => before[i].startsWith(t) && after[i].startsWith(t),
+    );
+    const allowed = target && new Set([`${target}string`, `${target}null`]);
+    if (!allowed || !allowed.has(before[i]) || !allowed.has(after[i])) {
+      return { ok: false, error: "That change would alter the structure of the file." };
+    }
+  }
+
+  const json = `${JSON.stringify(updated, null, 2)}\n`;
+  try {
+    if (JSON.stringify(JSON.parse(json)) !== JSON.stringify(updated)) {
+      return { ok: false, error: "The saved file would not match what was validated." };
+    }
+  } catch {
+    return { ok: false, error: "The saved file would not be valid JSON." };
+  }
+
+  return { ok: true, json, photo: cleaned };
+}
+
 export function validateEdit(
   file: string,
   data: Record<string, unknown>,
@@ -103,7 +230,8 @@ export function validateEdit(
   if (rule.kind === "image") {
     return {
       ok: false,
-      error: "Photographs are not editable yet — image upload arrives in the next phase.",
+      error:
+        "A photograph and its text are edited together, as one unit — use the photo editor for this slot.",
     };
   }
   if (!isEditableLeaf(current, rule)) {
