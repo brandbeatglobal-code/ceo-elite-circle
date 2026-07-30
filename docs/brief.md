@@ -151,7 +151,39 @@ CSS), warm full-colour elsewhere. Free-licensed, hotlinked from Unsplash;
 **Photo slots live on the page or item they belong to, in that section's file
 under `content/`.** A slot with `src: null` renders a labelled "photography
 pending" frame instead of an image, so a missing photo reads as deliberate
-rather than broken. Filling one is a one-line edit to the JSON.
+rather than broken. Filling one is a one-line edit to the JSON — or an upload
+through the admin, which is the case the next rule exists for.
+
+### Text over a photograph
+
+**An overlay is calibrated against a white photograph, never against the one
+that happens to be there today.** The mood above is a direction, not a
+guarantee: anyone can upload a bright image through the admin in one click,
+and a hero whose legibility depended on the photographer choosing dusk breaks
+the moment they don't.
+
+The rule is the one `PhotoCard` already followed, applied to every full-bleed
+section (`.photo-scrim` and the `.copy-scrim*` classes in `globals.css`):
+
+- A light wash on the section — currently `black/42` — so the photograph
+  reads.
+- A heavy field, `black/86`, on the copy itself, feathered in over the
+  container's own padding so it has no visible edge. Composited, the copy sits
+  on `(1 − 0.86)(1 − 0.42) = 0.081` luminance against a pure white image,
+  which is about 8:1 for white text.
+- Nothing over a photograph is dimmer than 75% white — 55% clears 4.5:1 on the
+  near-black ramp but not against a bright image behind a scrim. `Placeholder`
+  takes `onPhoto` for exactly this.
+- **No photograph, no scrim.** An empty slot renders the pending frame on the
+  dark ramp, where the copy is already legible and a field would only bury the
+  frame's label.
+
+`/about`'s philosophy pull-quote is copy from top to bottom, so its field
+covers the whole section and the photograph reads as texture rather than as an
+image. That is the honest cost of the rule, not an oversight: there is no
+empty band there to leave light.
+
+Verified by measurement rather than by reading the CSS — see *Verification*.
 
 ## Closing forms
 
@@ -190,6 +222,26 @@ while being visibly broken (height was the axis that mattered), and the fixed
 draft notice overlapping the hero CTA was invisible in full-page captures,
 because fixed elements render at the capture origin rather than the viewport
 bottom. Both needed the other method to find.
+
+**Contrast over a photograph is measured, not calculated.** Point every photo
+slot at a deliberately high-key (pure white) image, capture the page, then
+capture it again with the text set to `transparent` — which keeps every box
+exactly where it was, so the scrims are unchanged — and read the *lightest*
+pixel behind each text element out of that second capture. Contrast is then
+computed between the element's own resolved colour and that worst case.
+Details that matter: Tailwind v4 colours compute to `oklch(...)` and cannot be
+parsed as `rgb`, so resolve each by painting it over black and over white and
+solving for the triple and its alpha; sample the *padding* box, since an
+element's own border ring is its chrome rather than its background; and hide
+the fixed draft notice, whose white text otherwise lands in a full-page
+capture wherever the first viewport ended.
+
+**A save that depends on "what is there now" is tested with two saves, not
+one.** The stale-base bug (see *Current status*) passed every single-edit
+test. The sequence that catches it: save field A, rewind the running server's
+`content/` to its pre-save bytes — which is exactly what a not-yet-redeployed
+deployment has on disk — then save field B and assert field A's value in the
+*repository*.
 
 ## Microcopy conventions (client-specified, use verbatim)
 - "Learn More" → **Discover the Circle**
@@ -382,6 +434,21 @@ Two constraints, both enforced rather than assumed:
   the JSON pointing at them; a replaced upload is deleted in that commit too.
   The editor previews the crop inside the slot's real proportions before
   saving, and clearing a slot returns it to the standard pending frame.
+- **A save no longer reverts a field it did not touch.** Two uploads seconds
+  apart (`55544a8`, then `d0868d3`) both committed correctly in themselves,
+  but the second one reverted the first: it had been applied to the deployed
+  bundle's build-time copy of `homepage.json` rather than to what `main`
+  actually held, and it committed the whole file. Every edit is now applied to
+  the repository's copy, read at the moment of saving and pinned to a commit,
+  and a save that cannot read it is refused rather than guessed at. The panel
+  reads live too. `hero.photo` has been pointed back at the upload the bug
+  discarded — the file itself was still in the repository, orphaned.
+- **Heroes are legible over any photograph, not just a dark one.** Every
+  full-bleed photo section carries the calibrated scrim described under
+  *Text over a photograph* instead of a flat overlay. Measured against a pure
+  white image in every slot, at three viewports: previously nothing cleared
+  4.5:1 (the homepage headline 3.36:1, its body copy 2.60:1, the accent bullet
+  1.05:1); now the worst element on any of them is 4.77:1.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

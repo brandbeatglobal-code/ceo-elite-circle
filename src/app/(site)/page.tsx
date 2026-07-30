@@ -48,7 +48,7 @@ export default function Home() {
           className="h-full"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/45" />
+        {hero.photo.src && <div className="photo-scrim-nav" />}
 
         {/* The hairline grid carries over the photograph */}
         <div className="absolute inset-0 pointer-events-none hidden lg:block">
@@ -60,30 +60,37 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="wrap relative pt-36 lg:pt-44 hero-foot">
-          {/* The breaks are deliberate — the last line is indented at `lg`, so
-              it has to be its own line. */}
-          <h1 className="type-display type-hero text-white mb-6 lg:mb-10">
-            {hero.headline.map((line, i) => (
-              <Fragment key={line}>
-                {i > 0 && <br />}
-                {i === hero.headline.length - 1 ? (
-                  <span className="lg:ml-[18%]">{line}</span>
-                ) : (
-                  line
-                )}
-              </Fragment>
-            ))}
-          </h1>
+        {/* The copy carries its own field, so the headline stays legible over
+            a bright photograph as well as a dark one. The padding here is what
+            `.copy-scrim` fades across — keep the two in step. */}
+        <div
+          className={`relative pt-36 lg:pt-44 ${hero.photo.src ? "copy-scrim" : ""}`}
+        >
+          <div className="wrap hero-foot">
+            {/* The breaks are deliberate — the last line is indented at `lg`,
+                so it has to be its own line. */}
+            <h1 className="type-display type-hero text-white mb-6 lg:mb-10">
+              {hero.headline.map((line, i) => (
+                <Fragment key={line}>
+                  {i > 0 && <br />}
+                  {i === hero.headline.length - 1 ? (
+                    <span className="lg:ml-[18%]">{line}</span>
+                  ) : (
+                    line
+                  )}
+                </Fragment>
+              ))}
+            </h1>
 
-          <div className="max-w-sm mb-6 lg:mb-10">
-            <p className="type-body text-white mb-3">{hero.lead}</p>
-            <p className="type-body text-white/75">{hero.body}</p>
+            <div className="max-w-sm mb-6 lg:mb-10">
+              <p className="type-body text-white mb-3">{hero.lead}</p>
+              <p className="type-body text-white/75">{hero.body}</p>
+            </div>
+
+            <PillButton href="/contact" variant="outline" className="w-full">
+              {hero.cta}
+            </PillButton>
           </div>
-
-          <PillButton href="/contact" variant="outline" className="w-full">
-            {hero.cta}
-          </PillButton>
         </div>
       </section>
 

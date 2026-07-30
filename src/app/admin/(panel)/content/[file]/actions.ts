@@ -5,6 +5,7 @@ import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { adminEnabled, hasSession } from "@/lib/admin/auth";
+import { editBase } from "@/lib/admin/content";
 import { commitFile, commitFiles, type CommitEntry } from "@/lib/admin/github";
 import {
   MAX_UPLOAD_BYTES,
@@ -12,7 +13,7 @@ import {
   processUpload,
   uploadPath,
 } from "@/lib/admin/images";
-import { contentFile, keyLabel } from "@/lib/admin/registry";
+import { keyLabel } from "@/lib/admin/registry";
 import { getAtPath, isPhotoObject, parsePath, validatePhotoEdit, validateEdit } from "@/lib/admin/validate";
 
 export type SaveState =
@@ -22,6 +23,10 @@ export type SaveState =
 
 /**
  * Save one field.
+ *
+ * The edit is applied to the repository's copy of the file, read at the moment
+ * of saving — never to this server's copy, which on Vercel is a build-time
+ * snapshot and is a minute stale after any save. See `content.ts`.
  *
  * Order matters: validate everything first, then commit to GitHub, and only
  * write to the local file once the commit succeeded. GitHub is the source of
@@ -43,8 +48,9 @@ export async function saveField(
   const fieldPath = String(formData.get("path") ?? "");
   const value = String(formData.get("value") ?? "");
 
-  const cf = contentFile(fileName);
-  if (!cf) return { status: "error", message: "That content file was not found." };
+  const base = await editBase(fileName);
+  if (!base.ok) return { status: "error", message: base.error };
+  const { cf } = base;
 
   const result = validateEdit(cf.name, cf.data, fieldPath, value);
   if (!result.ok) return { status: "error", message: result.error };
@@ -54,10 +60,14 @@ export async function saveField(
     .map((p) => (/^\d+$/.test(p) ? `#${Number(p) + 1}` : keyLabel(p).toLowerCase()))
     .join(" › ");
 
+  // The blob sha makes the write a compare-and-swap: if the file moved on
+  // between the read above and this line, GitHub refuses rather than
+  // overwriting whatever landed in between.
   const commit = await commitFile(
     `content/${cf.fileName}`,
     result.json,
     `Content: update ${cf.fileName} — ${fieldPath}\n\nEdited through the content admin.\nField: ${label}`,
+    base.sha,
   );
   if (!commit.ok) return { status: "error", message: commit.error };
 
@@ -101,6 +111,11 @@ export async function saveField(
  * hold, or a superseded upload lingers with nothing pointing at it. Only
  * files this system itself stored are ever deleted; the Unsplash-hosted
  * slots have nothing local to clean up.
+ *
+ * As with a text save, the JSON written is the repository's copy plus this
+ * one slot — not this server's build-time snapshot plus this one slot. The
+ * commit is built on the exact commit that copy was read from, so a branch
+ * that moved in between is refused rather than rolled back.
  */
 export async function savePhoto(
   _prev: SaveState,
@@ -116,8 +131,9 @@ export async function savePhoto(
   const clear = formData.get("clear") === "1";
   const upload = formData.get("image");
 
-  const cf = contentFile(fileName);
-  if (!cf) return { status: "error", message: "That content file was not found." };
+  const base = await editBase(fileName);
+  if (!base.ok) return { status: "error", message: base.error };
+  const { cf } = base;
 
   const parsed = parsePath(fieldPath);
   const current = parsed ? getAtPath(cf.data, parsed) : undefined;
@@ -174,6 +190,7 @@ export async function savePhoto(
     entries,
     deletions,
     `Content: ${cf.fileName} — ${fieldPath} ${what}\n\nEdited through the content admin.`,
+    base.head,
   );
   if (!commit.ok) return { status: "error", message: commit.error };
 

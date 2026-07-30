@@ -17,10 +17,12 @@ export function DetailHero({
   summary?: string;
   photo: Photo;
 }) {
+  // No photograph, no scrim — see `PhotoHero` for the reasoning.
+  const scrim = photo.src !== null;
   return (
     <section className="relative min-h-[calc(88svh-var(--banner-h))] flex flex-col overflow-hidden bg-ramp text-white">
       <PhotoFrame photo={photo} tone="ramp" cover className="h-full" sizes="100vw" />
-      <div className="absolute inset-0 bg-black/55" />
+      {scrim && <div className="photo-scrim" />}
 
       <div className="absolute inset-0 pointer-events-none hidden lg:block">
         <div className="wrap h-full grid grid-cols-4">
@@ -31,37 +33,44 @@ export function DetailHero({
         </div>
       </div>
 
-      <div className="wrap relative flex-1 flex flex-col justify-between pt-36 lg:pt-44 hero-foot">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-          <div className="lg:col-span-3">
-            <div data-reveal>
-              <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
+      {/* Copy sits at both ends of this hero, so it takes two fields rather
+          than one — solid where the words are, fading through the empty
+          middle so the photograph still reads. */}
+      <div className="relative flex-1 flex flex-col justify-between">
+        <div className={`pt-36 lg:pt-44 ${scrim ? "copy-scrim-top" : ""}`}>
+          <div className="wrap grid grid-cols-1 lg:grid-cols-4 gap-10">
+            <div className="lg:col-span-3">
+              <div data-reveal>
+                <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
+              </div>
+              <h1
+                className="type-display type-hero mt-6 max-w-4xl"
+                data-reveal
+                style={{ transitionDelay: "90ms" }}
+              >
+                {title}
+              </h1>
             </div>
-            <h1
-              className="type-display type-hero mt-6 max-w-4xl"
+            <div
+              className="flex items-end"
               data-reveal
-              style={{ transitionDelay: "90ms" }}
+              style={{ transitionDelay: "200ms" }}
             >
-              {title}
-            </h1>
-          </div>
-          <div
-            className="flex items-end"
-            data-reveal
-            style={{ transitionDelay: "200ms" }}
-          >
-            {summary ? (
-              <p className="type-body text-white/80 max-w-xs">{summary}</p>
-            ) : (
-              <Placeholder tone="ramp" />
-            )}
+              {summary ? (
+                <p className="type-body text-white/80 max-w-xs">{summary}</p>
+              ) : (
+                <Placeholder tone="ramp" onPhoto />
+              )}
+            </div>
           </div>
         </div>
 
-        <div data-reveal style={{ transitionDelay: "280ms" }}>
-          <PillButton href="/contact" variant="outline" className="w-full mt-12">
-            Request Membership Consideration
-          </PillButton>
+        <div className={scrim ? "copy-scrim-band" : ""}>
+          <div className="wrap hero-foot" data-reveal style={{ transitionDelay: "280ms" }}>
+            <PillButton href="/contact" variant="outline" className="w-full mt-12">
+              Request Membership Consideration
+            </PillButton>
+          </div>
         </div>
       </div>
     </section>

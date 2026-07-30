@@ -254,6 +254,103 @@ body:not(:has(.draft-banner)) {
   padding-bottom: 2rem;
 }
 
+/* ---- Text over a photograph -------------------------------------------
+   The same discipline as `.photo-card-scrim` further down, applied to the
+   full-bleed sections. A single flat overlay only works if the photograph
+   happens to be dark, and the admin makes it trivial to upload one that is
+   not — a hero must stay legible whatever gets put behind it.
+
+   So the wash on the section stays light enough to see the picture, and the
+   copy carries its own field. Composited against a *pure white* photograph:
+
+     transmittance = (1 − 0.86)(1 − 0.42) = 0.081
+
+   which is luminance 0.081 behind the copy — about 8.0:1 for white text and
+   5.4:1 for the 75% white used for secondary lines. None of that depends on
+   the image. Where there is no copy the photograph reads at 0.42, lighter
+   than the flat overlays these replaced.
+
+   Nothing over a photograph may be dimmer than 70% white; `Placeholder`
+   takes `onPhoto` for that reason. */
+.photo-scrim,
+.photo-scrim-nav {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+}
+
+/* Heroes on `/` and `/about` carry a transparent navigation bar, so the head
+   of the section holds white text too. */
+.photo-scrim-nav {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.86) 0%,
+      rgba(0, 0, 0, 0.86) 8rem,
+      rgba(0, 0, 0, 0) 14rem
+    ),
+    rgba(0, 0, 0, 0.42);
+}
+
+.copy-scrim,
+.copy-scrim-top,
+.copy-scrim-band {
+  --scrim: rgba(0, 0, 0, 0.86);
+  --scrim-feather: 7rem;
+}
+
+/* Copy held at the foot of a hero. The fade runs across the container's own
+   top padding — these two stops track `pt-36` / `lg:pt-44` on the element,
+   so the field is solid exactly where the first line begins. */
+.copy-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 2rem,
+    var(--scrim) 9rem,
+    var(--scrim) 100%
+  );
+}
+
+@media (min-width: 1024px) {
+  .copy-scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 3rem,
+      var(--scrim) 11rem,
+      var(--scrim) 100%
+    );
+  }
+}
+
+/* Copy held at the head of a section: solid from the top edge, fading out
+   below the block. The negative margin buys the fade without moving the
+   copy. */
+.copy-scrim-top {
+  padding-bottom: var(--scrim-feather);
+  margin-bottom: calc(-1 * var(--scrim-feather));
+  background: linear-gradient(
+    to bottom,
+    var(--scrim) 0,
+    var(--scrim) calc(100% - var(--scrim-feather)),
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* A block with empty photograph on both sides of it. */
+.copy-scrim-band {
+  padding-top: var(--scrim-feather);
+  padding-bottom: var(--scrim-feather);
+  margin-top: calc(-1 * var(--scrim-feather));
+  margin-bottom: calc(-1 * var(--scrim-feather));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    var(--scrim) var(--scrim-feather),
+    var(--scrim) calc(100% - var(--scrim-feather)),
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
 /* ---- Motion -----------------------------------------------------------
    Content is visible by default. The `js-anim` class is only added by an
    inline script in the document head, and only when JavaScript runs AND the

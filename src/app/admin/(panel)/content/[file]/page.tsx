@@ -1,16 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/auth";
-import { contentFile, keyLabel } from "@/lib/admin/registry";
+import { displayContent } from "@/lib/admin/content";
+import { keyLabel } from "@/lib/admin/registry";
 import { ValueView } from "@/components/admin/ValueView";
 
 export const dynamic = "force-dynamic";
 
 /**
- * One content file, read-only: its sections are the file's top-level keys,
- * its fields the values, rendered by the same schema-free walk that Phase 3's
- * forms will bind inputs to. Showing the live values (not just labels) is
- * deliberate — it proves the generated navigation resolves to real data.
+ * One content file: its sections are the file's top-level keys, its fields the
+ * values, rendered by a schema-free walk that puts an input at every editable
+ * leaf.
+ *
+ * The values come from the repository, read on each request — not from this
+ * server's copy of `content/`, which on Vercel is a build-time snapshot and
+ * therefore a minute behind after any save. Showing a value that a save has
+ * already replaced would invite the editor to save it back again.
  */
 export default async function ContentFilePage({
   params,
@@ -19,8 +24,9 @@ export default async function ContentFilePage({
 }) {
   await requireAdmin();
   const { file } = await params;
-  const cf = contentFile(file);
-  if (!cf) notFound();
+  const live = await displayContent(file);
+  if (!live) notFound();
+  const { cf, note } = live;
 
   return (
     <div className="wrap py-10 lg:py-14">
@@ -43,6 +49,11 @@ export default async function ContentFilePage({
             repository, which publishes it — allow about a minute. A
             photograph, its alt text and its note are saved together.
           </p>
+          {note && (
+            <p className="type-label italic text-olive mt-3 max-w-xl border-l-2 border-sage pl-3">
+              {note}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col">

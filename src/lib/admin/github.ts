@@ -41,6 +41,111 @@ function headers(token: string): HeadersInit {
   };
 }
 
+export type FetchedFile =
+  | { ok: true; content: string; sha: string }
+  | { ok: false; error: string };
+
+export type FetchedHead = { ok: true; sha: string } | { ok: false; error: string };
+
+const NO_TOKEN =
+  "Saving is not configured yet: this site has no GitHub token set, so there is nowhere to commit the change. Nothing has been altered.";
+const REFUSED =
+  "GitHub refused the saved credentials. The token may have expired or lost access to this repository. Nothing has been changed.";
+
+/**
+ * The commit the branch currently points at.
+ *
+ * Every edit is pinned to one commit: the content it is based on is read at
+ * this sha, and the write is made conditional on the branch still being here.
+ * That is what makes two saves inside the deploy window safe — the second one
+ * either sees the first one's commit, or is refused.
+ */
+export async function readBranchHead(): Promise<FetchedHead> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { ok: false, error: NO_TOKEN };
+  try {
+    const res = await fetch(
+      `${API_BASE}/repos/${REPO}/git/ref/${encodeURIComponent(`heads/${BRANCH}`)}`,
+      { headers: headers(token), cache: "no-store" },
+    );
+    if (res.status === 401 || res.status === 403) return { ok: false, error: REFUSED };
+    if (res.status !== 200) {
+      return {
+        ok: false,
+        error: `The repository could not be read from GitHub (HTTP ${res.status}), so this save was not attempted. Nothing has been changed.`,
+      };
+    }
+    const body = (await res.json()) as { object?: { sha?: string } };
+    const sha = body.object?.sha;
+    if (typeof sha !== "string") {
+      return {
+        ok: false,
+        error:
+          "GitHub returned the branch in an unexpected form, so this save was not attempted. Nothing has been changed.",
+      };
+    }
+    return { ok: true, sha };
+  } catch {
+    return {
+      ok: false,
+      error:
+        "GitHub could not be reached to read the current content, so this save was not attempted. Nothing has been changed.",
+    };
+  }
+}
+
+/**
+ * Read a file's current contents from the repository — not this server's copy.
+ *
+ * This exists because the deployed bundle's `content/` is a snapshot taken at
+ * build time: it only changes when a deploy finishes, about a minute after a
+ * save. An edit built on that snapshot silently reverts anything committed
+ * since it was taken. Every write must therefore start from what GitHub holds
+ * right now, and a save that cannot read it must fail rather than guess.
+ *
+ * `ref` pins the read to an exact commit, so the content and the concurrency
+ * check cannot be describing two different moments.
+ */
+export async function readFile(
+  repoPath: string,
+  ref: string = BRANCH,
+): Promise<FetchedFile> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { ok: false, error: NO_TOKEN };
+  try {
+    const res = await fetch(
+      `${API_BASE}/repos/${REPO}/contents/${repoPath}?ref=${encodeURIComponent(ref)}`,
+      { headers: headers(token), cache: "no-store" },
+    );
+    if (res.status === 401 || res.status === 403) return { ok: false, error: REFUSED };
+    if (res.status !== 200) {
+      return {
+        ok: false,
+        error: `The current content could not be read from GitHub (HTTP ${res.status}), so this save was not attempted. Nothing has been changed.`,
+      };
+    }
+    const body = (await res.json()) as { content?: string; sha?: string };
+    if (typeof body.content !== "string" || typeof body.sha !== "string") {
+      return {
+        ok: false,
+        error:
+          "GitHub returned the file in an unexpected form, so this save was not attempted. Nothing has been changed.",
+      };
+    }
+    return {
+      ok: true,
+      content: Buffer.from(body.content, "base64").toString("utf8"),
+      sha: body.sha,
+    };
+  } catch {
+    return {
+      ok: false,
+      error:
+        "GitHub could not be reached to read the current content, so this save was not attempted. Nothing has been changed.",
+    };
+  }
+}
+
 export type CommitEntry = {
   /** Repo-relative path, e.g. `content/about.json`. */
   path: string;
@@ -57,20 +162,20 @@ export type CommitEntry = {
  * top of the branch head, then a commit, then a fast-forward ref update; a
  * non-fast-forward means someone else pushed first, and maps to the same
  * "changed while you were editing" error the single-file path reports.
+ *
+ * `baseCommitSha` is the commit the edit was read from. Building the tree on
+ * that commit — rather than on whatever the branch happens to point at now —
+ * is what makes the ref update refuse instead of quietly discarding anything
+ * committed since the read.
  */
 export async function commitFiles(
   entries: CommitEntry[],
   deletions: string[],
   message: string,
+  baseCommitSha?: string,
 ): Promise<CommitResult> {
   const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    return {
-      ok: false,
-      error:
-        "Saving is not configured yet: this site has no GitHub token set, so there is nowhere to commit the change. Nothing has been altered.",
-    };
-  }
+  if (!token) return { ok: false, error: NO_TOKEN };
   const h = headers(token);
   const base = `${API_BASE}/repos/${REPO}/git`;
 
@@ -95,18 +200,15 @@ export async function commitFiles(
   };
 
   try {
-    const ref = await call("GET", `${base}/ref/${encodeURIComponent(`heads/${BRANCH}`)}`);
-    if (ref.status === 401 || ref.status === 403) {
-      return {
-        ok: false,
-        error:
-          "GitHub refused the saved credentials. The token may have expired or lost access to this repository. Nothing has been changed.",
-      };
+    let headSha = baseCommitSha;
+    if (!headSha) {
+      const ref = await call("GET", `${base}/ref/${encodeURIComponent(`heads/${BRANCH}`)}`);
+      if (ref.status === 401 || ref.status === 403) return { ok: false, error: REFUSED };
+      if (ref.status !== 200) {
+        return { ok: false, error: `GitHub could not be read (HTTP ${ref.status}). Nothing has been changed.` };
+      }
+      headSha = (ref.json.object as { sha?: string })?.sha;
     }
-    if (ref.status !== 200) {
-      return { ok: false, error: `GitHub could not be read (HTTP ${ref.status}). Nothing has been changed.` };
-    }
-    const headSha = (ref.json.object as { sha?: string })?.sha;
     if (!headSha) return { ok: false, error: "GitHub returned an unexpected reply. Nothing has been changed." };
 
     const headCommit = await call("GET", `${base}/commits/${headSha}`);
@@ -183,33 +285,34 @@ export async function commitFile(
   repoPath: string,
   contents: string,
   message: string,
+  /**
+   * The blob sha the edit was based on. Passing it makes the write
+   * conditional: if the file changed in the repository since it was read,
+   * GitHub refuses rather than overwriting. Omitted, the current sha is
+   * looked up instead — which is only safe when nothing was read first.
+   */
+  knownSha?: string,
 ): Promise<CommitResult> {
   const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    return {
-      ok: false,
-      error:
-        "Saving is not configured yet: this site has no GitHub token set, so there is nowhere to commit the change. Nothing has been altered.",
-    };
-  }
+  if (!token) return { ok: false, error: NO_TOKEN };
 
   const url = `${API_BASE}/repos/${REPO}/contents/${repoPath}`;
 
-  let sha: string | undefined;
+  let sha: string | undefined = knownSha;
   try {
-    const head = await fetch(
+    const head = knownSha
+      ? null
+      : await fetch(
       `${url}?ref=${encodeURIComponent(BRANCH)}`,
       { headers: headers(token), cache: "no-store" },
     );
-    if (head.status === 200) {
+    if (head === null) {
+      // Already known from the read this edit was based on.
+    } else if (head.status === 200) {
       const body = (await head.json()) as { sha?: string };
       sha = body.sha;
     } else if (head.status === 401 || head.status === 403) {
-      return {
-        ok: false,
-        error:
-          "GitHub refused the saved credentials. The token may have expired or lost access to this repository. Nothing has been changed.",
-      };
+      return { ok: false, error: REFUSED };
     } else if (head.status !== 404) {
       return {
         ok: false,

@@ -134,9 +134,44 @@ GitHub until all of that passes.
 Ordering in the save action matters: **commit first, write locally second.**
 GitHub is the source of truth and local state must never run ahead of it. On
 Vercel the local write simply fails (read-only filesystem) and that is fine —
-the deploy is what brings the new content. It also means the panel keeps
-showing the previous value for about a minute after a save, which is why the
-input keeps what was typed rather than resetting from the server.
+the deploy is what brings the new content.
+
+#### What an edit is applied to
+
+**The repository, read at the moment of saving — never this server's copy of
+`content/`.** `src/lib/admin/content.ts` is the only place that decides this,
+and both server actions go through it.
+
+The distinction is not academic; getting it wrong lost real work. On Vercel
+the deployed bundle's `content/` is a snapshot taken when the deployment was
+built, and a save takes about a minute to redeploy. For that minute the
+running server's own copy is *behind the repository*. An edit applied to that
+snapshot and committed as a whole file silently reverts anything committed
+since — which is what happened when two photographs were uploaded seconds
+apart: the second upload landed correctly and rolled the first one back
+(`55544a8`, then `d0868d3`).
+
+So: `registry.ts` reads the filesystem, and that is right for discovering
+*what exists* — the section list, the field walk, the shapes, which cannot
+change without a code change. It is wrong for *values*. `editBase()` fetches
+the file from the branch at a pinned commit and refuses the save outright if
+it cannot; there is no fall back to the snapshot, because guessing is what
+caused the bug. The panel reads live too (`displayContent()`), so it never
+invites an editor to save back a value that has already been replaced; that
+one *does* fall back to the deployment's copy, with a visible note, since
+display cannot lose anyone's work.
+
+Two writes, two concurrency guards, both fail closed with "reload and try
+again":
+
+- a text save is a compare-and-swap on the blob sha the edit was read from
+  (the Contents API refuses a stale sha);
+- a photo save builds its tree on the commit the read was pinned to, so the
+  non-forced ref update refuses if the branch moved.
+
+The regression test for all of this is the two-save sequence described in
+`docs/brief.md` § *Verification*. A single-edit test passes against the broken
+code.
 
 Deferred: adding or removing whole array entries, and creating a key that is
 currently absent. Both change a file's shape, which is exactly what the
@@ -260,6 +295,33 @@ one-line edit; several slots still carry Unsplash URLs from the design stage.
 `images.unsplash.com` is allow-listed in `next.config.ts`. **In a sandbox the
 proxy blocks it (403)** — images will not render locally, and that is expected,
 not a bug. It also means a wrong photo ID cannot be caught locally.
+
+### Text over a photograph is never calibrated to the photograph
+
+Every full-bleed photo section uses the scrim classes in `globals.css`, not a
+flat `bg-black/NN`: a light `black/42` wash on the section so the picture
+reads, plus a heavy `black/86` field on the copy itself, feathered in over the
+container's own padding. Against a *pure white* photograph the copy therefore
+sits on 0.081 luminance — about 8:1 for white text — and that number does not
+depend on the image. A flat overlay dark enough to survive a white photograph
+behind text leaves the photograph invisible everywhere else, which is why the
+field belongs to the copy rather than to the section.
+
+Three consequences worth knowing before editing one of these sections:
+
+- `.copy-scrim`'s gradient stops track the container's `pt-36` / `lg:pt-44`.
+  Change one and change the other, or the field starts in the wrong place.
+- Nothing over a photograph may be dimmer than 75% white. `Placeholder` takes
+  `onPhoto` for that; 55% white clears 4.5:1 on the ramp but not here.
+- **No photograph, no scrim** — each component checks `photo.src` and skips
+  both classes. An empty slot is the dark ramp with a labelled pending frame,
+  and a field would only bury the frame's own label. The classes are
+  background-only or padding-and-negative-margin balanced, so dropping them
+  moves nothing.
+
+Verify by measurement against a deliberately high-key image, not by reading
+the CSS — `docs/brief.md` § *Verification* describes the method and the three
+traps in it.
 
 ### `PhotoFrame` owns its `position`
 

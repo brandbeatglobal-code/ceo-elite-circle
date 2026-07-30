@@ -224,18 +224,28 @@ export function Placeholder({
   tone = "cream",
   lead = false,
   note,
+  onPhoto = false,
 }: {
   tone?: Tone;
   lead?: boolean;
   /** Replaces the default sentence when a slot has a stricter requirement. */
   note?: string;
+  /**
+   * Sitting over a photograph rather than a flat dark section. 55% white
+   * clears 4.5:1 comfortably on the near-black ramp; behind the scrim on a
+   * bright photograph it does not, so the floor over an image is 80%.
+   */
+  onPhoto?: boolean;
 }) {
   const dark = isDark(tone);
+  const darkInk = onPhoto
+    ? "border-white/40 text-white/80"
+    : "border-white/25 text-white/55";
   return (
     <p
       className={`${lead ? "type-lead" : "type-body"} italic border border-dashed px-4 py-3 ${
         lead ? "max-w-sm" : "max-w-md"
-      } ${dark ? "border-white/25 text-white/55" : "border-hair text-olive"}`}
+      } ${dark ? darkInk : "border-hair text-olive"}`}
     >
       {note ??
         "Content placeholder — copy for this section is still to be drafted and reviewed."}

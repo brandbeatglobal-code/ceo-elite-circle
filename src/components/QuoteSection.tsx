@@ -25,6 +25,8 @@ export function QuoteSection({
   quote: ReactNode;
   support: ReactNode;
 }) {
+  // No photograph, no scrim — see `PhotoHero` for the reasoning.
+  const scrim = photo.src !== null;
   return (
     <section className="relative bg-ramp text-white overflow-hidden">
       <PhotoFrame
@@ -34,22 +36,26 @@ export function QuoteSection({
         className="h-full"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-black/62" />
+      {scrim && <div className="photo-scrim" />}
 
-      <div className="wrap relative">
-        <SectionHeader index={index} eyebrow={eyebrow} tone="ramp" />
+      {/* This section is copy from top to bottom, so its field covers the
+          whole of it — there is no empty band to leave light. */}
+      <div className={`relative ${scrim ? "copy-scrim-band" : ""}`}>
+        <div className="wrap">
+          <SectionHeader index={index} eyebrow={eyebrow} tone="ramp" />
 
-        <div className="pt-16 pb-16 lg:pt-36 lg:pb-40">
-          <h2 className="type-h2 max-w-5xl lg:[text-indent:22%] mb-16 lg:mb-28">
-            {title}
-          </h2>
+          <div className="pt-16 pb-16 lg:pt-36 lg:pb-40">
+            <h2 className="type-h2 max-w-5xl lg:[text-indent:22%] mb-16 lg:mb-28">
+              {title}
+            </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div className="flex flex-col items-start gap-4">{quote}</div>
-            <div className="flex flex-col items-start gap-4 lg:border-l border-hair-dark lg:pl-8">
-              {support}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              <div className="flex flex-col items-start gap-4">{quote}</div>
+              <div className="flex flex-col items-start gap-4 lg:border-l border-hair-dark lg:pl-8">
+                {support}
+              </div>
+              <div className="hidden lg:block lg:col-span-2" />
             </div>
-            <div className="hidden lg:block lg:col-span-2" />
           </div>
         </div>
       </div>

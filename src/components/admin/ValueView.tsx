@@ -12,8 +12,9 @@ import { PhotoEditor } from "@/components/admin/PhotoEditor";
  * still renders correctly, which is what keeps the admin derived from
  * `content/` rather than hand-maintained.
  *
- * Photographs are shown but not editable: image upload is Phase 4, and a slot
- * left out entirely would look broken rather than pending.
+ * A whole photo slot renders as one editor — image, alt text and note
+ * together. A photo leaf reached on its own is display-only, because alt text
+ * must describe the image that is actually there.
  */
 export function ValueView({
   file,

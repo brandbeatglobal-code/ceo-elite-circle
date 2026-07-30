@@ -94,7 +94,7 @@ export default function AboutPage() {
         eyebrow={philosophy.eyebrow}
         title={philosophy.title}
         photo={philosophy.photo}
-        quote={<Placeholder tone="ramp" lead note={philosophy.quoteNote} />}
+        quote={<Placeholder tone="ramp" lead onPhoto note={philosophy.quoteNote} />}
         support={
           <p className="type-body text-white/75 max-w-sm">
             {philosophy.support}
