@@ -1,0 +1,322 @@
+# Content inventory
+
+Every editable string and image on the site, where it lived before the Phase 1
+migration, and where it lives now. Written as the spec for the JSON schema, and
+kept as a record independent of the code.
+
+"Editable" means a client could reasonably want to change it without a
+developer. It excludes anything that is **structure**: route paths, section
+ordering, the running index ("One", "Two"…), tone/background choices, grid
+spans, and which component renders a section. Those stay in code, per the
+confirmed scope — text and images only.
+
+---
+
+## Where content lives now
+
+| File | Holds |
+|---|---|
+| `content/site.json` | Site metadata, nav, footer, draft banner |
+| `content/forms.json` | The eight `RequestSection` variants |
+| `content/homepage.json` | `/` |
+| `content/about.json` | `/about` |
+| `content/pillars.json` | `/pillars` and `/pillars/[slug]` |
+| `content/experiences.json` | `/experiences` and `/experiences/[slug]` |
+| `content/membership.json` | `/membership` (+ the homepage category teaser) |
+| `content/trust.json` | `/trust` |
+| `content/councils.json` | `/councils` |
+| `content/contact.json` | `/contact` |
+| `content/insights.json` | `/insights` and `/insights/[slug]` |
+| `content/leadership.json` | `/about/leadership/[slug]` |
+
+Each file is read by a thin typed loader in `src/lib/`, which is what pages
+import. The loader declares the type and does nothing else — no defaulting, no
+merging, no computation. Changing a value in the JSON changes the rendered page
+and nothing else.
+
+### Two files the brief did not name
+
+`site.json` and `forms.json` are cross-page: the nav, the footer and the
+closing-form variants belong to no single page, and duplicating them per page
+is exactly the drift the shared-copy rule exists to prevent.
+
+### One deliberate cross-reference
+
+Membership categories live **only** in `content/membership.json`. The homepage
+teaser reads them from there. This is the existing `src/lib/copy.ts` invariant
+carried over: a homepage teaser and its full page must not be able to drift.
+An admin editing the homepage will not find category copy under `homepage.json`
+— that is correct, not an omission.
+
+---
+
+## Global
+
+### `content/site.json`
+
+| Field | Was | Note |
+|---|---|---|
+| `metadata.title` | `src/app/layout.tsx` | Browser/tab title |
+| `metadata.description` | `src/app/layout.tsx` | |
+| `metadata.titleSuffix` | assembled inline in five `generateMetadata` calls | `" — CEO Elite Circle"` |
+| `metadata.fallbackTitle` | same | Used when a record has no title |
+| `pageTitles.*` | `export const metadata` in six page files | One per static page |
+| `brand` | `Nav.tsx`, `Footer.tsx` | "CEO Elite Circle", rendered in both |
+| `nav.groups[].heading` | `Nav.tsx` | Three groups |
+| `nav.groups[].links[].label` | `Nav.tsx` | |
+| `nav.groups[].links[].href` | `Nav.tsx` | **Structure** — carried in JSON because it is part of the link record, but not to be exposed as an editable field in Phase 3 |
+| `nav.cta.label` | `Nav.tsx` | "Begin Your Membership Journey" |
+| `nav.menuLabel` / `nav.closeLabel` | `Nav.tsx` | Mobile toggle |
+| `nav.menuAriaLabel` | `Nav.tsx` | |
+| `footer.tagline` | `Footer.tsx` | |
+| `footer.columns[]` | `Footer.tsx` | Mirrors the nav groups plus a "Begin" column |
+| `footer.legal[]` | `Footer.tsx` | Four items. The `©` year is computed, not content |
+| `draftBanner.text` | `DraftBanner.tsx` | |
+| `draftBanner.dismissLabel` | `DismissDraftBanner.tsx` | |
+
+### `content/forms.json`
+
+The eight closing-form variants. Each carries: `eyebrow`, `heading`, `lead`,
+`body`, `columns[]` (`legend` + `inputs[]` or `selects[]`), `note`, `cta`, and
+an optional `ctaHref`.
+
+Was: the `configs` record in `src/components/RequestSection.tsx`.
+
+Variants: `membership`, `application`, `pillar`, `experience`, `governance`,
+`council`, `briefings`, `enquiry`.
+
+Two rules survive the move and are load-bearing:
+
+- **`ctaHref` is set only where the destination does what the label promises.**
+  Today that is `membership` and `application` only (both → `/contact`).
+  Everything else renders a disabled button. Adding a `ctaHref` to a variant
+  whose CTA has nowhere honest to go turns a visibly-unfinished control into a
+  working one that lies.
+- The shared `CONTACT` column (Name / Surname / Phone number / Email) was one
+  object reused by two variants. It is now written out in both, because a JSON
+  file cannot hold a reference and an admin editing one variant should not
+  silently change another.
+
+---
+
+## `/` — `content/homepage.json`
+
+| Field | Was |
+|---|---|
+| `hero.photo` | `images.ts` → `photos.hero` |
+| `hero.headline[]` | page.tsx — three lines, hard-broken deliberately; the third is indented at `lg` |
+| `hero.lead` | page.tsx |
+| `hero.body` | page.tsx |
+| `hero.cta` | page.tsx |
+| `philosophy.eyebrow` / `.title` / `.lead` / `.body` | page.tsx |
+| `philosophy.link.label`, `.arrowLabel` | page.tsx |
+| `pillars.eyebrow` / `.title` / `.lead` / `.link.label` | page.tsx |
+| `pillars.cardLabel`, `.cardLinkLabel` | page.tsx — "Pillar", "Discover the Circle" |
+| `whyNow.eyebrow` / `.title` / `.lead` / `.body` / `.linkLabel` | page.tsx |
+| `whyNow.photo` | `images.ts` → `photos.whyNow` |
+| `categories.eyebrow` / `.title` / `.link.label` / `.rowLabel` / `.rowLinkLabel` | page.tsx |
+| — category name/body/photo | **not here** — `membership.json` |
+| `governance.eyebrow` / `.title` / `.lead` / `.body` / `.link.label` | page.tsx |
+| `governance.primaryLinkLabel`, `.secondaryLinkLabel` | page.tsx |
+| `experiences.eyebrow` / `.title` / `.lead` / `.link.label` | page.tsx |
+| `experiences.featuredSlug` | page.tsx — was `experiences.find(e => e.slug === "ceo-private-dinners")` |
+| `experiences.featuredLinkLabel`, `.listLinkLabel` | page.tsx |
+| `testimonials.eyebrow` / `.title` / `.note` / `.cardLabel` | page.tsx |
+| `request.variant` | page.tsx |
+
+Pillar and experience names, summaries and photos come from
+`pillars.json` / `experiences.json`. The homepage renders the first five
+pillars and all seven experiences; nothing is duplicated.
+
+## `/about` — `content/about.json`
+
+| Field | Was |
+|---|---|
+| `hero.*` (eyebrow, title, left, right) | page.tsx |
+| `hero.photo` | `photos.aboutHero` |
+| `story.eyebrow` / `.title` / `.lead` / `.body` | page.tsx |
+| `story.photo` | `photos.aboutStory` |
+| `leadership.eyebrow` / `.title` / `.intro` | page.tsx |
+| `leadership.cards[].photo` | `photos.leadershipOne`…`Four` |
+| `sections[]` — 5 × (`title`, `lead`, `body`) | page.tsx — Purpose, Beliefs, Mission, Vision, Who We Serve |
+| `philosophy.eyebrow` / `.title` / `.support` | page.tsx |
+| `philosophy.quoteNote` | page.tsx — the placeholder's stricter note |
+| `philosophy.photo` | `photos.aboutPhilosophy` |
+| `differences.eyebrow` / `.title` / `.intro` | page.tsx |
+| `differences.features[]` — 4 × (`icon`, `label`, `body`) | page.tsx |
+
+`icon` is a key (`rings` / `arcs` / `stack` / `orbit`) resolved to a component
+in the page. The icon set is design; the label and body are content.
+
+**Section order is code.** `sections[0..3]` render as Three–Six, the philosophy
+pull-quote as Seven, `sections[4]` as Eight. That split is layout, so the array
+order in JSON is read positionally and adding a sixth entry would not add a
+section.
+
+## `/pillars`, `/pillars/[slug]` — `content/pillars.json`
+
+`page` block: `title`, `eyebrow`, `intro`, `itemEyebrowPrefix`, `linkLabel`.
+
+`detail` block: the labels shared by all five detail pages — `heroEyebrow`,
+`aboutEyebrow`, `variantsEyebrow`, `variantsTitle`, `variantsIntro`,
+`criteriaEyebrow`, `criteriaTitle`, `criteriaIntro`, `requestContextLabel`.
+
+`items[]`: `slug`, `name`, `photo`, `summary`, `intro`, `criteria[]`
+(`title` + `body`), optional `variants[]` (`name` + `body`).
+
+Was: `src/lib/pillars.ts` plus the labels hardcoded in both page files.
+
+**`detail.variantsIntro` carries a `{name}` token** — it was
+`` `${pillar.name} runs in more than one shape…` ``. The token is resolved at
+render. It is the only templated string on the site.
+
+`variants` is present on three pillars and absent on two, and that is
+deliberate: Elite Network and Knowledge & Insights have no meaningful list of
+formats. Absent `variants` also removes a section, so the detail page's running
+index shifts — handled by the existing local counter, not by content.
+
+## `/experiences`, `/experiences/[slug]` — `content/experiences.json`
+
+Same shape as pillars: `page`, `detail`, `items[]`.
+
+`items[]`: `slug`, `name`, `photo`, `summary`, `intro`, `criteria[]`,
+`steps[]` (`title` + `body`).
+
+Was: `src/lib/experiences.ts`.
+
+**`steps` used to be generated.** A helper, `attend(what)`, produced the same
+four steps for all seven experiences with one noun interpolated ("the summit",
+"the majlis", "a private dinner"…). They are now written out per experience —
+28 step records instead of one template. That is the point: a client editing
+the summit's lead-up should not silently rewrite the awards evening's. The
+resolved text is identical to what the helper produced.
+
+## `/membership` — `content/membership.json`
+
+| Field | Was |
+|---|---|
+| `hero.*` | page.tsx |
+| `whoShouldJoin.*` + `criteria[]` | page.tsx |
+| `categories.eyebrow` / `.title` / `.intro` | page.tsx + `copy.ts` (`membershipCategoriesIntro`) |
+| `categories.rowLabel`, `.rowLinkLabel` | page.tsx |
+| `categories.items[]` — 3 × (`name`, `body`, `photo`) | `copy.ts` (`tiers`) + `images.ts` (`tier*`) |
+| `benefits.*` + `features[]` | page.tsx |
+| `journey.*` + `steps[]` | page.tsx |
+| `faq.*` + `items[]` | page.tsx |
+| `request.variant` | page.tsx — `application` |
+
+Category descriptions stay descriptive: they say what each category involves
+and state no fee, no headcount and no entitlement that reads as a term.
+
+## `/trust` — `content/trust.json`
+
+| Field | Was |
+|---|---|
+| `hero.*` | page.tsx |
+| `status.eyebrow` / `.title` / `.lead` / `.body` | page.tsx |
+| `areas.eyebrow` / `.title` / `.label` / `.body` | page.tsx |
+| `areas.items[]` — ten names | page.tsx |
+| `areas.placeholderNote` | page.tsx |
+
+**No policy text is stored, and none should be added through the admin.** The
+ten areas carry a name and a labelled placeholder. Each is a commitment a
+member could rely on, so draft wording reads as binding whether or not it is
+finished. Phase 3 should treat this file as name-only until sign-off exists.
+
+## `/councils` — `content/councils.json`
+
+`hero`, `purpose` (title/lead/body), `councils` (+ 3 items), `format` (+ 4
+steps), `benefits` (+ 4 features), `calendar` (+ 4 steps), `advisors`
+(eyebrow, title, placeholder note), `request.variant`.
+
+Was: page.tsx throughout. Expert Advisors names real people, so it stays a
+placeholder note rather than content.
+
+## `/contact` — `content/contact.json`
+
+`hero`, `form` (eyebrow, two column legends, field lists, consent label,
+CTA, disabled note), `selection` (eyebrow/title/intro + 5 steps).
+
+Was: page.tsx. `/contact` is the only page with no `RequestSection` — its own
+form is the real one — so its form copy lives here rather than in `forms.json`.
+
+## `/insights`, `/insights/[slug]` — `content/insights.json`
+
+`page`: hero, list-section eyebrow/title/intro, the pending-card label, the
+pending-card photo note, and the "template exists / stays unlinked" note.
+
+`detail`: the article-template labels — section eyebrows, the metadata row
+labels (Reading time / Author / Published by / Date of publication), the
+"pending" value word, the related-articles heading and note.
+
+`articles[]`: one entry, `template`. `slug`, `title`, `photo`, `readingTime`,
+`author`, `publisher`, `date` (all four metadata fields null on purpose), and
+`body` — the article prose, which was hardcoded in `insights/[slug]/page.tsx`:
+`openingHeading`, `openingParagraphs[]`, `listHeading`, `listIntro`,
+`listItems[]`, `closingHeading`, `closingParagraphs[]`, `note`, `pullQuote`.
+
+`published[]` is empty and drives the list page. The `template` article is a
+real route linked from nowhere; keep it that way.
+
+## `/about/leadership/[slug]` — `content/leadership.json`
+
+`detail`: the template's labels — hero eyebrow, expertise eyebrow/title,
+career eyebrow/title, recognition eyebrow/title, philosophy eyebrow, the
+`Area`/`Recognition` placeholder-row prefixes, and the pull-quote note.
+
+`members[]`: one entry, `template`, every text field null. `slug`, `photo`,
+`name`, `credentials`, `role`, `intro`, `timeline[]`, `expertise[]`, `quote`.
+
+Was: `src/lib/leadership.ts`. Unchanged in substance — it was already a
+null-filled record designed to be a data edit rather than a template rewrite.
+
+---
+
+## What deliberately did **not** move
+
+- **Section numbering.** `src/lib/ordinal.ts` and every `ordinal(n)` call. The
+  running index is structure, and the three idioms that keep it contiguous
+  (hardcoded list, `ordinal(i)` in a map, local counter) all depend on code.
+- **Icon choice.** `src/components/Icons.tsx` and the `icon` keys. Which
+  hairline mark sits above a label is design.
+- **Tone and layout props** — `tone`, `flip`, `greyscale`, `cover`, grid spans,
+  `sizes`, transition delays.
+- **Route paths and `generateStaticParams`.** A slug is an address.
+- **The `Placeholder` component's default sentence.** It is a system default,
+  not page copy. Per-slot overrides (`note`) did move, since those are written
+  for a specific slot.
+- **The `©` year** in the footer, which is computed.
+- **`src/lib/ordinal.ts`, `Reveal.tsx`, `template.tsx`, `globals.css`.** No
+  content.
+
+## Things that were not a clean lift
+
+Recorded here because they are the places a future change is most likely to go
+wrong. All four are also flagged in the migration report.
+
+1. **`attend()` expanded.** One generated template → 28 literal step records
+   (`experiences.json`). Resolved text identical.
+2. **`{name}` token.** `pillars.detail.variantsIntro` is the one string that
+   interpolates a value at render.
+3. **The shared `CONTACT` column duplicated.** One object reused by two form
+   variants → written out in both (`forms.json`).
+4. **`photos.privateDinners` was referenced twice.** Once as the featured
+   experience's photo on the homepage, once as that experience's own photo. It
+   is now stored once, on the experience, and the homepage reads it from there.
+
+## Conditional logic that depends on content values
+
+Not defects — but they mean a content edit can change which sections render,
+so Phase 3 should not treat every field as inert text.
+
+- `pillars.items[].variants` — absent removes the Formats section, and shifts
+  that page's running index. It also flips the criteria section's tone from
+  `black` to `cream`, because two dark sections would otherwise stack.
+- `insights.published` — empty renders the "article pending" cards and the
+  "template stays unlinked" note; non-empty would render real cards.
+- `leadership.members[].name` / `.credentials` / `.intro` / `.quote` /
+  `.timeline` / `.expertise` — each null falls back to a placeholder.
+- `insights.articles[].title` and the four metadata fields — same.
+- `photo.src: null` — renders the labelled "photography pending" frame.
+- `forms.*.ctaHref` — absent renders a disabled button instead of a link.
+- `forms.*.columns.length` — one column widens to two grid columns.

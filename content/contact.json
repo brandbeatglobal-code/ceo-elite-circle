@@ -1,0 +1,53 @@
+{
+  "metaTitle": "Request Membership Consideration — CEO Elite Circle",
+
+  "hero": {
+    "eyebrow": "Begin",
+    "title": "Request Membership Consideration",
+    "intro": "Membership is by invitation and consideration. Share your details below and the Circle will be in touch."
+  },
+
+  "form": {
+    "eyebrow": "Application",
+    "contactLegend": "Contact information",
+    "contactFields": ["Name", "Surname", "Phone number", "Email"],
+    "detailsLegend": "Membership details",
+    "detailsFields": [
+      "Membership category",
+      "Region",
+      "Introduced by",
+      "Preferred contact"
+    ],
+    "consentLabel": "I have read and agree to the Privacy policy",
+    "cta": "Request Membership Consideration",
+    "note": "Form disabled in this scaffold — it will be wired up once the fields and submission handling are confirmed."
+  },
+
+  "selection": {
+    "eyebrow": "Selection process",
+    "title": "How consideration works",
+    "intro": "Five steps, from first enquiry to invitation. How long each takes varies with the enquiry, and is not fixed to a schedule.",
+    "steps": [
+      {
+        "title": "Enquiry",
+        "body": "You write, or a member writes on your behalf. Either route is considered on the same footing."
+      },
+      {
+        "title": "First conversation",
+        "body": "An unhurried discussion about what you are working on and what you would want from the membership. There is nothing to prepare."
+      },
+      {
+        "title": "Interview",
+        "body": "A longer conversation with members of the Circle. It runs in both directions — you are assessing the fit as much as we are."
+      },
+      {
+        "title": "Review",
+        "body": "Your candidacy is considered within the Circle. The question is whether the room is right for you and you for it, rather than whether you are qualified."
+      },
+      {
+        "title": "Acceptance",
+        "body": "Where consideration is favourable, an invitation follows with the terms of membership. Where it is not, you are told directly."
+      }
+    ]
+  }
+}

@@ -1,32 +1,34 @@
 import { MediaSection } from "@/components/MediaSection";
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
-import { experiences } from "@/lib/experiences";
+import { experiences, experiencesContent } from "@/lib/experiences";
 import { ordinal } from "@/lib/ordinal";
 
-export const metadata = { title: "Signature Experiences — CEO Elite Circle" };
+const { page } = experiencesContent;
+
+export const metadata = { title: page.metaTitle };
 
 export default function ExperiencesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Signature Experiences"
-        title="Signature Experiences"
-        intro="The occasions on which the Circle convenes. Each is built for a different kind of conversation."
+        eyebrow={page.heroEyebrow}
+        title={page.heroTitle}
+        intro={page.heroIntro}
       />
 
       {experiences.map((experience, i) => (
         <MediaSection
           key={experience.slug}
           index={ordinal(i)}
-          eyebrow="Experience"
+          eyebrow={page.itemEyebrow}
           title={experience.name}
           photo={experience.photo}
           tone={i % 2 === 1 ? "black" : "cream"}
           flip={i % 2 === 1}
           link={{
             href: `/experiences/${experience.slug}`,
-            label: "Discover the Circle",
+            label: page.itemLinkLabel,
           }}
         >
           <p

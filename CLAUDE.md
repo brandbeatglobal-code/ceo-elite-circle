@@ -85,24 +85,47 @@ gaps. Three idioms are in use, matched to the page:
 `RequestSection` is always the last section before the footer, and takes the
 next number. `/contact` is the only page without one.
 
-### Content lives in `src/lib/`
+### Content lives in `content/*.json`
 
-`pillars.ts`, `experiences.ts`, `leadership.ts`, `insights.ts` and `copy.ts`
-hold the data the pages map over. Shared copy (membership categories) lives in
-`copy.ts` so a homepage teaser and its full page cannot drift.
+Every editable string and image on the site is in one of twelve JSON files
+under `content/` — one per page, plus `site.json` (metadata, nav, footer, draft
+banner) and `forms.json` (the `RequestSection` variants), both of which belong
+to no single page. `docs/content-inventory.md` is the field-by-field record of
+what moved where, and is the spec to read before changing the schema.
 
-`leadership.ts` and `insights.ts` type every text field as `string | null` and
-currently hold nulls — the templates render placeholders per empty slot, so
+`src/lib/*.ts` are now **thin typed loaders**, one per content file: import the
+JSON, declare its type, export it. No defaulting, no merging, no computation —
+so changing a value in `content/` changes the rendered page and nothing else.
+That is what makes the Phase 2+ admin panel a file edit rather than a code
+change. Keep them thin.
+
+Structure stays in code and is deliberately *not* in the JSON: section order
+and numbering, tone/`flip`/grid props, route paths, and which icon sits above a
+feature label (the JSON names an icon by key; `Icon` in `Icons.tsx` resolves
+it).
+
+Membership categories live only in `content/membership.json`; the homepage
+teaser reads them from there, so a teaser and its full page cannot drift. An
+admin editing the homepage will not find category copy under `homepage.json` —
+that is correct, not an omission.
+
+`leadership.json` and `insights.json` type every text field as `string | null`
+and currently hold nulls — the templates render placeholders per empty slot, so
 adding a real person or article is a data edit, not a template rewrite.
-`insights.ts` also separates `articles` (includes the unlinked template) from
+`insights.json` also separates `articles` (includes the unlinked template) from
 `published` (empty); the list page renders from `published`.
+
+`trust.json` deliberately has **no field for policy text** — only the ten area
+names. The schema itself makes the no-sample-copy rule hard to break by
+accident, including from the admin panel.
 
 ### Photographs
 
-Singleton slots live in `src/lib/images.ts`; per-item photographs live on the
-item in `pillars.ts` / `experiences.ts`. A `Photo` with `src: null` renders a
-labelled "photography pending" frame rather than a broken image, so a missing
-photograph reads as deliberate. Filling one is a one-line change.
+Photo slots live on the page or item they belong to, in that section's JSON
+file. `src/lib/images.ts` holds only the `Photo` type. A `Photo` with
+`src: null` renders a labelled "photography pending" frame rather than a broken
+image, so a missing photograph reads as deliberate. Filling one is a one-line
+edit to the JSON.
 
 `images.unsplash.com` is allow-listed in `next.config.ts`. **In a sandbox the
 proxy blocks it (403)** — images will not render locally, and that is expected,
@@ -139,7 +162,8 @@ and reduced motion must skip it entirely.
 
 `RequestSection` takes a `variant` — one component, not copies. A governance
 page and a briefings index must not both end in a membership application. The
-route-to-variant map is in `docs/brief.md` § *Closing forms*. Rules: no field
+variants themselves are in `content/forms.json`; the route-to-variant map is in
+`docs/brief.md` § *Closing forms*. Rules: no field
 implying a capability that doesn't exist (upload, scheduling, payment);
 pre-filled context rendered inert rather than as an editable field; only the
 two application variants may call themselves an application.
@@ -173,7 +197,28 @@ free space and padding below the CTA does not move it up.
 ## Verifying changes
 
 Build and lint are necessary but not sufficient. Measurement and screenshots
-catch different failures, and this repo has produced examples of both:
+catch different failures, and this repo has produced examples of both.
+
+Two harness traps that have already cost time here, both of which produced
+*confident wrong answers* rather than obvious failures:
+
+- **`next start` does not rebind a port that is already held.** Rebuilding
+  `.next` under a still-running server leaves it serving an old build manifest:
+  chunks 404/500, React never hydrates, and every client component looks
+  broken. Kill the old process and confirm the port is free before capturing.
+- **Failed images paint their alt text**, and *when* the failure lands decides
+  whether that text is on screen at capture time. That reads as a page diff but
+  is a network diff. Stub the image route — and note that `next/image` requests
+  `/_next/image?url=…` from our own server, so `images.unsplash.com` is the
+  wrong URL to intercept.
+
+For a content refactor specifically, the strongest check is not a screenshot at
+all: `next build` writes the prerendered HTML to `.next/server/app/**.html`, so
+before/after copies of that tree can be diffed byte-for-byte once `<script>`,
+`<link>` and HTML comments are stripped (build-id chunk hashes and React's text
+separators are the only legitimate differences).
+
+The failures that needed the other methods:
 
 - A hero/nav overlap passed a **width** sweep while being visibly broken —
   height was the axis that mattered. For anything vertically anchored, sweep

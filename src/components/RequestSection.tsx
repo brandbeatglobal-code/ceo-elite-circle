@@ -1,162 +1,25 @@
 import { PillButton, SectionHeader } from "@/components/ui";
+import { forms, type RequestVariant } from "@/lib/forms";
 
 /**
  * The closing form. One component, one variant per context — a governance
  * page and a briefings index should not both end in a membership application.
  *
- * Rules that hold across every variant:
+ * The variants themselves live in `content/forms.json`. Rules that hold across
+ * every one of them:
  * - No field implies a capability that does not exist: no upload, no
  *   scheduling, no payment.
  * - Pre-filled context is rendered inert, as a labelled value rather than an
  *   editable field nobody can correct.
  * - Every variant carries its own honest note. Only the two application
  *   variants may describe themselves as an application.
+ * - `ctaHref` is set only where the button genuinely lands somewhere that does
+ *   what the label promises. Without it the button renders disabled, the same
+ *   way the fields do — a working button that navigates somewhere else is the
+ *   one part of this section that could mislead, because nothing about it
+ *   looks unfinished.
  */
-export type RequestVariant =
-  | "membership"
-  | "application"
-  | "pillar"
-  | "experience"
-  | "governance"
-  | "council"
-  | "briefings"
-  | "enquiry";
-
-type Column = { legend: string; inputs?: string[]; selects?: string[] };
-
-type Config = {
-  eyebrow: string;
-  heading: string;
-  lead: string;
-  body: string;
-  columns: Column[];
-  note: string;
-  cta: string;
-  /**
-   * Only set where the button genuinely lands somewhere that does what the
-   * label promises. Without it the button renders disabled, the same way the
-   * fields do — a working button that navigates somewhere else is the one part
-   * of this section that could mislead, because nothing about it looks
-   * unfinished.
-   */
-  ctaHref?: string;
-};
-
-const CONTACT: Column = {
-  legend: "Contact information",
-  inputs: ["Name", "Surname", "Phone number", "Email"],
-};
-
-const configs: Record<RequestVariant, Config> = {
-  membership: {
-    eyebrow: "Begin",
-    heading: "Request Membership Consideration",
-    lead: "Membership in the CEO Elite Circle is by invitation and consideration only.",
-    body: "Tell us who you are and what you are working on. Someone from the Circle will read it, and you will hear back either way.",
-    columns: [
-      CONTACT,
-      {
-        legend: "Membership details",
-        selects: ["Membership category", "Region", "Introduced by", "Preferred contact"],
-      },
-    ],
-    note: "Fields are not yet wired up — the application questions are still being confirmed. The button below opens the full request page.",
-    cta: "Request Membership Consideration",
-    ctaHref: "/contact",
-  },
-
-  application: {
-    eyebrow: "Apply",
-    heading: "Apply for Membership",
-    lead: "One application, whichever category you are considered for.",
-    body: "Category is decided during consideration rather than chosen at the outset, so an approximate answer is fine here.",
-    columns: [
-      CONTACT,
-      {
-        legend: "Membership details",
-        selects: ["Membership category", "Organisation", "Region", "Introduced by"],
-      },
-    ],
-    note: "Fields are not yet wired up — the application questions are still being confirmed. The button below opens the full request page.",
-    cta: "Request Membership Consideration",
-    ctaHref: "/contact",
-  },
-
-  pillar: {
-    eyebrow: "Enquire",
-    heading: "Enquire about this pillar",
-    lead: "Questions about how a pillar works in practice are welcome before any question of membership.",
-    body: "Tell us what you would want from it, and someone who runs it will reply.",
-    columns: [
-      { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
-      { legend: "Your enquiry", selects: ["Nature of enquiry", "Preferred contact"] },
-    ],
-    note: "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
-    cta: "Send an Enquiry",
-  },
-
-  experience: {
-    eyebrow: "Register interest",
-    heading: "Register interest in this occasion",
-    lead: "Places are held for members, and interest is noted ahead of each occasion.",
-    body: "Registering interest carries no obligation and is not an application for membership.",
-    columns: [
-      { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
-      { legend: "Your interest", selects: ["Attending as", "Region", "Preferred contact"] },
-    ],
-    note: "Fields and button are not yet wired up — registration handling is still to be built. Registering interest is not a membership application.",
-    cta: "Register Interest",
-  },
-
-  governance: {
-    eyebrow: "Governance",
-    heading: "Ask a governance question",
-    lead: "The Trust Framework is being finalised and is not published yet.",
-    body: "If you have a question about how the Circle is governed, or would like the framework when it is settled, say so here.",
-    columns: [
-      { legend: "Contact information", inputs: ["Name", "Email"] },
-      { legend: "Your question", selects: ["Area of the framework", "Preferred contact"] },
-    ],
-    note: "Fields and button are not yet wired up. This is not a membership application, and it does not yet reach anyone.",
-    cta: "Send a Governance Question",
-  },
-
-  council: {
-    eyebrow: "Councils",
-    heading: "Express interest in a council",
-    lead: "Councils hold their membership across the year, so places open at particular points.",
-    body: "Tell us which council fits your work and we will let you know when it next takes members.",
-    columns: [
-      { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
-      { legend: "Council details", selects: ["Council", "Region", "Preferred contact"] },
-    ],
-    note: "Fields and button are not yet wired up — council interest handling is still to be built. This is not a membership application.",
-    cta: "Express Interest",
-  },
-
-  briefings: {
-    eyebrow: "Briefings",
-    heading: "Subscribe to briefings",
-    lead: "Insights are published sparingly, and only when there is something worth the time.",
-    body: "Leave your details and you will receive them as they are written. Nothing else is sent.",
-    columns: [{ legend: "Your details", inputs: ["Name", "Email"] }],
-    note: "Fields and button are not yet wired up — subscription handling is still to be built. This is not a membership application.",
-    cta: "Subscribe to Briefings",
-  },
-
-  enquiry: {
-    eyebrow: "Enquire",
-    heading: "Enquire about the Circle",
-    lead: "Questions are welcome, whether or not they lead anywhere.",
-    body: "Tell us what you would like to know and the right person will reply.",
-    columns: [
-      { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
-      { legend: "Your enquiry", selects: ["Nature of enquiry", "Preferred contact"] },
-    ],
-    note: "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
-    cta: "Send an Enquiry",
-  },
-};
+export type { RequestVariant };
 
 export function RequestSection({
   index,
@@ -168,7 +31,7 @@ export function RequestSection({
   /** Shown inert above the fields — never an editable input. */
   context?: { label: string; value: string };
 }) {
-  const c = configs[variant];
+  const c = forms[variant];
   const single = c.columns.length === 1;
 
   return (

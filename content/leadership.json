@@ -1,0 +1,35 @@
+{
+  "detail": {
+    "fallbackMetaTitle": "Leadership — CEO Elite Circle",
+    "heroEyebrow": "Leadership",
+    "expertiseEyebrow": "Expertise",
+    "expertiseTitle": "Areas of expertise",
+    "expertisePlaceholderPrefix": "Area",
+    "careerEyebrow": "Education & Career",
+    "careerTitle": "Education and career",
+    "careerPeriodLabel": "Period",
+    "recognitionEyebrow": "Recognition",
+    "recognitionTitle": "Recognition",
+    "recognitionPlaceholderPrefix": "Recognition",
+    "philosophyEyebrow": "Philosophy",
+    "quoteNote": "Pull-quote placeholder — this slot must carry real words from a real, named person. Nothing should be written on their behalf."
+  },
+
+  "members": [
+    {
+      "slug": "template",
+      "photo": {
+        "src": null,
+        "alt": "",
+        "note": "a member of Circle leadership."
+      },
+      "name": null,
+      "credentials": null,
+      "role": null,
+      "intro": null,
+      "timeline": [],
+      "expertise": [],
+      "quote": null
+    }
+  ]
+}

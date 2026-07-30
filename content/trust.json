@@ -1,0 +1,36 @@
+{
+  "metaTitle": "Trust Framework — CEO Elite Circle",
+
+  "hero": {
+    "eyebrow": "Governance",
+    "title": "Trust Framework",
+    "intro": "The Trust Framework is being finalised. The ten areas it will cover are listed below; the wording of each is with the Circle for sign-off and is not published until it is settled."
+  },
+
+  "status": {
+    "eyebrow": "Status",
+    "title": "Written once, not drafted twice",
+    "lead": "Everything on this page is a commitment rather than a description.",
+    "body": "Confidentiality, conduct, review and removal are the terms a member is asked to rely on. Placeholder wording in those places would read as settled policy long before it is, so the areas below are named and left empty until each one has been agreed."
+  },
+
+  "areas": {
+    "eyebrow": "Policy areas",
+    "title": "The ten areas",
+    "label": "Awaiting sign-off",
+    "body": "Open any area to see its current state. Each will carry its full wording once agreed.",
+    "placeholderNote": "Policy text pending sign-off. This section states a commitment members may rely on, so nothing is drafted here in the meantime.",
+    "items": [
+      "Our Commitment",
+      "CEO Charter",
+      "Moderation Standards",
+      "Confidentiality",
+      "Governance",
+      "Member Conduct",
+      "Privacy",
+      "Conflict Resolution",
+      "Membership Review",
+      "Removal Policy"
+    ]
+  }
+}

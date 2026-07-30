@@ -1,33 +1,9 @@
 import Link from "next/link";
+import { site } from "@/lib/site";
 
-/* Mirrors the nav's three groups exactly, so the two never drift apart, plus
-   the closing CTA column. */
-const columns = [
-  {
-    heading: "The Circle",
-    links: [
-      { href: "/about", label: "About the Circle" },
-      { href: "/pillars", label: "The Five Pillars" },
-      { href: "/experiences", label: "Signature Experiences" },
-    ],
-  },
-  {
-    heading: "Membership",
-    links: [
-      { href: "/membership", label: "Membership" },
-      { href: "/trust", label: "Trust Framework" },
-      { href: "/councils", label: "Executive Councils" },
-    ],
-  },
-  {
-    heading: "Insights",
-    links: [{ href: "/insights", label: "Insights" }],
-  },
-  {
-    heading: "Begin",
-    links: [{ href: "/contact", label: "Request Membership Consideration" }],
-  },
-];
+/* Columns mirror the nav's three groups exactly, so the two never drift apart,
+   plus the closing CTA column. Both live in `content/site.json`. */
+const { tagline, columns, legal } = site.footer;
 
 export default function Footer() {
   return (
@@ -36,11 +12,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 border-b border-hair">
           <div className="py-16 lg:pr-10">
             <div className="text-lg font-semibold tracking-tight mb-5">
-              CEO Elite Circle
+              {site.brand}
             </div>
-            <p className="type-lead max-w-xs">
-              A private circle for distinguished business leaders.
-            </p>
+            <p className="type-lead max-w-xs">{tagline}</p>
           </div>
 
           {columns.map((col) => (
@@ -63,18 +37,18 @@ export default function Footer() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-y-3 py-6">
+          {/* The year is computed, not content. */}
           <p className="type-label text-olive">
-            © {new Date().getFullYear()} CEO Elite Circle
+            © {new Date().getFullYear()} {legal.copyrightHolder}
           </p>
-          <p className="type-label text-olive md:border-l border-hair md:pl-8">
-            All rights reserved
-          </p>
-          <p className="type-label text-olive md:border-l border-hair md:pl-8">
-            Membership by consideration
-          </p>
-          <p className="type-label text-olive md:border-l border-hair md:pl-8">
-            Private and confidential
-          </p>
+          {legal.items.map((item) => (
+            <p
+              key={item}
+              className="type-label text-olive md:border-l border-hair md:pl-8"
+            >
+              {item}
+            </p>
+          ))}
         </div>
       </div>
     </footer>

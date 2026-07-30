@@ -1,0 +1,79 @@
+{
+  "brand": "CEO Elite Circle",
+  "metadata": {
+    "title": "CEO Elite Circle",
+    "description": "A private circle for distinguished business leaders. Built on trust, guided by integrity, and united by a shared commitment to excellence.",
+    "titleSuffix": " — CEO Elite Circle"
+  },
+  "nav": {
+    "groups": [
+      {
+        "heading": "The Circle",
+        "links": [
+          { "href": "/about", "label": "About the Circle" },
+          { "href": "/pillars", "label": "The Five Pillars" },
+          { "href": "/experiences", "label": "Signature Experiences" }
+        ]
+      },
+      {
+        "heading": "Membership",
+        "links": [
+          { "href": "/membership", "label": "Membership" },
+          { "href": "/trust", "label": "Trust Framework" },
+          { "href": "/councils", "label": "Executive Councils" }
+        ]
+      },
+      {
+        "heading": "Insights",
+        "links": [{ "href": "/insights", "label": "Insights" }]
+      }
+    ],
+    "cta": { "href": "/contact", "label": "Begin Your Membership Journey" },
+    "menuLabel": "Menu",
+    "closeLabel": "Close",
+    "menuAriaLabel": "Toggle menu"
+  },
+  "footer": {
+    "tagline": "A private circle for distinguished business leaders.",
+    "columns": [
+      {
+        "heading": "The Circle",
+        "links": [
+          { "href": "/about", "label": "About the Circle" },
+          { "href": "/pillars", "label": "The Five Pillars" },
+          { "href": "/experiences", "label": "Signature Experiences" }
+        ]
+      },
+      {
+        "heading": "Membership",
+        "links": [
+          { "href": "/membership", "label": "Membership" },
+          { "href": "/trust", "label": "Trust Framework" },
+          { "href": "/councils", "label": "Executive Councils" }
+        ]
+      },
+      {
+        "heading": "Insights",
+        "links": [{ "href": "/insights", "label": "Insights" }]
+      },
+      {
+        "heading": "Begin",
+        "links": [
+          { "href": "/contact", "label": "Request Membership Consideration" }
+        ]
+      }
+    ],
+    "legal": {
+      "copyrightHolder": "CEO Elite Circle",
+      "items": [
+        "All rights reserved",
+        "Membership by consideration",
+        "Private and confidential"
+      ]
+    }
+  },
+  "draftBanner": {
+    "text": "Work-in-progress preview — copy and imagery on this site are placeholders and not final.",
+    "dismissLabel": "Dismiss"
+  }
+}

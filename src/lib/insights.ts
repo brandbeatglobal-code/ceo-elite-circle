@@ -1,4 +1,5 @@
 import type { Photo } from "@/lib/images";
+import data from "../../content/insights.json";
 
 /**
  * Insights articles.
@@ -9,9 +10,23 @@ import type { Photo } from "@/lib/images";
  * labelled "article pending" cards instead — present and on-system, but not
  * pretending to be posts.
  *
- * Publishing the first real article means adding it here with every field
- * filled, then adding it to `published`.
+ * The template's four metadata fields stay null on purpose: an author, a
+ * publisher and a date are verifiable claims, and this is not a published
+ * article. Publishing a first real one means adding it to `articles` with every
+ * field filled, then adding it to `published`.
  */
+export type ArticleBody = {
+  openingHeading: string;
+  openingParagraphs: string[];
+  listHeading: string;
+  listIntro: string;
+  listItems: string[];
+  closingHeading: string;
+  closingParagraphs: string[];
+  note: string;
+  pullQuote: string;
+};
+
 export type Article = {
   slug: string;
   title: string | null;
@@ -20,29 +35,47 @@ export type Article = {
   author: string | null;
   publisher: string | null;
   date: string | null;
+  body: ArticleBody;
 };
 
-export const articles: Article[] = [
-  {
-    slug: "template",
-    // Sample title and body, so the template reads as a page rather than a
-    // skeleton. The metadata below stays null on purpose: an author, publisher
-    // and date are verifiable claims, and this is not a published article.
-    title: "The problem with good advice",
-    photo: {
-      src: null,
-      alt: "",
-      note: "the article's lead image, breaking the body copy.",
-    },
-    readingTime: null,
-    author: null,
-    publisher: null,
-    date: null,
-  },
-];
+export type InsightsContent = {
+  page: {
+    metaTitle: string;
+    heroEyebrow: string;
+    heroTitle: string;
+    heroIntro: string;
+    listEyebrow: string;
+    listTitle: string;
+    listIntro: string;
+    pendingCardLabel: string;
+    pendingCardPhotoNote: string;
+    emptyNote: string;
+  };
+  detail: {
+    fallbackMetaTitle: string;
+    articleEyebrow: string;
+    metaLabels: {
+      readingTime: string;
+      author: string;
+      publisher: string;
+      date: string;
+    };
+    pendingValue: string;
+    noteLabel: string;
+    relatedEyebrow: string;
+    relatedTitle: string;
+    relatedNote: string;
+    relatedCardLabel: string;
+    relatedCardPhotoNote: string;
+  };
+  articles: Article[];
+  /** Real, publishable articles. Empty until a first post is written. */
+  published: Article[];
+};
 
-/** Real, publishable articles. Empty until a first post is written. */
-export const published: Article[] = [];
+export const insights: InsightsContent = data;
+export const articles = insights.articles;
+export const published = insights.published;
 
 export function articleBySlug(slug: string) {
   return articles.find((a) => a.slug === slug);

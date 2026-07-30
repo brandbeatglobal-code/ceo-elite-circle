@@ -1,0 +1,129 @@
+{
+  "hero": {
+    "eyebrow": "The Circle",
+    "title": "About the Circle",
+    "left": "A private circle for chief executives, built on trust rather than reach.",
+    "right": "The Circle was formed on a simple observation: the people who most need candid counsel are the least likely to be offered it.",
+    "photo": {
+      "src": null,
+      "alt": "",
+      "note": "Interior of a considered, quiet room — the setting the Circle meets in."
+    }
+  },
+
+  "story": {
+    "eyebrow": "Story",
+    "title": "Our Story",
+    "lead": "The Circle began as a standing invitation between a handful of chief executives who had run out of rooms in which they could speak plainly.",
+    "body": "What began as an occasional dinner became a structure — pillars, councils, a framework of trust — because the value turned out to sit in the regularity rather than the occasion. The form has changed a good deal since. The premise has not.",
+    "photo": {
+      "src": null,
+      "alt": "",
+      "note": "Wide architectural exterior, daylight. Permanence rather than motion."
+    }
+  },
+
+  "leadership": {
+    "eyebrow": "Leadership",
+    "title": "Leadership",
+    "intro": "The Circle is convened by a small group who hold its governance and decide who is invited to join.",
+    "cards": [
+      {
+        "photo": {
+          "src": null,
+          "alt": "",
+          "note": "a member of Circle leadership."
+        }
+      },
+      {
+        "photo": {
+          "src": null,
+          "alt": "",
+          "note": "a member of Circle leadership."
+        }
+      },
+      {
+        "photo": {
+          "src": null,
+          "alt": "",
+          "note": "a member of Circle leadership."
+        }
+      },
+      {
+        "photo": {
+          "src": null,
+          "alt": "",
+          "note": "a member of Circle leadership."
+        }
+      }
+    ]
+  },
+
+  "sections": [
+    {
+      "title": "Our Purpose",
+      "lead": "To hold a room in which leadership can be discussed honestly.",
+      "body": "The Circle exists to make candour ordinary between people who rarely encounter it. Everything else — the forums, the councils, the briefings — is built to serve that, and is dropped when it stops serving it."
+    },
+    {
+      "title": "Our Beliefs",
+      "lead": "Four convictions shape how the Circle works.",
+      "body": "That counsel is worth more than advice. That a small room outperforms a large one. That confidence, once given, is absolute. And that a network is measured by the quality of a single introduction rather than the length of a list."
+    },
+    {
+      "title": "Our Mission",
+      "lead": "To be the room a chief executive keeps returning to.",
+      "body": "Not the largest gathering in the calendar, nor the most visible — the one that proves useful enough to survive a tightening diary. The Circle would rather be indispensable to a few than familiar to many."
+    },
+    {
+      "title": "Our Vision",
+      "lead": "A standard for how senior leaders convene.",
+      "body": "That private, considered, confidential conversation becomes the expectation at this level rather than the exception, and that the Circle is held as the reference for how such rooms are run."
+    },
+    {
+      "title": "Who We Serve",
+      "lead": "Chief executives and chairs of established organisations.",
+      "body": "Members carry final responsibility for an organisation of substance — the accountability that cannot be delegated to anyone else in the building. Sector, geography and scale vary widely across the membership. The seniority and the disposition do not."
+    }
+  ],
+
+  "philosophy": {
+    "eyebrow": "Philosophy",
+    "title": "Leadership Philosophy",
+    "quoteNote": "Pull-quote placeholder — this slot must carry real words from a real, named person. Nothing should be written on their behalf.",
+    "support": "Leadership at this level turns less on having answers than on the quality of the questions a person is willing to sit with. The Circle is built around that conviction, and everything in it follows from there.",
+    "photo": {
+      "src": null,
+      "alt": "",
+      "note": "A real working moment — people mid-discussion, not posed to camera."
+    }
+  },
+
+  "differences": {
+    "eyebrow": "Difference",
+    "title": "What Makes Us Different",
+    "intro": "Four things the Circle does differently, and holds to when it would be easier not to.",
+    "features": [
+      {
+        "icon": "rings",
+        "label": "Closed by design",
+        "body": "The Circle does not grow towards a target. Membership is bounded by what a room can hold, and admission is slowed rather than accelerated."
+      },
+      {
+        "icon": "arcs",
+        "label": "Counsel, not content",
+        "body": "There is no keynote and no stage. Members come to be questioned by peers rather than addressed by speakers."
+      },
+      {
+        "icon": "stack",
+        "label": "Confidence as the first term",
+        "body": "Discretion is not a policy applied to the Circle. It is the condition that makes the Circle possible at all."
+      },
+      {
+        "icon": "orbit",
+        "label": "Built to compound",
+        "body": "Councils and forums hold their membership across the year, so context accumulates instead of resetting at every meeting."
+      }
+    ]
+  }
+}

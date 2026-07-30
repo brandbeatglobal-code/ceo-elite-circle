@@ -4,8 +4,15 @@ import { DetailHero } from "@/components/DetailHero";
 import { NumberedSteps } from "@/components/NumberedSteps";
 import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
-import { experienceBySlug, experiences } from "@/lib/experiences";
+import {
+  experienceBySlug,
+  experiences,
+  experiencesContent,
+} from "@/lib/experiences";
 import { ordinal } from "@/lib/ordinal";
+import { site } from "@/lib/site";
+
+const { detail } = experiencesContent;
 
 export function generateStaticParams() {
   return experiences.map((e) => ({ slug: e.slug }));
@@ -20,8 +27,8 @@ export async function generateMetadata({
   const experience = experienceBySlug(slug);
   return {
     title: experience
-      ? `${experience.name} — CEO Elite Circle`
-      : "CEO Elite Circle",
+      ? `${experience.name}${site.metadata.titleSuffix}`
+      : detail.fallbackMetaTitle,
   };
 }
 
@@ -40,30 +47,34 @@ export default async function ExperiencePage({
   return (
     <>
       <DetailHero
-        eyebrow="Signature Experience"
+        eyebrow={detail.heroEyebrow}
         title={experience.name}
         summary={experience.summary}
         photo={experience.photo}
       />
 
-      <Section index={next()} eyebrow="About" title={experience.name}>
+      <Section
+        index={next()}
+        eyebrow={detail.aboutEyebrow}
+        title={experience.name}
+      >
         <p className="type-lead text-ink">{experience.intro}</p>
       </Section>
 
       <CandidacyChecklist
         index={next()}
-        eyebrow="Who it is for"
-        title="Who attends"
-        intro="Every signature experience suits a particular frame of mind as much as a particular seniority."
+        eyebrow={detail.criteriaEyebrow}
+        title={detail.criteriaTitle}
+        intro={detail.criteriaIntro}
         criteria={experience.criteria}
         tone="black"
       />
 
       <NumberedSteps
         index={next()}
-        eyebrow="Taking part"
-        title="Before you attend"
-        intro="A short sequence, so that the time in the room is spent well."
+        eyebrow={detail.stepsEyebrow}
+        title={detail.stepsTitle}
+        intro={detail.stepsIntro}
         steps={experience.steps}
         tone="cream"
       />
@@ -71,7 +82,10 @@ export default async function ExperiencePage({
       <RequestSection
         index={next()}
         variant="experience"
-        context={{ label: "Signature Experience", value: experience.name }}
+        context={{
+          label: detail.requestContextLabel,
+          value: experience.name,
+        }}
       />
     </>
   );

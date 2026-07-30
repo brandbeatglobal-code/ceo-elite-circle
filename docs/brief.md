@@ -148,16 +148,18 @@ hero, desaturated documentary in the membership rows (rendered greyscale in
 CSS), warm full-colour elsewhere. Free-licensed, hotlinked from Unsplash;
 `images.unsplash.com` is allow-listed in `next.config.ts`.
 
-**All photo slots live in `src/lib/images.ts`.** A slot with `src: null`
-renders a labelled "photography pending" frame instead of an image, so a
-missing photo reads as deliberate rather than broken. Filling one is a
-one-line change.
+**Photo slots live on the page or item they belong to, in that section's file
+under `content/`.** A slot with `src: null` renders a labelled "photography
+pending" frame instead of an image, so a missing photo reads as deliberate
+rather than broken. Filling one is a one-line edit to the JSON.
 
 ## Closing forms
 
 Every page ends with `RequestSection`, which takes a `variant` — one component,
 not copies. A governance page and a briefings index must not both close with a
-membership application.
+membership application. The variants live in `content/forms.json`; the
+route-to-variant map below stays in code, because which form closes a page is
+structure rather than copy.
 
 | Route | Variant |
 |---|---|
@@ -347,6 +349,14 @@ Two constraints, both enforced rather than assumed:
 - Live on Vercel already via direct deploy (project `ceo-elite-circle`).
   This repo is being connected as the permanent source so future changes
   go through git instead.
+- **Content has been lifted out of the components into `content/*.json`**
+  (Phase 1 of the custom admin panel). Twelve files — one per page, plus
+  `site.json` and `forms.json` — read by thin typed loaders in `src/lib/`.
+  Nothing about the design or the rendered output changed: all 25 prerendered
+  routes are byte-identical and all 46 screenshots pixel-identical against the
+  build before the migration. `docs/content-inventory.md` records every field
+  and where it came from. Later phases add the admin UI that edits these files;
+  the schema is the contract they build against.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

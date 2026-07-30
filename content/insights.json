@@ -1,0 +1,72 @@
+{
+  "page": {
+    "metaTitle": "Insights — CEO Elite Circle",
+    "heroEyebrow": "Knowledge & Insights",
+    "heroTitle": "Insights",
+    "heroIntro": "Writing from the Circle. No articles have been published yet — the cards below are structure, not posts.",
+    "listEyebrow": "Articles",
+    "listTitle": "Latest writing",
+    "listIntro": "Briefings, notes and short essays from members and from the people who convene them. Published sparingly, and only when there is something worth a member’s attention.",
+    "pendingCardLabel": "Article pending",
+    "pendingCardPhotoNote": "the article's lead image.",
+    "emptyNote": "The article template exists and is ready to receive a first post. It stays unlinked until one is written."
+  },
+
+  "detail": {
+    "fallbackMetaTitle": "Insights — CEO Elite Circle",
+    "articleEyebrow": "Article",
+    "metaLabels": {
+      "readingTime": "Reading time",
+      "author": "Author",
+      "publisher": "Published by",
+      "date": "Date of publication"
+    },
+    "pendingValue": "pending",
+    "noteLabel": "Note",
+    "relatedEyebrow": "Related articles",
+    "relatedTitle": "Further reading",
+    "relatedNote": "No other articles have been published yet, so none are linked — these cards are structure only.",
+    "relatedCardLabel": "Article pending",
+    "relatedCardPhotoNote": "the article's lead image."
+  },
+
+  "articles": [
+    {
+      "slug": "template",
+      "title": "The problem with good advice",
+      "photo": {
+        "src": null,
+        "alt": "",
+        "note": "the article's lead image, breaking the body copy."
+      },
+      "readingTime": null,
+      "author": null,
+      "publisher": null,
+      "date": null,
+      "body": {
+        "openingHeading": "The problem with good advice",
+        "openingParagraphs": [
+          "A chief executive is rarely short of input. Boards offer direction, advisers offer options, and the market offers an opinion whether or not one was sought. What is scarce is the conversation that asks nothing in return.",
+          "The distinction matters more than it sounds. Advice arrives with a position already taken. Counsel begins by establishing what the question actually is, which is often not the question that was brought into the room."
+        ],
+        "listHeading": "What a closed room allows",
+        "listIntro": "Once a conversation is genuinely private, several things become possible that are not possible anywhere else:",
+        "listItems": [
+          "A question can be described accurately, rather than in the version prepared for the board.",
+          "Disagreement costs nothing, so the strongest objection actually gets voiced.",
+          "Nobody is performing for a promotion, an investor, or the room itself.",
+          "Being wrong out loud carries no consequence beyond the conversation."
+        ],
+        "closingHeading": "Where this leaves a chair",
+        "closingParagraphs": [
+          "None of this removes the weight of the decision. The chief executive still signs, still answers for it, and still carries the consequence alone. What changes is the quality of thinking that precedes the signature.",
+          "That is the whole of the argument for a room like this one, and it is a narrower claim than most gatherings make."
+        ],
+        "note": "Members raise questions ahead of each forum, so the session is shaped by the room rather than presented to it.",
+        "pullQuote": "The scarcest thing at this level is not information. It is a room with nothing to sell."
+      }
+    }
+  ],
+
+  "published": []
+}

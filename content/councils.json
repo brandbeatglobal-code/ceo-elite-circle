@@ -1,0 +1,118 @@
+{
+  "metaTitle": "Executive Councils — CEO Elite Circle",
+
+  "hero": {
+    "eyebrow": "Executive Councils",
+    "title": "Executive Councils",
+    "intro": "Standing groups that hold their membership across the year, so that the work compounds rather than beginning again at each meeting."
+  },
+
+  "purpose": {
+    "eyebrow": "Purpose",
+    "title": "Purpose",
+    "lead": "A council exists to think properly about one field, over a long enough period that the thinking gets somewhere.",
+    "body": "Where a forum convenes around a single question and closes, a council holds its membership across the year. Each session begins where the last ended. The result is less immediate than a forum and considerably more durable."
+  },
+
+  "councils": {
+    "eyebrow": "Councils",
+    "title": "The Councils",
+    "intro": "Councils form around whatever the members have genuinely in common — an industry, a region, or a remit.",
+    "items": [
+      {
+        "name": "Sector Councils",
+        "body": "Organised by industry, for questions that only make sense with shared commercial context. Members arrive already fluent in the same landscape."
+      },
+      {
+        "name": "Regional Councils",
+        "body": "Organised by geography, where the operating environment is the common ground and regulation is a shared concern rather than a footnote."
+      },
+      {
+        "name": "Practice Councils",
+        "body": "Organised by function, drawing members who hold a comparable remit across different industries."
+      }
+    ]
+  },
+
+  "format": {
+    "eyebrow": "Meeting format",
+    "title": "Meeting Format",
+    "intro": "Every council runs to the same shape, whatever it is organised around.",
+    "steps": [
+      {
+        "title": "Convene",
+        "body": "Each council opens with the questions its members are carrying, gathered before the session rather than raised in it."
+      },
+      {
+        "title": "Work the question",
+        "body": "One subject is taken at a time and worked properly. Councils would rather finish one question than open four."
+      },
+      {
+        "title": "Record the position",
+        "body": "What the council concludes is written down for its own members, so the next session starts from it."
+      },
+      {
+        "title": "Carry it between sessions",
+        "body": "Work continues in the interval. The council is a standing group, not a series of unrelated meetings."
+      }
+    ]
+  },
+
+  "benefits": {
+    "eyebrow": "Benefits",
+    "title": "Benefits",
+    "intro": "What a standing group offers that a one-off gathering cannot.",
+    "features": [
+      {
+        "icon": "rings",
+        "label": "Continuity",
+        "body": "The same people, across a year. Context accumulates instead of resetting at each gathering."
+      },
+      {
+        "icon": "arcs",
+        "label": "Depth",
+        "body": "One question at a time, taken further than a single meeting would allow."
+      },
+      {
+        "icon": "stack",
+        "label": "Record",
+        "body": "Positions are written down and held for the council's own members."
+      },
+      {
+        "icon": "orbit",
+        "label": "Reach",
+        "body": "Councils extend a member's context beyond their own market and function."
+      }
+    ]
+  },
+
+  "calendar": {
+    "eyebrow": "Annual calendar",
+    "title": "Annual Calendar",
+    "intro": "The shape of a council year. Specific dates are set with each council and are not published here.",
+    "steps": [
+      {
+        "title": "Opening session",
+        "body": "The council sets its agenda for the year and agrees what it intends to resolve."
+      },
+      {
+        "title": "Working sessions",
+        "body": "The substance of the year. Each session takes one question and closes it as far as it can be closed."
+      },
+      {
+        "title": "Between sessions",
+        "body": "Members circulate material and carry the work forward, so nothing restarts from the beginning."
+      },
+      {
+        "title": "Closing session",
+        "body": "The council reviews what it concluded, and hands forward what it did not."
+      }
+    ]
+  },
+
+  "advisors": {
+    "eyebrow": "Expert advisors",
+    "title": "Expert Advisors",
+    "placeholderNote": "Advisors are named individuals — this section stays a placeholder until there are real people, with their agreement, to name."
+  }
+}
