@@ -9,6 +9,7 @@ import "@fontsource/fraunces/400.css";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { BackToTop } from "@/components/BackToTop";
 import { DraftBanner } from "@/components/DraftBanner";
 import { Reveal } from "@/components/Reveal";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
         <Nav />
         <main>{children}</main>
         <Footer />
+        <BackToTop />
         <DraftBanner />
         <Reveal />
       </body>
