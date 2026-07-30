@@ -7,7 +7,6 @@
     "itemEyebrowPrefix": "Pillar",
     "itemLinkLabel": "Discover the Circle"
   },
-
   "detail": {
     "fallbackMetaTitle": "CEO Elite Circle",
     "heroEyebrow": "Pillar",
@@ -20,7 +19,6 @@
     "criteriaIntro": "Membership is broad, but each pillar suits a particular disposition more than others.",
     "requestContextLabel": "Pillar"
   },
-
   "items": [
     {
       "slug": "strategic-advisory",

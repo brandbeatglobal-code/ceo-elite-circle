@@ -7,7 +7,6 @@
     "itemEyebrow": "Experience",
     "itemLinkLabel": "Discover the Circle"
   },
-
   "detail": {
     "fallbackMetaTitle": "CEO Elite Circle",
     "heroEyebrow": "Signature Experience",
@@ -20,7 +19,6 @@
     "stepsIntro": "A short sequence, so that the time in the room is spent well.",
     "requestContextLabel": "Signature Experience"
   },
-
   "items": [
     {
       "slug": "ceo-leadership-summit",

@@ -38,8 +38,10 @@ export default async function ContentFilePage({
             {cf.fileName} · {cf.feeds} · {cf.sectionCount} sections ·{" "}
             {cf.fieldCount} fields
           </p>
-          <p className="type-label italic text-olive mt-2">
-            Read-only — editing arrives in the next phase.
+          <p className="type-label italic text-olive mt-2 max-w-xl">
+            Editing one field at a time. Saving commits the change to the
+            repository, which publishes it — allow about a minute. Photographs
+            are not editable yet.
           </p>
         </div>
 
@@ -53,7 +55,7 @@ export default async function ContentFilePage({
                 {keyLabel(key)}
               </h2>
               <div className="lg:col-span-3 lg:border-l border-hair lg:pl-8">
-                <ValueView value={value} />
+                <ValueView file={cf.name} path={[key]} value={value} />
               </div>
             </section>
           ))}

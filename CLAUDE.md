@@ -74,7 +74,7 @@ The body's banner-clearing `padding-bottom` is scoped with
 don't carry it; browsers without `:has()` keep the padding everywhere, which
 is the old behaviour.
 
-### The admin panel (Phase 2 — login and read-only shell)
+### The admin panel (Phases 2–3 — login, shell, text editing)
 
 `/admin` is the content admin. Access model, in order:
 
@@ -106,6 +106,51 @@ be missing from the deployed functions.
 Admin pages are `force-dynamic`, carry `robots: noindex`, and are not linked
 from the public site. To run locally: set `ADMIN_PASSWORD` in the server's
 environment for that run.
+
+#### Editing (Phase 3)
+
+One field, one form, one save. Saving validates server-side, commits the whole
+file to `main` via the GitHub Contents API, and lets the existing Vercel deploy
+publish it — so every edit is a real commit with history, and the confirmation
+says "about a minute" rather than implying it is already live.
+
+**`src/lib/admin/schema.ts` is the one place that says how a field behaves** —
+editable or not, clearable or not, and what clearing it would do. The form and
+the validator both read it, so a field can never be rendered as editable and
+then rejected on save. Rules match on `file:path` with array indices collapsed
+to `*`.
+
+`src/lib/admin/validate.ts` is deliberately paranoid, because the client edits
+without review and a bad value breaks the production build. In order: the path
+must resolve to a leaf that already exists; the leaf must be a string or null
+(never an object, array, or photograph); the value is length- and
+control-character-checked; empty is only allowed where the rule says nullable;
+link fields must be a single-slash site path (`//host` is protocol-relative and
+would leave the site). Then the backstop — **the file's whole shape after the
+edit must be identical to its shape before at every other position**, and the
+serialised bytes must re-parse to exactly what was validated. Nothing reaches
+GitHub until all of that passes.
+
+Ordering in the save action matters: **commit first, write locally second.**
+GitHub is the source of truth and local state must never run ahead of it. On
+Vercel the local write simply fails (read-only filesystem) and that is fine —
+the deploy is what brings the new content. It also means the panel keeps
+showing the previous value for about a minute after a save, which is why the
+input keeps what was typed rather than resetting from the server.
+
+Deferred: adding or removing whole array entries, and creating a key that is
+currently absent. Both change a file's shape, which is exactly what the
+validator refuses. Six form variants have no `ctaHref` key at all, so the admin
+cannot make those buttons live — which is the safe direction.
+
+`content/*.json` is stored in exactly the format `JSON.stringify(data, null, 2)`
+produces, plus a trailing newline. Keep it that way: a save rewrites the whole
+file with that serialiser, so any hand-formatting would be destroyed on the
+first edit and show up as a huge diff.
+
+Testing the commit path needs no real token: `GITHUB_API_BASE` points the
+client at a stand-in API (see the Phase 3 verification), which is how the
+request shape was checked without writing to the repository.
 
 ### Pages are composed from section components
 

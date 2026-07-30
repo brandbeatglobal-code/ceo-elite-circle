@@ -192,6 +192,35 @@ h1, h2, h3, h4 {
   cursor: not-allowed;
 }
 
+/* Admin editing fields. Boxed rather than underlined like the site's own
+   forms — these are working controls, not part of the Spectra layout, and an
+   editor needs to see the edge of the box they are typing in. A structural
+   field carries a sage edge so clearing one never looks like clearing an
+   ordinary sentence. */
+.admin-field {
+  width: 100%;
+  max-width: 36rem;
+  background: #fff;
+  border: 1px solid var(--color-hair);
+  border-radius: 2px;
+  padding: 0.6rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  outline: none;
+  resize: vertical;
+}
+
+.admin-field:focus {
+  border-color: var(--color-sage);
+  box-shadow: 0 0 0 2px rgba(98, 140, 108, 0.18);
+}
+
+.admin-field-structural {
+  border-left: 3px solid var(--color-sage);
+}
+
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;

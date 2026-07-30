@@ -1,19 +1,16 @@
 {
   "metaTitle": "Executive Councils — CEO Elite Circle",
-
   "hero": {
     "eyebrow": "Executive Councils",
     "title": "Executive Councils",
     "intro": "Standing groups that hold their membership across the year, so that the work compounds rather than beginning again at each meeting."
   },
-
   "purpose": {
     "eyebrow": "Purpose",
     "title": "Purpose",
     "lead": "A council exists to think properly about one field, over a long enough period that the thinking gets somewhere.",
     "body": "Where a forum convenes around a single question and closes, a council holds its membership across the year. Each session begins where the last ended. The result is less immediate than a forum and considerably more durable."
   },
-
   "councils": {
     "eyebrow": "Councils",
     "title": "The Councils",
@@ -33,7 +30,6 @@
       }
     ]
   },
-
   "format": {
     "eyebrow": "Meeting format",
     "title": "Meeting Format",
@@ -57,7 +53,6 @@
       }
     ]
   },
-
   "benefits": {
     "eyebrow": "Benefits",
     "title": "Benefits",
@@ -85,7 +80,6 @@
       }
     ]
   },
-
   "calendar": {
     "eyebrow": "Annual calendar",
     "title": "Annual Calendar",
@@ -109,7 +103,6 @@
       }
     ]
   },
-
   "advisors": {
     "eyebrow": "Expert advisors",
     "title": "Expert Advisors",

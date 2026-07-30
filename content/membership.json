@@ -1,12 +1,10 @@
 {
   "metaTitle": "Membership — CEO Elite Circle",
-
   "hero": {
     "eyebrow": "Membership",
     "title": "Membership",
     "intro": "Membership is personal, closed, and held by invitation and consideration. What follows sets out who it suits and how it is entered."
   },
-
   "whoShouldJoin": {
     "eyebrow": "Who should join",
     "title": "Who should join",
@@ -30,7 +28,6 @@
       }
     ]
   },
-
   "categories": {
     "eyebrow": "Categories",
     "title": "Membership Categories",
@@ -67,7 +64,6 @@
       }
     ]
   },
-
   "benefits": {
     "eyebrow": "Benefits",
     "title": "Membership Benefits",
@@ -95,7 +91,6 @@
       }
     ]
   },
-
   "journey": {
     "eyebrow": "Journey",
     "title": "Membership Journey",
@@ -119,7 +114,6 @@
       }
     ]
   },
-
   "faq": {
     "eyebrow": "Questions",
     "title": "Frequently Asked Questions",

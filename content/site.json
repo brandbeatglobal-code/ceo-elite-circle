@@ -10,25 +10,51 @@
       {
         "heading": "The Circle",
         "links": [
-          { "href": "/about", "label": "About the Circle" },
-          { "href": "/pillars", "label": "The Five Pillars" },
-          { "href": "/experiences", "label": "Signature Experiences" }
+          {
+            "href": "/about",
+            "label": "About the Circle"
+          },
+          {
+            "href": "/pillars",
+            "label": "The Five Pillars"
+          },
+          {
+            "href": "/experiences",
+            "label": "Signature Experiences"
+          }
         ]
       },
       {
         "heading": "Membership",
         "links": [
-          { "href": "/membership", "label": "Membership" },
-          { "href": "/trust", "label": "Trust Framework" },
-          { "href": "/councils", "label": "Executive Councils" }
+          {
+            "href": "/membership",
+            "label": "Membership"
+          },
+          {
+            "href": "/trust",
+            "label": "Trust Framework"
+          },
+          {
+            "href": "/councils",
+            "label": "Executive Councils"
+          }
         ]
       },
       {
         "heading": "Insights",
-        "links": [{ "href": "/insights", "label": "Insights" }]
+        "links": [
+          {
+            "href": "/insights",
+            "label": "Insights"
+          }
+        ]
       }
     ],
-    "cta": { "href": "/contact", "label": "Begin Your Membership Journey" },
+    "cta": {
+      "href": "/contact",
+      "label": "Begin Your Membership Journey"
+    },
     "menuLabel": "Menu",
     "closeLabel": "Close",
     "menuAriaLabel": "Toggle menu"
@@ -39,27 +65,53 @@
       {
         "heading": "The Circle",
         "links": [
-          { "href": "/about", "label": "About the Circle" },
-          { "href": "/pillars", "label": "The Five Pillars" },
-          { "href": "/experiences", "label": "Signature Experiences" }
+          {
+            "href": "/about",
+            "label": "About the Circle"
+          },
+          {
+            "href": "/pillars",
+            "label": "The Five Pillars"
+          },
+          {
+            "href": "/experiences",
+            "label": "Signature Experiences"
+          }
         ]
       },
       {
         "heading": "Membership",
         "links": [
-          { "href": "/membership", "label": "Membership" },
-          { "href": "/trust", "label": "Trust Framework" },
-          { "href": "/councils", "label": "Executive Councils" }
+          {
+            "href": "/membership",
+            "label": "Membership"
+          },
+          {
+            "href": "/trust",
+            "label": "Trust Framework"
+          },
+          {
+            "href": "/councils",
+            "label": "Executive Councils"
+          }
         ]
       },
       {
         "heading": "Insights",
-        "links": [{ "href": "/insights", "label": "Insights" }]
+        "links": [
+          {
+            "href": "/insights",
+            "label": "Insights"
+          }
+        ]
       },
       {
         "heading": "Begin",
         "links": [
-          { "href": "/contact", "label": "Request Membership Consideration" }
+          {
+            "href": "/contact",
+            "label": "Request Membership Consideration"
+          }
         ]
       }
     ],

@@ -367,6 +367,13 @@ Two constraints, both enforced rather than assumed:
   marketing chrome — verified pixel-identical across all pages — and the site
   gained a designed 404 page in the process, since the previous default one
   lost its nav in the split.
+- **Text editing works** (Phase 3). A field is edited and saved one at a time;
+  the save is validated server-side, committed to `main` through the GitHub
+  API, and published by the existing deploy. Fields whose absence changes what
+  renders — a form's `ctaHref`, a pillar's `variants`, the nullable leadership
+  and Insights fields — carry a visible note saying so, so clearing one never
+  feels like clearing a sentence. Photographs are shown but not editable until
+  Phase 4. Adding or removing whole list entries is deferred.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

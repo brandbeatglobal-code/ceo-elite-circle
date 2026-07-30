@@ -1,16 +1,19 @@
 {
   "metaTitle": "Request Membership Consideration — CEO Elite Circle",
-
   "hero": {
     "eyebrow": "Begin",
     "title": "Request Membership Consideration",
     "intro": "Membership is by invitation and consideration. Share your details below and the Circle will be in touch."
   },
-
   "form": {
     "eyebrow": "Application",
     "contactLegend": "Contact information",
-    "contactFields": ["Name", "Surname", "Phone number", "Email"],
+    "contactFields": [
+      "Name",
+      "Surname",
+      "Phone number",
+      "Email"
+    ],
     "detailsLegend": "Membership details",
     "detailsFields": [
       "Membership category",
@@ -22,7 +25,6 @@
     "cta": "Request Membership Consideration",
     "note": "Form disabled in this scaffold — it will be wired up once the fields and submission handling are confirmed."
   },
-
   "selection": {
     "eyebrow": "Selection process",
     "title": "How consideration works",

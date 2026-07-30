@@ -5,12 +5,15 @@
       "alt": "City skyline at dusk with illuminated towers",
       "note": "Dramatic, low-light architecture or skyline. Carries the hero."
     },
-    "headline": ["A Private Circle for", "Distinguished", "Business Leaders."],
+    "headline": [
+      "A Private Circle for",
+      "Distinguished",
+      "Business Leaders."
+    ],
     "lead": "Leadership was never meant to be experienced alone.",
     "body": "Built on trust, guided by integrity, and united by a shared commitment to excellence, the CEO Elite Circle brings together accomplished business leaders in a confidential environment where meaningful relationships, thoughtful dialogue, and strategic collaboration shape the future of leadership.",
     "cta": "Request Membership Consideration"
   },
-
   "philosophy": {
     "eyebrow": "Our Philosophy",
     "headerLinkLabel": "More about the Circle",
@@ -19,7 +22,6 @@
     "body": "Boards want reassurance, executives want direction, advisers want a mandate. Very few rooms want nothing at all. The Circle exists to be one of them — somewhere a chief executive can think aloud among people who have carried the same weight, and where the conversation is not also a transaction.",
     "linkLabel": "Discover the Circle"
   },
-
   "pillars": {
     "eyebrow": "Structure",
     "headerLinkLabel": "All pillars",
@@ -28,7 +30,6 @@
     "cardLabel": "Pillar",
     "cardLinkLabel": "Discover the Circle"
   },
-
   "whyNow": {
     "eyebrow": "Timing",
     "title": "Why Now",
@@ -41,7 +42,6 @@
       "note": "Warm, full-colour, wide. Forward motion."
     }
   },
-
   "categories": {
     "eyebrow": "Membership",
     "headerLinkLabel": "All categories",
@@ -49,7 +49,6 @@
     "rowLabel": "Category",
     "rowLinkLabel": "Discover the Circle"
   },
-
   "governance": {
     "eyebrow": "Governance",
     "headerLinkLabel": "Trust framework",
@@ -59,7 +58,6 @@
     "primaryLinkLabel": "Discover the Circle",
     "secondaryLinkLabel": "Membership Selection"
   },
-
   "experiences": {
     "eyebrow": "Experiences",
     "headerLinkLabel": "All experiences",
@@ -69,7 +67,6 @@
     "featuredLinkLabel": "Discover the Circle",
     "listLinkLabel": "Discover"
   },
-
   "testimonials": {
     "eyebrow": "Testimonials",
     "title": "What Members Say",

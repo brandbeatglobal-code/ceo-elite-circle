@@ -304,10 +304,21 @@ wrong. All four are also flagged in the migration report.
    experience's photo on the homepage, once as that experience's own photo. It
    is now stored once, on the experience, and the homepage reads it from there.
 
+## File formatting
+
+Every file is stored exactly as `JSON.stringify(data, null, 2)` plus a trailing
+newline. The admin rewrites whole files with that serialiser when a field is
+saved, so hand-formatting (the blank lines `forms.json` originally carried
+between variants) would be destroyed on the first edit. The files were
+normalised to the canonical form when editing shipped, which is a
+whitespace-only change — the data round-trips identically.
+
 ## Conditional logic that depends on content values
 
 Not defects — but they mean a content edit can change which sections render,
-so Phase 3 should not treat every field as inert text.
+so the admin does not treat every field as inert text. Each of these carries a
+visible structural note on its field, and the ones that would change a file's
+*shape* (rather than a value in it) cannot be edited through the admin at all.
 
 - `pillars.items[].variants` — absent removes the Formats section, and shifts
   that page's running index. It also flips the criteria section's tone from

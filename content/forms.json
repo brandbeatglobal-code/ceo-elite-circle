@@ -7,7 +7,12 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Surname", "Phone number", "Email"]
+        "inputs": [
+          "Name",
+          "Surname",
+          "Phone number",
+          "Email"
+        ]
       },
       {
         "legend": "Membership details",
@@ -23,7 +28,6 @@
     "cta": "Request Membership Consideration",
     "ctaHref": "/contact"
   },
-
   "application": {
     "eyebrow": "Apply",
     "heading": "Apply for Membership",
@@ -32,7 +36,12 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Surname", "Phone number", "Email"]
+        "inputs": [
+          "Name",
+          "Surname",
+          "Phone number",
+          "Email"
+        ]
       },
       {
         "legend": "Membership details",
@@ -48,7 +57,6 @@
     "cta": "Request Membership Consideration",
     "ctaHref": "/contact"
   },
-
   "pillar": {
     "eyebrow": "Enquire",
     "heading": "Enquire about this pillar",
@@ -57,17 +65,23 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Surname", "Email"]
+        "inputs": [
+          "Name",
+          "Surname",
+          "Email"
+        ]
       },
       {
         "legend": "Your enquiry",
-        "selects": ["Nature of enquiry", "Preferred contact"]
+        "selects": [
+          "Nature of enquiry",
+          "Preferred contact"
+        ]
       }
     ],
     "note": "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
     "cta": "Send an Enquiry"
   },
-
   "experience": {
     "eyebrow": "Register interest",
     "heading": "Register interest in this occasion",
@@ -76,17 +90,24 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Surname", "Email"]
+        "inputs": [
+          "Name",
+          "Surname",
+          "Email"
+        ]
       },
       {
         "legend": "Your interest",
-        "selects": ["Attending as", "Region", "Preferred contact"]
+        "selects": [
+          "Attending as",
+          "Region",
+          "Preferred contact"
+        ]
       }
     ],
     "note": "Fields and button are not yet wired up — registration handling is still to be built. Registering interest is not a membership application.",
     "cta": "Register Interest"
   },
-
   "governance": {
     "eyebrow": "Governance",
     "heading": "Ask a governance question",
@@ -95,17 +116,22 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Email"]
+        "inputs": [
+          "Name",
+          "Email"
+        ]
       },
       {
         "legend": "Your question",
-        "selects": ["Area of the framework", "Preferred contact"]
+        "selects": [
+          "Area of the framework",
+          "Preferred contact"
+        ]
       }
     ],
     "note": "Fields and button are not yet wired up. This is not a membership application, and it does not yet reach anyone.",
     "cta": "Send a Governance Question"
   },
-
   "council": {
     "eyebrow": "Councils",
     "heading": "Express interest in a council",
@@ -114,17 +140,24 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Surname", "Email"]
+        "inputs": [
+          "Name",
+          "Surname",
+          "Email"
+        ]
       },
       {
         "legend": "Council details",
-        "selects": ["Council", "Region", "Preferred contact"]
+        "selects": [
+          "Council",
+          "Region",
+          "Preferred contact"
+        ]
       }
     ],
     "note": "Fields and button are not yet wired up — council interest handling is still to be built. This is not a membership application.",
     "cta": "Express Interest"
   },
-
   "briefings": {
     "eyebrow": "Briefings",
     "heading": "Subscribe to briefings",
@@ -133,13 +166,15 @@
     "columns": [
       {
         "legend": "Your details",
-        "inputs": ["Name", "Email"]
+        "inputs": [
+          "Name",
+          "Email"
+        ]
       }
     ],
     "note": "Fields and button are not yet wired up — subscription handling is still to be built. This is not a membership application.",
     "cta": "Subscribe to Briefings"
   },
-
   "enquiry": {
     "eyebrow": "Enquire",
     "heading": "Enquire about the Circle",
@@ -148,11 +183,18 @@
     "columns": [
       {
         "legend": "Contact information",
-        "inputs": ["Name", "Surname", "Email"]
+        "inputs": [
+          "Name",
+          "Surname",
+          "Email"
+        ]
       },
       {
         "legend": "Your enquiry",
-        "selects": ["Nature of enquiry", "Preferred contact"]
+        "selects": [
+          "Nature of enquiry",
+          "Preferred contact"
+        ]
       }
     ],
     "note": "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
