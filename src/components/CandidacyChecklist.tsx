@@ -1,4 +1,4 @@
-import { IconArcs, IconOrbit, IconRings, IconStack } from "@/components/Icons";
+import { Icon, type IconKey } from "@/components/Icons";
 import {
   BulletLabel,
   Placeholder,
@@ -6,17 +6,27 @@ import {
   type Tone,
 } from "@/components/ui";
 
-const icons = [IconRings, IconArcs, IconStack, IconOrbit];
 const ordinals = ["One", "Two", "Three", "Four"];
 
-export type Criterion = { title: string; body: string };
+/** Only for a cell with no criterion behind it yet — never for real copy. */
+const PENDING: IconKey[] = ["rings", "arcs", "stack", "orbit"];
+
+export type Criterion = { title: string; body: string; icon: IconKey };
 
 /**
  * Candidacy checklist — a 2×2 icon grid answering "who is this for". Same icon
  * language as the About page's difference grid, different use case.
  *
+ * The mark comes from the criterion, not from the cell's position. This
+ * component renders on Membership and on all twelve pillar and experience
+ * detail pages; a fixed positional array meant thirteen sections showed the
+ * same four shapes in the same order whatever their criteria said, which is
+ * decoration repeating itself rather than a mark reinforcing a label. Content
+ * names the icon and this resolves it, exactly as the feature grids do.
+ *
  * Without `criteria`, each cell falls back to a structural label and a
- * placeholder.
+ * placeholder — and only then to a mark chosen by position, since there is no
+ * label for it to agree with.
  */
 export function CandidacyChecklist({
   index,
@@ -68,7 +78,7 @@ export function CandidacyChecklist({
           <BulletLabel className={muted}>If you are</BulletLabel>
 
           <div className="grid grid-cols-1 md:grid-cols-2 mt-8">
-            {icons.map((Icon, i) => {
+            {ordinals.map((_, i) => {
               const item = criteria?.[i];
               return (
                 <div
@@ -80,7 +90,10 @@ export function CandidacyChecklist({
                   style={{ transitionDelay: `${i * 70}ms` }}
                 >
                   <div className="w-14 h-14 lg:w-16 lg:h-16">
-                    <Icon className="w-full h-full" />
+                    <Icon
+                      name={item?.icon ?? PENDING[i]}
+                      className="w-full h-full"
+                    />
                   </div>
                   {item ? (
                     <>

@@ -142,6 +142,9 @@ export async function savePhoto(
   }
 
   let nextSrc: string | null;
+  // Measured from the stored bytes, never submitted by the form. It sizes the
+  // scrim over this slot, so it has to describe the file the site will serve.
+  let nextBrightness: number | null;
   const entries: CommitEntry[] = [];
   const deletions: string[] = [];
   let uploadedNote = "";
@@ -159,6 +162,7 @@ export async function savePhoto(
     if (!processed.ok) return { status: "error", message: processed.error };
 
     nextSrc = uploadPath(cf.name, parsed, processed);
+    nextBrightness = processed.brightness;
     entries.push({ path: `public${nextSrc}`, content: processed.bytes });
     uploadedNote =
       processed.sourceFormat === "heic"
@@ -166,8 +170,10 @@ export async function savePhoto(
         : "";
   } else if (clear) {
     nextSrc = null;
+    nextBrightness = null;
   } else {
     nextSrc = current.src;
+    nextBrightness = current.brightness;
   }
 
   // Replacing or clearing an upload of our own removes the old file in the
@@ -180,6 +186,7 @@ export async function savePhoto(
     src: nextSrc,
     alt: nextSrc === null ? "" : alt,
     note,
+    brightness: nextBrightness,
   });
   if (!result.ok) return { status: "error", message: result.error };
   entries.push({ path: `content/${cf.fileName}`, content: result.json });

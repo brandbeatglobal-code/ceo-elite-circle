@@ -81,20 +81,26 @@ function shapeOf(value: unknown): string[] {
   return out;
 }
 
-/** Is this value a photo slot — exactly `{ src, alt, note }`? */
+/** Is this value a photo slot — exactly `{ src, alt, note, brightness }`? */
 export function isPhotoObject(
   value: unknown,
-): value is { src: string | null; alt: string; note: string } {
+): value is {
+  src: string | null;
+  alt: string;
+  note: string;
+  brightness: number | null;
+} {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
     return false;
   }
   const keys = Object.keys(value).sort().join(",");
-  if (keys !== "alt,note,src") return false;
+  if (keys !== "alt,brightness,note,src") return false;
   const v = value as Record<string, unknown>;
   return (
     (typeof v.src === "string" || v.src === null) &&
     typeof v.alt === "string" &&
-    typeof v.note === "string"
+    typeof v.note === "string" &&
+    (typeof v.brightness === "number" || v.brightness === null)
   );
 }
 
@@ -103,7 +109,12 @@ const BAD_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/;
 export type PhotoEditOk = {
   ok: true;
   json: string;
-  photo: { src: string | null; alt: string; note: string };
+  photo: {
+    src: string | null;
+    alt: string;
+    note: string;
+    brightness: number | null;
+  };
 };
 
 /**
@@ -116,11 +127,17 @@ export type PhotoEditOk = {
  * `src` is not free text: it is either null (cleared, the pending frame), the
  * slot's current value (text-only edit), or a path the server itself just
  * generated for a processed upload — the caller decides which, never the form.
+ * `brightness` is the same: measured from the stored bytes, never submitted.
  */
 export function validatePhotoEdit(
   data: Record<string, unknown>,
   rawPath: string,
-  next: { src: string | null; alt: string; note: string },
+  next: {
+    src: string | null;
+    alt: string;
+    note: string;
+    brightness: number | null;
+  },
 ): PhotoEditOk | ValidationError {
   const path = parsePath(rawPath);
   if (!path) return { ok: false, error: "That photo slot could not be identified." };
@@ -166,10 +183,23 @@ export function validatePhotoEdit(
     };
   }
 
+  if (
+    next.brightness !== null &&
+    (!Number.isFinite(next.brightness) ||
+      next.brightness < 0 ||
+      next.brightness > 1)
+  ) {
+    return { ok: false, error: "That photograph could not be measured." };
+  }
+  if (next.src === null && next.brightness !== null) {
+    return { ok: false, error: "An empty slot has no photograph to measure." };
+  }
+
   const cleaned = {
     src: next.src,
     alt: next.alt.trim(),
     note: next.note.trim(),
+    brightness: next.brightness,
   };
 
   let updated = data as unknown;
@@ -182,15 +212,25 @@ export function validatePhotoEdit(
   if (before.length !== after.length) {
     return { ok: false, error: "That change would alter the structure of the file." };
   }
-  const allowedTargets = new Set(
-    ["src", "alt", "note"].map((leaf) => `.${[...path, leaf].join(".")}=`),
-  );
+  // `brightness` is the one leaf that holds a number rather than text, so its
+  // permitted types differ from the other three.
+  const allowedTypes: Record<string, string[]> = {
+    src: ["string", "null"],
+    alt: ["string", "null"],
+    note: ["string", "null"],
+    brightness: ["number", "null"],
+  };
+  const targets = Object.keys(allowedTypes).map((leaf) => ({
+    prefix: `.${[...path, leaf].join(".")}=`,
+    types: allowedTypes[leaf],
+  }));
   for (let i = 0; i < before.length; i++) {
     if (before[i] === after[i]) continue;
-    const target = [...allowedTargets].find(
-      (t) => before[i].startsWith(t) && after[i].startsWith(t),
+    const target = targets.find(
+      (t) => before[i].startsWith(t.prefix) && after[i].startsWith(t.prefix),
     );
-    const allowed = target && new Set([`${target}string`, `${target}null`]);
+    const allowed =
+      target && new Set(target.types.map((t) => `${target.prefix}${t}`));
     if (!allowed || !allowed.has(before[i]) || !allowed.has(after[i])) {
       return { ok: false, error: "That change would alter the structure of the file." };
     }
@@ -232,6 +272,13 @@ export function validateEdit(
       ok: false,
       error:
         "A photograph and its text are edited together, as one unit — use the photo editor for this slot.",
+    };
+  }
+  if (rule.kind === "icon") {
+    return {
+      ok: false,
+      error:
+        "The mark above a label is part of the design, not the copy, and is changed in the code rather than here.",
     };
   }
   if (!isEditableLeaf(current, rule)) {

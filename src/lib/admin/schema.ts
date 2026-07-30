@@ -21,6 +21,12 @@ export type FieldKind =
    */
   | "image"
   /**
+   * The key naming which mark sits above a label. The mark is design, not
+   * copy — and a key that does not exist in `Icons.tsx` is a page that will
+   * not render, so this is shown but never made typeable.
+   */
+  | "icon"
+  /**
    * A whole list or record rather than a value — including when it is
    * currently null. Never gets a text input: typing into one of these would
    * replace a structure with a sentence.
@@ -53,11 +59,24 @@ const NULLABLE_NOTE =
  * the wildcards at the end.
  */
 const RULES: [RegExp, FieldRule][] = [
+  // ---- The mark above a label. Structure, not copy: the set of valid keys
+  // lives in `Icons.tsx`, and a key outside it would leave a section with no
+  // mark to resolve.
+  [
+    /^[a-z]+:.*\.icon$/,
+    {
+      kind: "icon",
+      nullable: false,
+      structural:
+        "Which mark sits above this label. The marks are part of the design and are chosen to agree with the words beneath them, so they are changed in the code rather than typed here.",
+    },
+  ],
+
   // ---- Photograph leaves. Reaching one individually is refused: a photo,
   // its alt text and its note are edited together, as one unit, through the
   // photo editor — alt text describes the image that is actually there.
   [
-    /^[a-z]+:.*\bphoto\.(src|alt|note)$/,
+    /^[a-z]+:.*\bphoto\.(src|alt|note|brightness)$/,
     { kind: "image", nullable: true },
   ],
 
@@ -202,7 +221,9 @@ export function fieldRule(
 
 /** A leaf the form may render an input for. */
 export function isEditableLeaf(value: unknown, rule: FieldRule): boolean {
-  if (rule.kind === "image" || rule.kind === "group") return false;
+  if (rule.kind === "image" || rule.kind === "group" || rule.kind === "icon") {
+    return false;
+  }
   return typeof value === "string" || value === null;
 }
 

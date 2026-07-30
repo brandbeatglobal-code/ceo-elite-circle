@@ -7,7 +7,8 @@
     "photo": {
       "src": null,
       "alt": "",
-      "note": "Interior of a considered, quiet room — the setting the Circle meets in."
+      "note": "Interior of a considered, quiet room — the setting the Circle meets in.",
+      "brightness": null
     }
   },
   "story": {
@@ -18,7 +19,8 @@
     "photo": {
       "src": null,
       "alt": "",
-      "note": "Wide architectural exterior, daylight. Permanence rather than motion."
+      "note": "Wide architectural exterior, daylight. Permanence rather than motion.",
+      "brightness": null
     }
   },
   "leadership": {
@@ -30,28 +32,32 @@
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership."
+          "note": "a member of Circle leadership.",
+          "brightness": null
         }
       },
       {
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership."
+          "note": "a member of Circle leadership.",
+          "brightness": null
         }
       },
       {
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership."
+          "note": "a member of Circle leadership.",
+          "brightness": null
         }
       },
       {
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership."
+          "note": "a member of Circle leadership.",
+          "brightness": null
         }
       }
     ]
@@ -91,7 +97,8 @@
     "photo": {
       "src": null,
       "alt": "",
-      "note": "A real working moment — people mid-discussion, not posed to camera."
+      "note": "A real working moment — people mid-discussion, not posed to camera.",
+      "brightness": null
     }
   },
   "differences": {
@@ -110,12 +117,12 @@
         "body": "There is no keynote and no stage. Members come to be questioned by peers rather than addressed by speakers."
       },
       {
-        "icon": "stack",
+        "icon": "chamber",
         "label": "Confidence as the first term",
         "body": "Discretion is not a policy applied to the Circle. It is the condition that makes the Circle possible at all."
       },
       {
-        "icon": "orbit",
+        "icon": "stack",
         "label": "Built to compound",
         "body": "Councils and forums hold their membership across the year, so context accumulates instead of resetting at every meeting."
       }

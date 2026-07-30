@@ -41,9 +41,9 @@ export function ValueView({
     );
   }
 
-  if (rule.kind === "image") {
-    // A stray photo leaf outside a full slot — display only; the unit above
-    // is where photographs are edited.
+  if (rule.kind === "image" || rule.kind === "icon") {
+    // A stray photo leaf outside a full slot, or the key naming a mark —
+    // display only. Photographs are edited as a unit above; a mark is design.
     return (
       <div className="flex flex-col gap-1.5">
         {label && <p className="type-label text-olive">{label}</p>}
@@ -52,6 +52,11 @@ export function ValueView({
             {value === null || value === "" ? "—" : String(value)}
           </span>
         </p>
+        {rule.kind === "icon" && rule.structural && (
+          <p className="type-label text-olive italic border-l-2 border-sage pl-3 max-w-xl">
+            {rule.structural}
+          </p>
+        )}
       </div>
     );
   }

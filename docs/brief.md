@@ -109,7 +109,9 @@ and photo heights, which is layout rather than spacing.
 ### Detail-page patterns
 Taken from the Service / Doctor / Blog reference set. Each is a component,
 reused rather than re-cut per page:
-- `CandidacyChecklist` — 2×2 icon grid answering "who is this for".
+- `CandidacyChecklist` — 2×2 icon grid answering "who is this for". Each
+  criterion names its own mark; the component resolves it, the way the
+  feature grids do.
 - `NumberedSteps` — hairline-divided numbered sequence. No dates.
 - `VariantCards` — three named variants, no photos, no prices.
 - `Accordion` — one item open, the rest collapsed to a title and `+`.
@@ -139,6 +141,28 @@ arcs, rings, diamonds, ellipses. Abstract, never illustrative or literal, and
 never decorative for its own sake. Anything added later goes in that file and
 matches that style.
 
+**A mark has to say what its label says.** The set is sixteen, each with its
+meaning written above its definition:
+
+| | | | |
+|---|---|---|---|
+| `rings` the Circle; a bounded set | `arcs` a meeting point; counsel both ways | `stack` accumulation over time | `orbit` reach across regions |
+| `threshold` admission; crossing in | `compass` direction; judgement | `converge` the final call | `lattice` structure; a discipline |
+| `horizon` the long view | `pair` one to one; an introduction | `crest` distinction; recognition | `ascent` progression; transition |
+| `signal` said, or heard | `weave` a network | `chamber` a closed room; discretion | `cycle` a recurring year |
+
+Two sections landing on the same mark is fine when the concepts really are the
+same. What is not fine is the same *sequence* under unrelated words: four
+marks spread across sixteen sections meant 25+ appearances of an identical
+run, which reads as decoration repeating itself. Sixteen sections now carry
+sixteen distinct sequences, and no section repeats a mark inside itself.
+
+Two marks were redrawn after seeing them at size: a ring broken at the top
+with a line through it is the standby glyph, and an upright symmetrical needle
+inside a ring reads as an eye once small. Borrowed meanings are not abstract,
+they are just wrong. Check a new mark at 20px and on the dark ramp, not only
+in the editor.
+
 (The original brief's "no icons" line was about keeping the hero uncluttered,
 not a site-wide ban. There is no conflict.)
 
@@ -165,12 +189,24 @@ the moment they don't.
 The rule is the one `PhotoCard` already followed, applied to every full-bleed
 section (`.photo-scrim` and the `.copy-scrim*` classes in `globals.css`):
 
-- A light wash on the section — currently `black/42` — so the photograph
-  reads.
-- A heavy field, `black/86`, on the copy itself, feathered in over the
-  container's own padding so it has no visible edge. Composited, the copy sits
-  on `(1 − 0.86)(1 − 0.42) = 0.081` luminance against a pure white image,
-  which is about 8:1 for white text.
+- A wash on the section so the photograph reads, and a heavier field on the
+  copy itself, feathered in over the container's own padding so it has no
+  visible edge.
+- **Both alphas are solved from the photograph, not fixed.** The rule is a
+  ceiling: whatever the image, the background behind the copy is brought to
+  `0.081` luminance — about 8:1 for white text — and no further. A white
+  photograph therefore gets `black/42` and `black/86`, which composite to
+  `(1 − 0.86)(1 − 0.42) = 0.081`; the homepage's night skyline, measured at
+  brightness 0.369, gets `black/35` and `black/66` and keeps 2.7× more of
+  itself for exactly the same contrast.
+- The brightness is measured on upload — the brightest *region* of the image,
+  not its mean, because a dark photograph with a blown-out window in it
+  averages dark and the headline lands on the window. An unmeasured slot
+  (`brightness: null`) is treated as white.
+- A ceiling on the *composite* is the point. Two layers each calibrated
+  against a white photograph compound to ~0.92 where they overlap, which is
+  most of a hero; that is what flattened the skyline to near-black even though
+  each layer was correct on its own.
 - Nothing over a photograph is dimmer than 75% white — 55% clears 4.5:1 on the
   near-black ramp but not against a bright image behind a scrim. `Placeholder`
   takes `onPhoto` for exactly this.
@@ -449,6 +485,23 @@ Two constraints, both enforced rather than assumed:
   white image in every slot, at three viewports: previously nothing cleared
   4.5:1 (the homepage headline 3.36:1, its body copy 2.60:1, the accent bullet
   1.05:1); now the worst element on any of them is 4.77:1.
+- **The icon set is sixteen marks, and every assignment was chosen against its
+  label.** Four marks were doing the work of sixteen sections — and
+  `CandidacyChecklist` applied them by position, so all thirteen candidacy
+  grids showed the same shapes in the same order whatever they said. All
+  sixteen sections now carry distinct sequences, and none repeats a mark
+  inside itself.
+- **The navigation bar goes solid at 32px of scroll**, not at 82% of viewport
+  height. The gap between the bar and the first line of hero copy bottoms out
+  at 52px once the hero content overflows, so the old threshold let white
+  headline text pass behind a transparent white bar on any window shorter than
+  about 800px.
+- **The scrim is sized to the photograph.** Two layers each calibrated against
+  a white image compounded to ~0.92 where they overlap — most of a hero — and
+  flattened the homepage's night skyline to near-black. Both alphas are now
+  solved from the brightness measured on upload, holding the same contrast
+  ceiling: the bright-probe measurement still passes 12/12 at the same worst
+  case, and the skyline keeps 2.7× more of itself.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —
