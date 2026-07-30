@@ -230,7 +230,8 @@ provisional. Only the dismiss button is a client component; dismissal is a
 the inline script in `layout.tsx`.
 
 Removing it at launch: delete `DraftBanner`, `DismissDraftBanner`, their mount
-in `layout.tsx`, and the `.draft-banner` rules in `globals.css`.
+in `SiteChrome.tsx`, and the `.draft-banner` rules plus the two `body` padding
+rules in `globals.css`.
 
 ### What is still empty, and why
 
@@ -357,6 +358,15 @@ Two constraints, both enforced rather than assumed:
   build before the migration. `docs/content-inventory.md` records every field
   and where it came from. Later phases add the admin UI that edits these files;
   the schema is the contract they build against.
+- **The admin's login and read-only shell exist** (Phase 2). `/admin` is
+  password-gated (`ADMIN_PASSWORD` in Vercel's environment; unset means the
+  route is the site's 404), sessions are a signed cookie, and the section
+  list is derived from the `content/` directory rather than hand-kept. It
+  shows every file's current values read-only; editing is Phase 3. The public
+  pages moved into a `(site)` route group so the admin does not wear the
+  marketing chrome — verified pixel-identical across all pages — and the site
+  gained a designed 404 page in the process, since the previous default one
+  lost its nav in the split.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

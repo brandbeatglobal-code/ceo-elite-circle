@@ -56,6 +56,57 @@ Consequences that are easy to trip over:
 
 ## Architecture
 
+### Route groups: `(site)` vs `/admin`
+
+The root layout carries only fonts, `globals.css` and the motion flag. The
+public site's chrome — nav, footer, back-to-top, draft banner — is
+`SiteChrome`, mounted by `(site)/layout.tsx`; every public page lives under
+`src/app/(site)/`. `/admin` shares the root layout (so it stays on-system)
+but not the marketing shell.
+
+The root `not-found.tsx` mounts `SiteChrome` itself, deliberately: a URL that
+matches no route never enters the `(site)` segment, so without that the 404
+would render bare with no way back in. `notFound()` thrown anywhere — an
+unknown slug, the admin when unconfigured — lands on the same page.
+
+The body's banner-clearing `padding-bottom` is scoped with
+`body:not(:has(.draft-banner))` so documents without the notice (the admin)
+don't carry it; browsers without `:has()` keep the padding everywhere, which
+is the old behaviour.
+
+### The admin panel (Phase 2 — login and read-only shell)
+
+`/admin` is the content admin. Access model, in order:
+
+- **`ADMIN_PASSWORD` unset → every admin route (login included) serves the
+  site's 404.** This is the safe default and the state immediately after a
+  deploy; the variable is set only in Vercel's dashboard (a redeploy is
+  needed to pick it up), never in the repo, and there is no fallback value.
+- One shared password, compared server-side with a timing-safe hash compare
+  (`src/lib/admin/auth.ts`). Failures get one generic message and a growing
+  per-IP delay (in-memory, per server instance — accepted for a one-editor
+  admin).
+- Sessions are a signed cookie, `<expiresMs>.<hmac>`, verified on every
+  request; no session store. httpOnly, secure, SameSite=Lax, `Path=/admin`,
+  24h. The signing key is derived from the password, so changing the password
+  signs everyone out.
+- Every page under `admin/(panel)` calls `requireAdmin()` itself — a layout
+  does not re-run on navigation between its own children, so pages are the
+  gate and the layout's call is defence in depth.
+
+The section list is **derived from the `content/` directory at request time**
+(`src/lib/admin/registry.ts`), not hand-maintained: files are discovered with
+`readdir`, sections are each file's top-level keys, and `ValueView` renders
+any shape read-only. A thirteenth content file appears in the admin without
+code changes (`KNOWN` in the registry is display polish only). Phase 3's
+forms bind to the same walk. `outputFileTracingIncludes` in `next.config.ts`
+ships `content/**` with the admin's server bundle — without it the JSON would
+be missing from the deployed functions.
+
+Admin pages are `force-dynamic`, carry `robots: noindex`, and are not linked
+from the public site. To run locally: set `ADMIN_PASSWORD` in the server's
+environment for that run.
+
 ### Pages are composed from section components
 
 `src/app/**/page.tsx` files are thin: they assemble section-level components
@@ -247,5 +298,5 @@ button is a client component; dismissal is a `draft-dismissed` class on the
 document element, re-applied before paint by the inline script.
 
 Removing it at launch: delete `DraftBanner`, `DismissDraftBanner`, their mount
-in `layout.tsx`, and the `.draft-banner` / `.hero-foot` rules in `globals.css`.
-That is the whole removal.
+in `SiteChrome.tsx`, and the `.draft-banner` / `.hero-foot` rules plus the two
+`body` padding rules in `globals.css`. That is the whole removal.
