@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <>
       {/* ---- Hero — full-bleed photograph, serif headline, full-width pill CTA */}
-      <section className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden">
+      <section className="relative min-h-[calc(100svh-var(--banner-h))] flex flex-col justify-end overflow-hidden">
         <PhotoFrame
           photo={photos.hero}
           cover
@@ -49,7 +49,7 @@ export default function Home() {
         </div>
 
         <div className="wrap relative pt-36 lg:pt-44 hero-foot">
-          <h1 className="type-display type-hero text-white mb-10">
+          <h1 className="type-display type-hero text-white mb-6 lg:mb-10">
             A Private Circle for
             <br />
             Distinguished
@@ -57,7 +57,7 @@ export default function Home() {
             <span className="lg:ml-[18%]">Business Leaders.</span>
           </h1>
 
-          <div className="max-w-sm mb-10">
+          <div className="max-w-sm mb-6 lg:mb-10">
             <p className="type-body text-white mb-3">
               Leadership was never meant to be experienced alone.
             </p>

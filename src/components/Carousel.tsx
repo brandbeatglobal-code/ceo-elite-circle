@@ -36,9 +36,14 @@ export function Carousel({ children }: { children: ReactNode }) {
           →
         </button>
       </div>
+      {/* Focusable so the rail can be scrolled from the keyboard; axe flags a
+          scrollable region that cannot be reached without a pointer. */}
       <div
         ref={rail}
-        className="no-scrollbar flex gap-8 overflow-x-auto snap-x snap-mandatory pb-16"
+        tabIndex={0}
+        role="group"
+        aria-label="Scrollable cards"
+        className="no-scrollbar flex gap-8 overflow-x-auto snap-x snap-mandatory pb-16 focus-visible:outline focus-visible:outline-1 focus-visible:outline-sage"
       >
         {children}
       </div>

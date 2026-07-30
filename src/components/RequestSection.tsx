@@ -32,6 +32,14 @@ type Config = {
   columns: Column[];
   note: string;
   cta: string;
+  /**
+   * Only set where the button genuinely lands somewhere that does what the
+   * label promises. Without it the button renders disabled, the same way the
+   * fields do — a working button that navigates somewhere else is the one part
+   * of this section that could mislead, because nothing about it looks
+   * unfinished.
+   */
+  ctaHref?: string;
 };
 
 const CONTACT: Column = {
@@ -54,6 +62,7 @@ const configs: Record<RequestVariant, Config> = {
     ],
     note: "Fields are not yet wired up — the application questions are still being confirmed. The button below opens the full request page.",
     cta: "Request Membership Consideration",
+    ctaHref: "/contact",
   },
 
   application: {
@@ -70,6 +79,7 @@ const configs: Record<RequestVariant, Config> = {
     ],
     note: "Fields are not yet wired up — the application questions are still being confirmed. The button below opens the full request page.",
     cta: "Request Membership Consideration",
+    ctaHref: "/contact",
   },
 
   pillar: {
@@ -81,8 +91,8 @@ const configs: Record<RequestVariant, Config> = {
       { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
       { legend: "Your enquiry", selects: ["Nature of enquiry", "Preferred contact"] },
     ],
-    note: "Fields are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
-    cta: "Begin Your Membership Journey",
+    note: "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
+    cta: "Send an Enquiry",
   },
 
   experience: {
@@ -94,8 +104,8 @@ const configs: Record<RequestVariant, Config> = {
       { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
       { legend: "Your interest", selects: ["Attending as", "Region", "Preferred contact"] },
     ],
-    note: "Fields are not yet wired up — registration handling is still to be built. Registering interest is not a membership application.",
-    cta: "Begin Your Membership Journey",
+    note: "Fields and button are not yet wired up — registration handling is still to be built. Registering interest is not a membership application.",
+    cta: "Register Interest",
   },
 
   governance: {
@@ -107,7 +117,7 @@ const configs: Record<RequestVariant, Config> = {
       { legend: "Contact information", inputs: ["Name", "Email"] },
       { legend: "Your question", selects: ["Area of the framework", "Preferred contact"] },
     ],
-    note: "Fields are not yet wired up. This is not a membership application — it reaches the Circle's governance contact.",
+    note: "Fields and button are not yet wired up. This is not a membership application, and it does not yet reach anyone.",
     cta: "Send a Governance Question",
   },
 
@@ -120,8 +130,8 @@ const configs: Record<RequestVariant, Config> = {
       { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
       { legend: "Council details", selects: ["Council", "Region", "Preferred contact"] },
     ],
-    note: "Fields are not yet wired up — council interest handling is still to be built. This is not a membership application.",
-    cta: "Begin Your Membership Journey",
+    note: "Fields and button are not yet wired up — council interest handling is still to be built. This is not a membership application.",
+    cta: "Express Interest",
   },
 
   briefings: {
@@ -130,7 +140,7 @@ const configs: Record<RequestVariant, Config> = {
     lead: "Insights are published sparingly, and only when there is something worth the time.",
     body: "Leave your details and you will receive them as they are written. Nothing else is sent.",
     columns: [{ legend: "Your details", inputs: ["Name", "Email"] }],
-    note: "Fields are not yet wired up — subscription handling is still to be built. This is not a membership application.",
+    note: "Fields and button are not yet wired up — subscription handling is still to be built. This is not a membership application.",
     cta: "Subscribe to Briefings",
   },
 
@@ -143,8 +153,8 @@ const configs: Record<RequestVariant, Config> = {
       { legend: "Contact information", inputs: ["Name", "Surname", "Email"] },
       { legend: "Your enquiry", selects: ["Nature of enquiry", "Preferred contact"] },
     ],
-    note: "Fields are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
-    cta: "Begin Your Membership Journey",
+    note: "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
+    cta: "Send an Enquiry",
   },
 };
 
@@ -237,9 +247,24 @@ export function RequestSection({
           <p className="type-label text-white/55 italic text-center max-w-md">
             {c.note}
           </p>
-          <PillButton href="/contact" variant="light" className="w-full max-w-2xl">
-            {c.cta}
-          </PillButton>
+          {c.ctaHref ? (
+            <PillButton
+              href={c.ctaHref}
+              variant="light"
+              className="w-full max-w-2xl"
+            >
+              {c.cta}
+            </PillButton>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="pill type-link bg-white text-ink w-full max-w-2xl px-8 py-4 opacity-55 cursor-not-allowed inline-flex items-center justify-center gap-2"
+            >
+              <span aria-hidden="true">•</span>
+              {c.cta}
+            </button>
+          )}
         </div>
       </div>
     </section>

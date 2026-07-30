@@ -29,7 +29,7 @@ export function SplitHero({
             <BulletLabel className="text-white/75">{eyebrow}</BulletLabel>
             {credentials}
             {role}
-            <div className="type-display type-h2 mt-2">{title}</div>
+            <h1 className="type-display type-h2 mt-2">{title}</h1>
           </div>
 
           <div className="lg:border-l border-hair-dark order-1 lg:order-2">

@@ -71,7 +71,7 @@ export default function Nav() {
             <div key={group.heading} className="flex flex-col gap-2 w-44">
               <span
                 className={`type-link ${
-                  transparent ? "text-white/50" : "text-ink/45"
+                  transparent ? "text-white/75" : "text-olive"
                 }`}
               >
                 {group.heading}

@@ -18,7 +18,7 @@ export function DetailHero({
   photo: Photo;
 }) {
   return (
-    <section className="relative min-h-[88svh] flex flex-col overflow-hidden bg-ramp text-white">
+    <section className="relative min-h-[calc(88svh-var(--banner-h))] flex flex-col overflow-hidden bg-ramp text-white">
       <PhotoFrame photo={photo} tone="ramp" cover className="h-full" sizes="100vw" />
       <div className="absolute inset-0 bg-black/55" />
 

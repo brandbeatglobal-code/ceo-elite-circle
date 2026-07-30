@@ -8,13 +8,26 @@
   --color-mint: #d8e1df;        /* Gradient step / subtle tint */
   --color-grey: #bcbcbc;        /* Gradient step / muted UI */
   --color-sage: #628c6c;        /* The one accent — links, rules, details */
-  --color-olive: #6f7161;       /* Gradient step / muted text on cream */
+  --color-olive: #5f6153;       /* Muted text on cream — dark enough for AA
+                                   on cream (5.6:1) and on the mint tint (5.2:1).
+                                   The gradient ramps use literal rgba values, so
+                                   this token is text-only. */
   --color-ink: #3e4032;         /* Near-black olive — primary text on cream */
   --color-black: #000000;       /* Solid black section backgrounds */
 
   /* Hairlines — the grid is drawn with these, never with heavy borders */
   --color-hair: rgba(62, 64, 50, 0.16);
   --color-hair-dark: rgba(255, 255, 255, 0.14);
+
+  /* Height the fixed draft notice occupies. Heroes subtract it from their
+     viewport height rather than claiming space the banner is sitting on, so
+     bottom-anchored hero content never ends up underneath it. Drops to zero
+     once the notice is dismissed, and goes with the banner at launch. */
+  --banner-h: 3rem;
+}
+
+.draft-dismissed {
+  --banner-h: 0rem;
 }
 
 @theme inline {
@@ -191,36 +204,18 @@ h1, h2, h3, h4 {
 /* Draft notice. Server-rendered and visible by default — including without
    JavaScript — and hidden only once the visitor dismisses it. */
 body {
-  padding-bottom: 3rem;
+  padding-bottom: var(--banner-h);
 }
 
 .draft-dismissed .draft-banner {
   display: none;
 }
 
-.draft-dismissed body {
-  padding-bottom: 0;
-}
-
-/* Heroes are bottom-anchored inside a viewport-height box, so the fixed draft
-   notice lands on top of their closing CTA. Reserve room for it, and give the
-   room back the moment the notice is dismissed — or removed at launch. */
+/* Plain bottom padding. Clearing the draft notice is handled by the hero's
+   height (see --banner-h) rather than by padding inside a box that ignores it
+   when the content overflows. */
 .hero-foot {
-  padding-bottom: 7rem;
-}
-
-.draft-dismissed .hero-foot {
   padding-bottom: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .hero-foot {
-    padding-bottom: 5.5rem;
-  }
-
-  .draft-dismissed .hero-foot {
-    padding-bottom: 2rem;
-  }
 }
 
 /* ---- Motion -----------------------------------------------------------

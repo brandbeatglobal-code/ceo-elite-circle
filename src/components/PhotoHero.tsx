@@ -21,7 +21,7 @@ export function PhotoHero({
   photo: Photo;
 }) {
   return (
-    <section className="relative min-h-[92svh] flex flex-col justify-end overflow-hidden bg-ramp text-white">
+    <section className="relative min-h-[calc(92svh-var(--banner-h))] flex flex-col justify-end overflow-hidden bg-ramp text-white">
       <PhotoFrame
         photo={photo}
         tone="ramp"

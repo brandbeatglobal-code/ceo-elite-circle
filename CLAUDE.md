@@ -144,6 +144,13 @@ implying a capability that doesn't exist (upload, scheduling, payment);
 pre-filled context rendered inert rather than as an editable field; only the
 two application variants may call themselves an application.
 
+**A variant's CTA renders as a link only when `ctaHref` is set**, and it is set
+only where the destination does what the label promises. Everything else
+renders a disabled button, like the fields. This matters more than it looks: a
+disabled field is visibly unfinished, but a working button that navigates
+somewhere other than what it offered gives no such signal. Today only the
+membership and application variants have a real destination (`/contact`).
+
 ### Spacing
 
 Rhythm is expressed through the Tailwind class scale, changed as a documented
@@ -155,6 +162,13 @@ which is layout rather than spacing.
 Heroes use `min-h-*`, never a fixed `h-*`. They are bottom-anchored
 (`flex flex-col justify-end`), so a fixed height compresses the content stack
 upward on a short viewport and pushes the headline behind the fixed nav.
+
+They also subtract the draft notice from the height they claim —
+`min-h-[calc(100svh-var(--banner-h))]` — so bottom-anchored content is never
+placed underneath the fixed bar. `--banner-h` drops to `0rem` under
+`.draft-dismissed` and goes with the banner at launch. Note that padding cannot
+substitute for this: once hero content overflows the box, `justify-end` has no
+free space and padding below the CTA does not move it up.
 
 ## Verifying changes
 
