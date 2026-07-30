@@ -1,30 +1,35 @@
 import { MediaSection } from "@/components/MediaSection";
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
-import { pillars } from "@/lib/pillars";
+import { pillars, pillarsContent } from "@/lib/pillars";
 import { ordinal } from "@/lib/ordinal";
 
-export const metadata = { title: "The Five Pillars — CEO Elite Circle" };
+const { page } = pillarsContent;
+
+export const metadata = { title: page.metaTitle };
 
 export default function PillarsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Structure"
-        title="The Five Pillars"
-        intro="Five pillars carry the work of the Circle. Each stands on its own, and each is available to every member."
+        eyebrow={page.heroEyebrow}
+        title={page.heroTitle}
+        intro={page.heroIntro}
       />
 
       {pillars.map((pillar, i) => (
         <MediaSection
           key={pillar.slug}
           index={ordinal(i)}
-          eyebrow={`Pillar ${ordinal(i)}`}
+          eyebrow={`${page.itemEyebrowPrefix} ${ordinal(i)}`}
           title={pillar.name}
           photo={pillar.photo}
           tone={i % 2 === 1 ? "black" : "cream"}
           flip={i % 2 === 1}
-          link={{ href: `/pillars/${pillar.slug}`, label: "Discover the Circle" }}
+          link={{
+            href: `/pillars/${pillar.slug}`,
+            label: page.itemLinkLabel,
+          }}
         >
           <p
             className={`type-lead ${

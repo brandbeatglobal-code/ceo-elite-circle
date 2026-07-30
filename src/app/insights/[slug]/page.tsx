@@ -7,8 +7,11 @@ import {
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
-import { articleBySlug, articles } from "@/lib/insights";
+import { articleBySlug, articles, insights } from "@/lib/insights";
 import { ordinal } from "@/lib/ordinal";
+import { site } from "@/lib/site";
+
+const { detail } = insights;
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -23,23 +26,16 @@ export async function generateMetadata({
   const article = articleBySlug(slug);
   return {
     title: article?.title
-      ? `${article.title} — CEO Elite Circle`
-      : "Insights — CEO Elite Circle",
+      ? `${article.title}${site.metadata.titleSuffix}`
+      : detail.fallbackMetaTitle,
   };
 }
 
-const listItems = [
-  "A question can be described accurately, rather than in the version prepared for the board.",
-  "Disagreement costs nothing, so the strongest objection actually gets voiced.",
-  "Nobody is performing for a promotion, an investor, or the room itself.",
-  "Being wrong out loud carries no consequence beyond the conversation.",
-];
-
 const meta = [
-  { label: "Reading time", key: "readingTime" },
-  { label: "Author", key: "author" },
-  { label: "Published by", key: "publisher" },
-  { label: "Date of publication", key: "date" },
+  { label: detail.metaLabels.readingTime, key: "readingTime" },
+  { label: detail.metaLabels.author, key: "author" },
+  { label: detail.metaLabels.publisher, key: "publisher" },
+  { label: detail.metaLabels.date, key: "date" },
 ] as const;
 
 export default async function ArticlePage({
@@ -51,11 +47,13 @@ export default async function ArticlePage({
   const article = articleBySlug(slug);
   if (!article) notFound();
 
+  const body = article.body;
+
   return (
     <>
       <section className="bg-cream text-ink pt-40 lg:pt-48">
         <div className="wrap">
-          <SectionHeader index={ordinal(0)} eyebrow="Article" />
+          <SectionHeader index={ordinal(0)} eyebrow={detail.articleEyebrow} />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
             {/* Metadata sidebar */}
@@ -78,7 +76,7 @@ export default async function ArticlePage({
                     <dd className="type-link text-ink">
                       {article[m.key] ?? (
                         <span className="italic text-olive normal-case tracking-normal">
-                          pending
+                          {detail.pendingValue}
                         </span>
                       )}
                     </dd>
@@ -90,21 +88,12 @@ export default async function ArticlePage({
             {/* Body */}
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-14 flex flex-col gap-10">
               <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">
-                  The problem with good advice
-                </h2>
-                <p className="type-body text-olive">
-                  A chief executive is rarely short of input. Boards offer
-                  direction, advisers offer options, and the market offers an
-                  opinion whether or not one was sought. What is scarce is the
-                  conversation that asks nothing in return.
-                </p>
-                <p className="type-body text-olive">
-                  The distinction matters more than it sounds. Advice arrives
-                  with a position already taken. Counsel begins by establishing
-                  what the question actually is, which is often not the question
-                  that was brought into the room.
-                </p>
+                <h2 className="type-display type-h3">{body.openingHeading}</h2>
+                {body.openingParagraphs.map((p) => (
+                  <p key={p} className="type-body text-olive">
+                    {p}
+                  </p>
+                ))}
               </div>
 
               <PhotoFrame
@@ -114,15 +103,12 @@ export default async function ArticlePage({
               />
 
               <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">What a closed room allows</h2>
-                <p className="type-body text-olive">
-                  Once a conversation is genuinely private, several things
-                  become possible that are not possible anywhere else:
-                </p>
+                <h2 className="type-display type-h3">{body.listHeading}</h2>
+                <p className="type-body text-olive">{body.listIntro}</p>
 
                 {/* Plain bulleted list — not a card grid */}
                 <ul className="flex flex-col gap-2.5">
-                  {listItems.map((item, i) => (
+                  {body.listItems.map((item, i) => (
                     <li key={i} className="flex gap-3 items-baseline">
                       <span className="text-sage shrink-0" aria-hidden="true">
                         •
@@ -134,28 +120,22 @@ export default async function ArticlePage({
               </div>
 
               <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">Where this leaves a chair</h2>
-                <p className="type-body text-olive">
-                  None of this removes the weight of the decision. The chief
-                  executive still signs, still answers for it, and still carries
-                  the consequence alone. What changes is the quality of thinking
-                  that precedes the signature.
-                </p>
-                <p className="type-body text-olive">
-                  That is the whole of the argument for a room like this one,
-                  and it is a narrower claim than most gatherings make.
-                </p>
+                <h2 className="type-display type-h3">{body.closingHeading}</h2>
+                {body.closingParagraphs.map((p) => (
+                  <p key={p} className="type-body text-olive">
+                    {p}
+                  </p>
+                ))}
               </div>
             </div>
 
             {/* Side-note callout */}
             <div className="lg:border-l border-hair lg:pl-8 py-14">
-              <BulletLabel className="text-olive">Note</BulletLabel>
+              <BulletLabel className="text-olive">
+                {detail.noteLabel}
+              </BulletLabel>
               <div className="mt-4">
-                <p className="type-body text-olive">
-                  Members raise questions ahead of each forum, so the session is
-                  shaped by the room rather than presented to it.
-                </p>
+                <p className="type-body text-olive">{body.note}</p>
               </div>
             </div>
           </div>
@@ -163,10 +143,7 @@ export default async function ArticlePage({
           {/* Closing statement */}
           <div className="border-t border-hair py-16 lg:py-36">
             <div className="lg:[text-indent:22%] max-w-5xl">
-              <p className="type-h2">
-                The scarcest thing at this level is not information. It is a
-                room with nothing to sell.
-              </p>
+              <p className="type-h2">{body.pullQuote}</p>
             </div>
           </div>
         </div>
@@ -175,14 +152,17 @@ export default async function ArticlePage({
       {/* Related articles — the Testimonials carousel, carrying article cards */}
       <section className="bg-black text-white">
         <div className="wrap">
-          <SectionHeader index={ordinal(1)} eyebrow="Related articles" tone="black" />
+          <SectionHeader
+            index={ordinal(1)}
+            eyebrow={detail.relatedEyebrow}
+            tone="black"
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
             <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-28 lg:pr-8">
-              <h2 className="type-h2 mb-8">Further reading</h2>
+              <h2 className="type-h2 mb-8">{detail.relatedTitle}</h2>
               <p className="type-body text-white/55 italic max-w-xs">
-                No other articles have been published yet, so none are linked —
-                these cards are structure only.
+                {detail.relatedNote}
               </p>
             </div>
 
@@ -196,13 +176,13 @@ export default async function ArticlePage({
                     className="snap-start shrink-0 w-[78vw] sm:w-[22rem] flex flex-col gap-5"
                   >
                     <BulletLabel className="text-white/55">
-                      Article pending
+                      {detail.relatedCardLabel}
                     </BulletLabel>
                     <PhotoFrame
                       photo={{
                         src: null,
                         alt: "",
-                        note: "the article's lead image.",
+                        note: detail.relatedCardPhotoNote,
                       }}
                       tone="black"
                       className="h-48"

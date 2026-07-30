@@ -71,3 +71,22 @@ export function IconOrbit({ className = "" }: IconProps) {
     </svg>
   );
 }
+
+/**
+ * Content files name an icon by key rather than importing a component: the
+ * label and body of a feature are content, the mark above them is design. The
+ * four keys are fixed — adding one means adding an icon here first.
+ */
+export type IconKey = "rings" | "arcs" | "stack" | "orbit";
+
+const marks: Record<IconKey, (props: IconProps) => React.ReactElement> = {
+  rings: IconRings,
+  arcs: IconArcs,
+  stack: IconStack,
+  orbit: IconOrbit,
+};
+
+export function Icon({ name, className = "" }: IconProps & { name: IconKey }) {
+  const Mark = marks[name];
+  return <Mark className={className} />;
+}

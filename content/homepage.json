@@ -1,0 +1,79 @@
+{
+  "hero": {
+    "photo": {
+      "src": "https://images.unsplash.com/photo-1663900108404-a05e8bf82cda",
+      "alt": "City skyline at dusk with illuminated towers",
+      "note": "Dramatic, low-light architecture or skyline. Carries the hero."
+    },
+    "headline": ["A Private Circle for", "Distinguished", "Business Leaders."],
+    "lead": "Leadership was never meant to be experienced alone.",
+    "body": "Built on trust, guided by integrity, and united by a shared commitment to excellence, the CEO Elite Circle brings together accomplished business leaders in a confidential environment where meaningful relationships, thoughtful dialogue, and strategic collaboration shape the future of leadership.",
+    "cta": "Request Membership Consideration"
+  },
+
+  "philosophy": {
+    "eyebrow": "Our Philosophy",
+    "headerLinkLabel": "More about the Circle",
+    "title": "Why the Circle Exists",
+    "lead": "Leadership at this level is unusually well supplied with advice, and unusually short of counsel.",
+    "body": "Boards want reassurance, executives want direction, advisers want a mandate. Very few rooms want nothing at all. The Circle exists to be one of them — somewhere a chief executive can think aloud among people who have carried the same weight, and where the conversation is not also a transaction.",
+    "linkLabel": "Discover the Circle"
+  },
+
+  "pillars": {
+    "eyebrow": "Structure",
+    "headerLinkLabel": "All pillars",
+    "title": "The Five Pillars",
+    "lead": "Five pillars carry the work of the Circle: counsel, connection, closed conversation, considered analysis, and standing groups that meet through the year.",
+    "cardLabel": "Pillar",
+    "cardLinkLabel": "Discover the Circle"
+  },
+
+  "whyNow": {
+    "eyebrow": "Timing",
+    "title": "Why Now",
+    "lead": "The demands on a chief executive have rarely shifted faster, and the rooms in which to think about them properly have rarely been fewer.",
+    "body": "Conferences have grown; conversations have not. The Circle was formed in the gap between the two.",
+    "linkLabel": "Discover the Circle",
+    "photo": {
+      "src": "https://images.unsplash.com/photo-1736528520038-015c130d0f9b",
+      "alt": "Aerial view of a modern highway leading into a city",
+      "note": "Warm, full-colour, wide. Forward motion."
+    }
+  },
+
+  "categories": {
+    "eyebrow": "Membership",
+    "headerLinkLabel": "All categories",
+    "title": "Membership Categories",
+    "rowLabel": "Category",
+    "rowLinkLabel": "Discover the Circle"
+  },
+
+  "governance": {
+    "eyebrow": "Governance",
+    "headerLinkLabel": "Trust framework",
+    "title": "Trust Framework",
+    "lead": "A closed room is only as good as the terms that hold it.",
+    "body": "The Trust Framework sets out how the Circle is governed, what members undertake, and how membership is reviewed. Selection follows from it: fit is considered before qualification, and the answer is given plainly either way.",
+    "primaryLinkLabel": "Discover the Circle",
+    "secondaryLinkLabel": "Membership Selection"
+  },
+
+  "experiences": {
+    "eyebrow": "Experiences",
+    "headerLinkLabel": "All experiences",
+    "title": "Signature Experiences",
+    "lead": "Seven occasions across the year, each built for a different kind of conversation — from the whole membership in one room to a single table of twelve.",
+    "featuredSlug": "ceo-private-dinners",
+    "featuredLinkLabel": "Discover the Circle",
+    "listLinkLabel": "Discover"
+  },
+
+  "testimonials": {
+    "eyebrow": "Testimonials",
+    "title": "What Members Say",
+    "note": "No member quotes have been given or approved yet, so none are shown — these cards are structure only.",
+    "cardLabel": "Awaiting member approval"
+  }
+}

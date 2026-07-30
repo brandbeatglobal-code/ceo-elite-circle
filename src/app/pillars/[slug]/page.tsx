@@ -4,8 +4,11 @@ import { DetailHero } from "@/components/DetailHero";
 import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
 import { VariantCards } from "@/components/VariantCards";
-import { pillarBySlug, pillars } from "@/lib/pillars";
+import { pillarBySlug, pillars, pillarsContent } from "@/lib/pillars";
 import { ordinal } from "@/lib/ordinal";
+import { site } from "@/lib/site";
+
+const { detail } = pillarsContent;
 
 export function generateStaticParams() {
   return pillars.map((p) => ({ slug: p.slug }));
@@ -18,7 +21,11 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const pillar = pillarBySlug(slug);
-  return { title: pillar ? `${pillar.name} — CEO Elite Circle` : "CEO Elite Circle" };
+  return {
+    title: pillar
+      ? `${pillar.name}${site.metadata.titleSuffix}`
+      : detail.fallbackMetaTitle,
+  };
 }
 
 export default async function PillarPage({
@@ -38,22 +45,23 @@ export default async function PillarPage({
   return (
     <>
       <DetailHero
-        eyebrow="Pillar"
+        eyebrow={detail.heroEyebrow}
         title={pillar.name}
         summary={pillar.summary}
         photo={pillar.photo}
       />
 
-      <Section index={next()} eyebrow="About" title={pillar.name}>
+      <Section index={next()} eyebrow={detail.aboutEyebrow} title={pillar.name}>
         <p className="type-lead text-ink">{pillar.intro}</p>
       </Section>
 
       {pillar.variants && (
         <VariantCards
           index={next()}
-          eyebrow="Formats"
-          title="How it is offered"
-          intro={`${pillar.name} runs in more than one shape, so members can take it in the form that suits the question.`}
+          eyebrow={detail.variantsEyebrow}
+          title={detail.variantsTitle}
+          // The one templated string on the site — see `content-inventory.md`.
+          intro={detail.variantsIntro.replace("{name}", pillar.name)}
           variants={pillar.variants}
           tone="black"
         />
@@ -61,9 +69,9 @@ export default async function PillarPage({
 
       <CandidacyChecklist
         index={next()}
-        eyebrow="Who it is for"
-        title="Who this pillar serves"
-        intro="Membership is broad, but each pillar suits a particular disposition more than others."
+        eyebrow={detail.criteriaEyebrow}
+        title={detail.criteriaTitle}
+        intro={detail.criteriaIntro}
         criteria={pillar.criteria}
         tone={pillar.variants ? "cream" : "black"}
       />
@@ -71,7 +79,7 @@ export default async function PillarPage({
       <RequestSection
         index={next()}
         variant="pillar"
-        context={{ label: "Pillar", value: pillar.name }}
+        context={{ label: detail.requestContextLabel, value: pillar.name }}
       />
     </>
   );

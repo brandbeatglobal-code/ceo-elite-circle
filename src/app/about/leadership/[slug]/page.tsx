@@ -3,7 +3,7 @@ import { Accordion } from "@/components/Accordion";
 import { AttributedQuote } from "@/components/AttributedQuote";
 import { CvTimeline } from "@/components/CvTimeline";
 import { FeatureGrid } from "@/components/FeatureGrid";
-import { IconArcs, IconOrbit, IconRings, IconStack } from "@/components/Icons";
+import { Icon, type IconKey } from "@/components/Icons";
 import { RequestSection } from "@/components/RequestSection";
 import { SplitHero } from "@/components/SplitHero";
 import {
@@ -11,8 +11,11 @@ import {
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
-import { leadership, memberBySlug } from "@/lib/leadership";
+import { leadership, leadershipContent, memberBySlug } from "@/lib/leadership";
 import { ordinal } from "@/lib/ordinal";
+import { site } from "@/lib/site";
+
+const { detail } = leadershipContent;
 
 export function generateStaticParams() {
   return leadership.map((m) => ({ slug: m.slug }));
@@ -27,12 +30,12 @@ export async function generateMetadata({
   const member = memberBySlug(slug);
   return {
     title: member?.name
-      ? `${member.name} — CEO Elite Circle`
-      : "Leadership — CEO Elite Circle",
+      ? `${member.name}${site.metadata.titleSuffix}`
+      : detail.fallbackMetaTitle,
   };
 }
 
-const recognitionIcons = [IconRings, IconArcs, IconStack, IconOrbit];
+const recognitionIcons: IconKey[] = ["rings", "arcs", "stack", "orbit"];
 
 export default async function LeadershipMemberPage({
   params,
@@ -61,7 +64,11 @@ export default async function LeadershipMemberPage({
           ),
         }))
       : Array.from({ length: 5 }, () => ({
-          period: <BulletLabel className="text-white/60">Period</BulletLabel>,
+          period: (
+            <BulletLabel className="text-white/60">
+              {detail.careerPeriodLabel}
+            </BulletLabel>
+          ),
           title: <Placeholder tone="black" lead />,
         }));
 
@@ -72,14 +79,14 @@ export default async function LeadershipMemberPage({
           body: <p className="type-body text-olive">{e.body}</p>,
         }))
       : Array.from({ length: 5 }, (_, i) => ({
-          title: `Area ${ordinal(i)}`,
+          title: `${detail.expertisePlaceholderPrefix} ${ordinal(i)}`,
           body: <Placeholder />,
         }));
 
   return (
     <>
       <SplitHero
-        eyebrow="Leadership"
+        eyebrow={detail.heroEyebrow}
         credentials={
           member.credentials ? (
             <p className="type-label text-white/75">{member.credentials}</p>
@@ -112,10 +119,10 @@ export default async function LeadershipMemberPage({
       {/* Areas of expertise — accordion */}
       <section className="bg-cream text-ink">
         <div className="wrap">
-          <SectionHeader index={next()} eyebrow="Expertise" />
+          <SectionHeader index={next()} eyebrow={detail.expertiseEyebrow} />
           <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-24 gap-10">
             <div className="lg:col-span-2 lg:pr-10">
-              <h2 className="type-h2 mb-8">Areas of expertise</h2>
+              <h2 className="type-h2 mb-8">{detail.expertiseTitle}</h2>
               <Placeholder lead />
             </div>
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8">
@@ -128,10 +135,14 @@ export default async function LeadershipMemberPage({
       {/* Education and career — alternating CV timeline */}
       <section className="bg-black text-white">
         <div className="wrap">
-          <SectionHeader index={next()} eyebrow="Education & Career" tone="black" />
+          <SectionHeader
+            index={next()}
+            eyebrow={detail.careerEyebrow}
+            tone="black"
+          />
           <div className="pt-12 lg:pt-16">
             <h2 className="type-h2 lg:[text-indent:26%] max-w-6xl mb-6">
-              Education and career
+              {detail.careerTitle}
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-4 mb-8">
               <div className="hidden lg:block" />
@@ -148,12 +159,12 @@ export default async function LeadershipMemberPage({
       {/* Recognition — house icon grid */}
       <FeatureGrid
         index={next()}
-        eyebrow="Recognition"
-        title="Recognition"
+        eyebrow={detail.recognitionEyebrow}
+        title={detail.recognitionTitle}
         intro={<Placeholder tone="black" lead />}
-        features={recognitionIcons.map((Icon, i) => ({
-          icon: <Icon className="w-full h-full" />,
-          label: `Recognition ${ordinal(i)}`,
+        features={recognitionIcons.map((key, i) => ({
+          icon: <Icon name={key} className="w-full h-full" />,
+          label: `${detail.recognitionPlaceholderPrefix} ${ordinal(i)}`,
           body: <Placeholder tone="black" />,
         }))}
       />
@@ -161,18 +172,14 @@ export default async function LeadershipMemberPage({
       {/* Philosophy — attributed pull-quote */}
       <AttributedQuote
         index={next()}
-        eyebrow="Philosophy"
+        eyebrow={detail.philosophyEyebrow}
         quote={
           member.quote ? (
             <blockquote className="type-h2">
               &ldquo;{member.quote.words}&rdquo;
             </blockquote>
           ) : (
-            <Placeholder
-              tone="black"
-              lead
-              note="Pull-quote placeholder — this slot must carry real words from a real, named person. Nothing should be written on their behalf."
-            />
+            <Placeholder tone="black" lead note={detail.quoteNote} />
           )
         }
         portrait={member.photo}

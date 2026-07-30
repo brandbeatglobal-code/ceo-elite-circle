@@ -1,5 +1,7 @@
 "use client";
 
+import { site } from "@/lib/site";
+
 export const DRAFT_BANNER_KEY = "cec-draft-banner-dismissed";
 
 /**
@@ -21,7 +23,7 @@ export function DismissDraftBanner() {
       onClick={dismiss}
       className="type-link text-white/70 hover:text-white transition-colors shrink-0"
     >
-      Dismiss
+      {site.draftBanner.dismissLabel}
     </button>
   );
 }

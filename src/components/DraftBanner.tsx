@@ -1,4 +1,5 @@
 import { DismissDraftBanner } from "@/components/DismissDraftBanner";
+import { site } from "@/lib/site";
 
 /**
  * Work-in-progress notice, shown while the site carries sample copy.
@@ -25,8 +26,7 @@ export function DraftBanner() {
           <span className="text-sage" aria-hidden="true">
             •
           </span>{" "}
-          Work-in-progress preview — copy and imagery on this site are
-          placeholders and not final.
+          {site.draftBanner.text}
         </p>
         <DismissDraftBanner />
       </div>

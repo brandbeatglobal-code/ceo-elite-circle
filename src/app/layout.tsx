@@ -12,11 +12,11 @@ import Footer from "@/components/Footer";
 import { BackToTop } from "@/components/BackToTop";
 import { DraftBanner } from "@/components/DraftBanner";
 import { Reveal } from "@/components/Reveal";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "CEO Elite Circle",
-  description:
-    "A private circle for distinguished business leaders. Built on trust, guided by integrity, and united by a shared commitment to excellence.",
+  title: site.metadata.title,
+  description: site.metadata.description,
 };
 
 /**

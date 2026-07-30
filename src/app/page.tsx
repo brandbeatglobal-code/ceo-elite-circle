@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { MediaSection } from "@/components/MediaSection";
 import { Carousel } from "@/components/Carousel";
 import { PhotoCard } from "@/components/PhotoCard";
@@ -10,19 +11,30 @@ import {
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
-import { photos } from "@/lib/images";
+import { home } from "@/lib/home";
 import { ordinal } from "@/lib/ordinal";
 import { pillars } from "@/lib/pillars";
 import { experiences } from "@/lib/experiences";
-import { membershipCategoriesIntro, tiers as tierCopy } from "@/lib/copy";
+import { membership } from "@/lib/membership";
 
-const tiers = [
-  { ...tierCopy[0], photo: photos.tierExecutive },
-  { ...tierCopy[1], photo: photos.tierElite },
-  { ...tierCopy[2], photo: photos.tierChairman },
-];
+const {
+  hero,
+  philosophy,
+  pillars: pillarsSection,
+  whyNow,
+  categories,
+  governance,
+  experiences: experiencesSection,
+  testimonials,
+} = home;
 
-const featured = experiences.find((e) => e.slug === "ceo-private-dinners")!;
+/* Categories are read from `content/membership.json`, not duplicated here, so
+   this teaser and the full page cannot drift apart. */
+const tiers = membership.categories.items;
+
+const featured = experiences.find(
+  (e) => e.slug === experiencesSection.featuredSlug,
+)!;
 const otherExperiences = experiences.filter((e) => e !== featured);
 
 export default function Home() {
@@ -31,7 +43,7 @@ export default function Home() {
       {/* ---- Hero — full-bleed photograph, serif headline, full-width pill CTA */}
       <section className="relative min-h-[calc(100svh-var(--banner-h))] flex flex-col justify-end overflow-hidden">
         <PhotoFrame
-          photo={photos.hero}
+          photo={hero.photo}
           cover
           className="h-full"
           sizes="100vw"
@@ -49,29 +61,28 @@ export default function Home() {
         </div>
 
         <div className="wrap relative pt-36 lg:pt-44 hero-foot">
+          {/* The breaks are deliberate — the last line is indented at `lg`, so
+              it has to be its own line. */}
           <h1 className="type-display type-hero text-white mb-6 lg:mb-10">
-            A Private Circle for
-            <br />
-            Distinguished
-            <br />
-            <span className="lg:ml-[18%]">Business Leaders.</span>
+            {hero.headline.map((line, i) => (
+              <Fragment key={line}>
+                {i > 0 && <br />}
+                {i === hero.headline.length - 1 ? (
+                  <span className="lg:ml-[18%]">{line}</span>
+                ) : (
+                  line
+                )}
+              </Fragment>
+            ))}
           </h1>
 
           <div className="max-w-sm mb-6 lg:mb-10">
-            <p className="type-body text-white mb-3">
-              Leadership was never meant to be experienced alone.
-            </p>
-            <p className="type-body text-white/75">
-              Built on trust, guided by integrity, and united by a shared
-              commitment to excellence, the CEO Elite Circle brings together
-              accomplished business leaders in a confidential environment where
-              meaningful relationships, thoughtful dialogue, and strategic
-              collaboration shape the future of leadership.
-            </p>
+            <p className="type-body text-white mb-3">{hero.lead}</p>
+            <p className="type-body text-white/75">{hero.body}</p>
           </div>
 
           <PillButton href="/contact" variant="outline" className="w-full">
-            Request Membership Consideration
+            {hero.cta}
           </PillButton>
         </div>
       </section>
@@ -81,35 +92,30 @@ export default function Home() {
         <div className="wrap">
           <SectionHeader
             index={ordinal(0)}
-            eyebrow="Our Philosophy"
-            link={{ href: "/about", label: "More about the Circle" }}
+            eyebrow={philosophy.eyebrow}
+            link={{ href: "/about", label: philosophy.headerLinkLabel }}
             tone="ramp"
           />
 
           <div className="pt-24 pb-16 lg:pt-52 lg:pb-40">
             {/* Staggered headline — begins mid-grid, then runs full width */}
             <h2 className="type-h2 lg:[text-indent:44%] max-w-6xl">
-              Why the Circle Exists
+              {philosophy.title}
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-14 mt-24 lg:mt-48">
               <div className="hidden lg:block" />
               <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-8">
                 <p className="type-lead text-white max-w-sm">
-                  Leadership at this level is unusually well supplied with
-                  advice, and unusually short of counsel.
+                  {philosophy.lead}
                 </p>
               </div>
               <div className="lg:border-l border-hair-dark lg:pl-8 flex flex-col items-start gap-8">
                 <p className="type-body text-white/75 max-w-sm">
-                  Boards want reassurance, executives want direction, advisers
-                  want a mandate. Very few rooms want nothing at all. The Circle
-                  exists to be one of them — somewhere a chief executive can
-                  think aloud among people who have carried the same weight, and
-                  where the conversation is not also a transaction.
+                  {philosophy.body}
                 </p>
                 <ArrowLink href="/about" tone="ramp">
-                  Discover the Circle
+                  {philosophy.linkLabel}
                 </ArrowLink>
               </div>
               <div className="hidden lg:block" />
@@ -123,20 +129,18 @@ export default function Home() {
         <div className="wrap">
           <SectionHeader
             index={ordinal(1)}
-            eyebrow="Structure"
-            link={{ href: "/pillars", label: "All pillars" }}
+            eyebrow={pillarsSection.eyebrow}
+            link={{ href: "/pillars", label: pillarsSection.headerLinkLabel }}
             tone="black"
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
             <h2 className="type-h2 col-span-1 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
-              The Five Pillars
+              {pillarsSection.title}
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-white max-w-lg">
-                Five pillars carry the work of the Circle: counsel, connection,
-                closed conversation, considered analysis, and standing groups
-                that meet through the year.
+                {pillarsSection.lead}
               </p>
             </div>
           </div>
@@ -145,13 +149,13 @@ export default function Home() {
             {pillars.map((pillar, i) => (
               <PhotoCard
                 key={pillar.slug}
-                label="Pillar"
+                label={pillarsSection.cardLabel}
                 index={ordinal(i)}
                 title={pillar.name}
                 body={pillar.summary}
                 photo={pillar.photo}
                 href={`/pillars/${pillar.slug}`}
-                linkLabel="Discover the Circle"
+                linkLabel={pillarsSection.cardLinkLabel}
                 delay={i * 70}
               />
             ))}
@@ -162,19 +166,13 @@ export default function Home() {
       {/* ---- Three — Why Now */}
       <MediaSection
         index={ordinal(2)}
-        eyebrow="Timing"
-        title="Why Now"
-        photo={photos.whyNow}
-        link={{ href: "/about", label: "Discover the Circle" }}
+        eyebrow={whyNow.eyebrow}
+        title={whyNow.title}
+        photo={whyNow.photo}
+        link={{ href: "/about", label: whyNow.linkLabel }}
       >
-        <p className="type-lead text-ink max-w-md">
-          The demands on a chief executive have rarely shifted faster, and the
-          rooms in which to think about them properly have rarely been fewer.
-        </p>
-        <p className="type-body text-olive max-w-md">
-          Conferences have grown; conversations have not. The Circle was formed
-          in the gap between the two.
-        </p>
+        <p className="type-lead text-ink max-w-md">{whyNow.lead}</p>
+        <p className="type-body text-olive max-w-md">{whyNow.body}</p>
       </MediaSection>
 
       {/* ---- Four — Membership Categories */}
@@ -182,17 +180,17 @@ export default function Home() {
         <div className="wrap">
           <SectionHeader
             index={ordinal(3)}
-            eyebrow="Membership"
-            link={{ href: "/membership", label: "All categories" }}
+            eyebrow={categories.eyebrow}
+            link={{ href: "/membership", label: categories.headerLinkLabel }}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair">
             <h2 className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
-              Membership Categories
+              {categories.title}
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-ink max-w-lg">
-                {membershipCategoriesIntro}
+                {membership.categories.intro}
               </p>
             </div>
           </div>
@@ -203,8 +201,12 @@ export default function Home() {
               className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair"
             >
               <div className="flex flex-col justify-between py-16 lg:py-14 lg:pr-8 gap-8">
-                <BulletLabel className="text-olive">Category</BulletLabel>
-                <ArrowLink href="/membership">Discover the Circle</ArrowLink>
+                <BulletLabel className="text-olive">
+                  {categories.rowLabel}
+                </BulletLabel>
+                <ArrowLink href="/membership">
+                  {categories.rowLinkLabel}
+                </ArrowLink>
               </div>
 
               <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-16 lg:py-14 flex flex-col justify-between gap-8">
@@ -230,30 +232,29 @@ export default function Home() {
         <div className="wrap">
           <SectionHeader
             index={ordinal(4)}
-            eyebrow="Governance"
-            link={{ href: "/trust", label: "Trust framework" }}
+            eyebrow={governance.eyebrow}
+            link={{ href: "/trust", label: governance.headerLinkLabel }}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-16 pb-16 lg:pt-44 lg:pb-36">
             <div className="flex flex-col items-start gap-8 lg:pr-8 order-2 lg:order-1 lg:justify-end">
-              <p className="type-lead max-w-xs">
-                A closed room is only as good as the terms that hold it.
-              </p>
-              <ArrowLink href="/trust">Discover the Circle</ArrowLink>
+              <p className="type-lead max-w-xs">{governance.lead}</p>
+              <ArrowLink href="/trust">
+                {governance.primaryLinkLabel}
+              </ArrowLink>
             </div>
 
             <div className="flex flex-col items-start gap-8 lg:border-l border-hair lg:pl-8 order-3 lg:order-2 lg:justify-end">
               <p className="type-body text-olive max-w-xs">
-                The Trust Framework sets out how the Circle is governed, what
-                members undertake, and how membership is reviewed. Selection
-                follows from it: fit is considered before qualification, and the
-                answer is given plainly either way.
+                {governance.body}
               </p>
-              <ArrowLink href="/membership">Membership Selection</ArrowLink>
+              <ArrowLink href="/membership">
+                {governance.secondaryLinkLabel}
+              </ArrowLink>
             </div>
 
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-10 order-1 lg:order-3">
-              <h2 className="type-h2 max-w-xl">Trust Framework</h2>
+              <h2 className="type-h2 max-w-xl">{governance.title}</h2>
             </div>
           </div>
         </div>
@@ -264,20 +265,21 @@ export default function Home() {
         <div className="wrap">
           <SectionHeader
             index={ordinal(5)}
-            eyebrow="Experiences"
-            link={{ href: "/experiences", label: "All experiences" }}
+            eyebrow={experiencesSection.eyebrow}
+            link={{
+              href: "/experiences",
+              label: experiencesSection.headerLinkLabel,
+            }}
             tone="black"
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark">
             <h2 className="type-h2 lg:col-span-2 py-12 lg:py-24 lg:pr-10">
-              Signature Experiences
+              {experiencesSection.title}
             </h2>
             <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 pb-12 lg:py-24">
               <p className="type-lead text-white max-w-lg">
-                Seven occasions across the year, each built for a different kind
-                of conversation — from the whole membership in one room to a
-                single table of twelve.
+                {experiencesSection.lead}
               </p>
             </div>
           </div>
@@ -292,13 +294,13 @@ export default function Home() {
                 <p className="type-body text-white/70">{featured.summary}</p>
               </div>
               <ArrowLink href={`/experiences/${featured.slug}`} tone="black">
-                Discover the Circle
+                {experiencesSection.featuredLinkLabel}
               </ArrowLink>
             </div>
 
             <div className="lg:border-l border-hair-dark lg:pl-8 py-14">
               <PhotoFrame
-                photo={photos.privateDinners}
+                photo={featured.photo}
                 className="h-72 lg:h-full lg:min-h-[24rem]"
                 sizes="(max-width: 1024px) 100vw, 25vw"
                 tone="black"
@@ -320,7 +322,7 @@ export default function Home() {
                     tone="black"
                     className="shrink-0"
                   >
-                    Discover
+                    {experiencesSection.listLinkLabel}
                   </ArrowLink>
                 </div>
               ))}
@@ -334,16 +336,15 @@ export default function Home() {
         <div className="wrap">
           <SectionHeader
             index={ordinal(6)}
-            eyebrow="Testimonials"
+            eyebrow={testimonials.eyebrow}
             tone="black"
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-4">
             <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-28 lg:pr-8">
-              <h2 className="type-h2 mb-8">What Members Say</h2>
+              <h2 className="type-h2 mb-8">{testimonials.title}</h2>
               <p className="type-body text-white/55 italic max-w-xs">
-                No member quotes have been given or approved yet, so none are
-                shown — these cards are structure only.
+                {testimonials.note}
               </p>
             </div>
 
@@ -357,7 +358,7 @@ export default function Home() {
                     className="snap-start shrink-0 w-[78vw] sm:w-[22rem] flex flex-col gap-5"
                   >
                     <BulletLabel className="text-white/55">
-                      Awaiting member approval
+                      {testimonials.cardLabel}
                     </BulletLabel>
                     <Placeholder tone="black" />
                   </article>

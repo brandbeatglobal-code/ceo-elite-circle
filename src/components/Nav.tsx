@@ -3,30 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { site } from "@/lib/site";
 
 /** Grouped by meaning rather than split to balance the count. */
-const groups = [
-  {
-    heading: "The Circle",
-    links: [
-      { href: "/about", label: "About the Circle" },
-      { href: "/pillars", label: "The Five Pillars" },
-      { href: "/experiences", label: "Signature Experiences" },
-    ],
-  },
-  {
-    heading: "Membership",
-    links: [
-      { href: "/membership", label: "Membership" },
-      { href: "/trust", label: "Trust Framework" },
-      { href: "/councils", label: "Executive Councils" },
-    ],
-  },
-  {
-    heading: "Insights",
-    links: [{ href: "/insights", label: "Insights" }],
-  },
-];
+const { groups, cta } = site.nav;
 
 const allLinks = groups.flatMap((g) => g.links);
 
@@ -61,7 +41,7 @@ export default function Nav() {
           href="/"
           className="text-lg font-semibold tracking-tight shrink-0 leading-none pt-1"
         >
-          CEO Elite Circle
+          {site.brand}
         </Link>
 
         {/* Three equal columns, so the single-item group does not read as
@@ -97,7 +77,7 @@ export default function Nav() {
 
         <div className="flex items-center gap-4 shrink-0">
           <Link
-            href="/contact"
+            href={cta.href}
             className={`pill type-link hidden lg:inline-flex items-center gap-2 px-6 py-3 transition-colors ${
               transparent
                 ? "border border-white/35 text-white hover:bg-white hover:text-ink"
@@ -105,7 +85,7 @@ export default function Nav() {
             }`}
           >
             <span aria-hidden="true">•</span>
-            Begin Your Membership Journey
+            {cta.label}
           </Link>
 
           <button
@@ -113,10 +93,10 @@ export default function Nav() {
               transparent ? "border-white/40" : "border-hair"
             }`}
             onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
+            aria-label={site.nav.menuAriaLabel}
             aria-expanded={open}
           >
-            {open ? "Close" : "Menu"}
+            {open ? site.nav.closeLabel : site.nav.menuLabel}
           </button>
         </div>
       </div>
@@ -135,11 +115,11 @@ export default function Nav() {
               </Link>
             ))}
             <Link
-              href="/contact"
+              href={cta.href}
               className="pill type-link bg-ink text-white text-center px-6 py-3.5 mt-5 mb-3"
               onClick={() => setOpen(false)}
             >
-              <span aria-hidden="true">•</span> Begin Your Membership Journey
+              <span aria-hidden="true">•</span> {cta.label}
             </Link>
           </div>
         </nav>
