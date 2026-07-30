@@ -15,7 +15,7 @@
     needs its own full section with benefits, outcomes, and examples.
 04. Signature Experiences (`/experiences`) — CEO Leadership Summit,
     Chairman's Majlis, Executive Leadership Retreat, Future Leadership
-    Forum, CEO Excellence Awards, International CEO Delegation, CEO Private
+    Forum, Elite Excellence Awards, International CEO Delegation, CEO Private
     Dinners.
 05. Membership (`/membership`) — Who Should Join, Membership Categories
     (Executive Circle, Elite Circle, Chairman's Circle), Membership
@@ -37,7 +37,7 @@
   `executive-councils`), linked from the list page.
 - `/experiences/[slug]` — one page per experience (`ceo-leadership-summit`,
   `chairmans-majlis`, `executive-leadership-retreat`,
-  `future-leadership-forum`, `ceo-excellence-awards`,
+  `future-leadership-forum`, `elite-excellence-awards`,
   `international-ceo-delegation`, `ceo-private-dinners`), linked from the
   list page.
 - `/about/leadership/[slug]` — leadership profile template. Built and
@@ -502,6 +502,13 @@ Two constraints, both enforced rather than assumed:
   solved from the brightness measured on upload, holding the same contrast
   ceiling: the bright-probe measurement still passes 12/12 at the same worst
   case, and the skyline keeps 2.7× more of itself.
+- The CEO Excellence Awards is now the **Elite Excellence Awards**, slug
+  included — pre-launch, so the URL was renamed with the name rather than left
+  saying something the page does not.
+- Photographs filled in by hand at design stage carry no brightness
+  measurement and therefore get the heaviest scrim by default. A one-time
+  maintenance route measures them in place — the images, their URLs and their
+  licensing are untouched — and is deleted once it has run.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

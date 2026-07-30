@@ -199,7 +199,7 @@
           "body": "Attendance comes through a member who knows the candidate's work directly."
         },
         {
-          "icon": "cycle",
+          "icon": "signal",
           "title": "Willing to be candid about gaps",
           "body": "The forum is most useful to those prepared to name what they do not yet know."
         },
@@ -229,8 +229,8 @@
       ]
     },
     {
-      "slug": "ceo-excellence-awards",
-      "name": "CEO Excellence Awards",
+      "slug": "elite-excellence-awards",
+      "name": "Elite Excellence Awards",
       "photo": {
         "src": "https://images.unsplash.com/photo-1632012773667-b68d7bd59cc4",
         "alt": "An awards evening, room set formally",

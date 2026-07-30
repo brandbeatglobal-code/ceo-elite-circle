@@ -173,6 +173,19 @@ The regression test for all of this is the two-save sequence described in
 `docs/brief.md` § *Verification*. A single-edit test passes against the broken
 code.
 
+#### One-time maintenance
+
+`admin/(panel)/maintenance/brightness` is a job, not a feature: it fills in
+`photo.brightness` for the slots that were filled by hand at design stage, by
+fetching each image from the URL the content already points at and running the
+same `measureBrightness` the upload path uses. It writes through `editBase` and
+`validatePhotoEdit` like any other save, one commit per file.
+
+It exists because the alternative — re-uploading each image through the admin
+to get it measured — would replace curated licensed photography with
+duplicates of itself. It is unlinked from the admin's navigation, and **should
+be deleted once it has run**.
+
 Deferred: adding or removing whole array entries, and creating a key that is
 currently absent. Both change a file's shape, which is exactly what the
 validator refuses. Six form variants have no `ctaHref` key at all, so the admin
