@@ -70,8 +70,19 @@ export type HomeContent = {
   testimonials: {
     eyebrow: string;
     title: string;
+    /** Shown only while no testimonial has been given. */
     note: string;
+    /** Label on a card that is still waiting. */
     cardLabel: string;
+    /** Label on a card that carries a real quote. */
+    memberLabel: string;
+    attributionNote: string;
+    /**
+     * One entry per card. A null `quote` renders the labelled waiting card;
+     * a real one renders as a quotation — the styling follows the content
+     * rather than being fixed to the empty state.
+     */
+    items: { quote: string | null; attribution: string | null }[];
   };
 };
 

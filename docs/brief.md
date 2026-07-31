@@ -434,10 +434,12 @@ artefact that does not exist:
    full profile for a real person needs a career timeline, areas of expertise
    and a quote, none of which we have. It is unlinked.
 2. **Testimonials** (homepage, 3 cards) — an invented quote is manufactured
-   social proof.
-3. **The Leadership Philosophy pull-quote** (`/about`) — an attributed quote
-   needs real words from a real named person. Its supporting paragraph is
-   filled.
+   social proof. The cards are content-driven now, so filling one through the
+   admin renders it as a real quotation; they stay empty until a member has
+   given words and agreed to be named.
+3. **The Leadership Philosophy attribution** (`/about`) — the quote itself is
+   real and published. Who said it is not recorded, so the name keeps its
+   pending frame beneath the quote rather than the quote going unsourced.
 4. **Expert Advisors** (`/councils`) — named individuals.
 
 **The About leadership cards came off this list**, which is what it was for.
@@ -654,6 +656,24 @@ Two constraints, both enforced rather than assumed:
   capital or a space still builds and still routes, which is exactly why it
   needed catching: the failure is an address nobody can type or repeat, not an
   error anyone would see.
+- **A slot's styling follows its content.** The About philosophy pull-quote
+  held a real line — "Capability, not just capital, will shape the future of
+  Saudi Arabia." — and still rendered inside the dashed, muted placeholder
+  box, because the line had been typed into `quoteNote`: the sentence shown
+  *inside* the empty frame, not the quote field. There was no quote field.
+  There is now, with an attribution beside it, and the section renders a real
+  serif pull-quote when the words exist and the labelled frame when they do
+  not. The attribution is empty, so the name shows as outstanding rather than
+  the quote appearing unsourced.
+
+  Every other slot that can take real content was audited for the same shape.
+  The card components (`VariantCards`, `NumberedSteps`, `CandidacyChecklist`,
+  `Section`, `DetailHero`) and the leadership profile template were already
+  gated correctly. Homepage testimonials were not fillable at all — three
+  hardcoded placeholders with no content behind them — so they gained the same
+  shape and now switch when filled. `schema.ts` labels every `*Note` field in
+  the admin as the empty-state text, which is the confusion that caused this.
+
 - **The Trust Framework is published.** Its ten areas were the most protected
   thing in the repo — `trust.json` had no field for policy text at all, so
   nothing could be drafted into it by accident or through the admin. The

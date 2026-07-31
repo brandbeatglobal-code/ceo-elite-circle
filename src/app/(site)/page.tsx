@@ -365,24 +365,50 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-4">
             <div className="lg:col-span-1 flex flex-col justify-end py-12 lg:py-28 lg:pr-8">
               <h2 className="type-h2 mb-8">{testimonials.title}</h2>
-              <p className="type-body text-white/55 italic max-w-xs">
-                {testimonials.note}
-              </p>
+              {testimonials.items.every((t) => t.quote === null) && (
+                <p className="type-body text-white/55 italic max-w-xs">
+                  {testimonials.note}
+                </p>
+              )}
             </div>
 
             <div className="hidden lg:block border-l border-hair-dark" />
 
             <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8">
               <Carousel>
-                {[0, 1, 2].map((i) => (
+                {testimonials.items.map((item, i) => (
                   <article
                     key={i}
                     className="snap-start shrink-0 w-[78vw] sm:w-[22rem] flex flex-col gap-5"
                   >
+                    {/* A card follows its content: real words get quoted, an
+                        empty slot keeps the labelled waiting frame. */}
                     <BulletLabel className="text-white/55">
-                      {testimonials.cardLabel}
+                      {item.quote
+                        ? testimonials.memberLabel
+                        : testimonials.cardLabel}
                     </BulletLabel>
-                    <Placeholder tone="black" />
+                    {item.quote ? (
+                      <figure className="flex flex-col items-start gap-4">
+                        <blockquote className="type-lead text-white">
+                          &ldquo;{item.quote}&rdquo;
+                        </blockquote>
+                        <figcaption>
+                          {item.attribution ? (
+                            <BulletLabel className="text-white/75">
+                              {item.attribution}
+                            </BulletLabel>
+                          ) : (
+                            <Placeholder
+                              tone="black"
+                              note={testimonials.attributionNote}
+                            />
+                          )}
+                        </figcaption>
+                      </figure>
+                    ) : (
+                      <Placeholder tone="black" />
+                    )}
                   </article>
                 ))}
               </Carousel>

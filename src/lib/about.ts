@@ -56,7 +56,20 @@ export type AboutContent = {
   philosophy: {
     eyebrow: string;
     title: string;
+    /**
+     * A real pull-quote, or null. Null renders the labelled pending frame
+     * carrying `quoteNote`; a value renders as an actual quotation.
+     *
+     * These are two different fields on purpose. `quoteNote` is the sentence
+     * shown *inside* the empty frame — a brief for whoever fills the slot —
+     * and a real quote typed into it renders as a placeholder, dashed border
+     * and all. That is exactly what happened once.
+     */
+    quote: string | null;
+    /** Who said it. Null renders `attributionNote` beneath the quote. */
+    quoteAttribution: string | null;
     quoteNote: string;
+    attributionNote: string;
     support: string;
     photo: Photo;
   };
