@@ -15,6 +15,29 @@ npm start        # serve the production build
 is no "run a single test". Verification is done by driving the built site in a
 headless browser — see *Verifying changes* below.
 
+### Environment
+
+Five variables, none of which has a fallback that guesses. The public site
+needs none of them; they are all the admin's.
+
+| Variable | Default | Unset |
+| --- | --- | --- |
+| `ADMIN_PASSWORD` | none | every `/admin` route, login included, serves the site's 404 |
+| `GITHUB_TOKEN` | none | the panel renders from the deployment's own copy with a visible note, and every save refuses with a message rather than silently doing nothing |
+| `GITHUB_REPO` | `brandbeatglobal-code/ceo-elite-circle` | — |
+| `GITHUB_BRANCH` | `main` | — |
+| `GITHUB_API_BASE` | `https://api.github.com` | — |
+
+The two secrets are set only in Vercel's dashboard, never in the repo, and a
+redeploy is needed to pick either up. The token is a fine-grained PAT scoped to
+this repository with Contents: read and write and nothing else.
+
+Locally, `ADMIN_PASSWORD` alone gets you into the panel and is enough for
+anything read-only. To exercise a *save* without touching the real repository,
+point `GITHUB_API_BASE` at a stand-in API and set any non-empty `GITHUB_TOKEN`
+— that is how the commit path was checked. `GITHUB_REPO`/`GITHUB_BRANCH` exist
+for the same reason and should not be set in production.
+
 ## What this is
 
 A marketing site for CEO Elite Circle, a private membership organisation.
@@ -22,9 +45,18 @@ Next.js 16 App Router, React 19, Tailwind v4, TypeScript. Every route is static
 (`generateStaticParams` for the dynamic ones); there is no database, no API
 route, and no form submission — every form on the site is deliberately disabled.
 
-`docs/brief.md` is the source of truth for design direction, copy rules and
-page-by-page intent. Read it before changing anything visual or textual. It is
-kept current; update it when you change a rule it documents.
+Three documents, and it matters which one you reach for:
+
+- `docs/brief.md` — the source of truth for design direction, copy rules and
+  page-by-page intent, plus the verification methods and the running status
+  log. Read it before changing anything visual or textual. It is kept current;
+  update it when you change a rule it documents.
+- `docs/content-inventory.md` — the field-by-field record of which content key
+  feeds which part of which page. The spec to read before changing the schema.
+- `docs/design-reference/` — **deliberately empty** (a `.gitkeep`). The eleven
+  layout reference screenshots are a third party's published work and are not
+  committed; `docs/brief.md` § *Design reference* names the source. The
+  directory is not a missing asset to go and find.
 
 ## The content-honesty rule
 
@@ -104,8 +136,7 @@ ships `content/**` with the admin's server bundle — without it the JSON would
 be missing from the deployed functions.
 
 Admin pages are `force-dynamic`, carry `robots: noindex`, and are not linked
-from the public site. To run locally: set `ADMIN_PASSWORD` in the server's
-environment for that run.
+from the public site. See § *Environment* for what to set to run one locally.
 
 #### Editing (Phase 3)
 
@@ -240,9 +271,13 @@ files added after startup.
 
 `src/app/**/page.tsx` files are thin: they assemble section-level components
 from `src/components/` and pass content in. Almost no layout lives in a page
-file. The shared primitives (`SectionHeader`, `PhotoFrame`, `Placeholder`,
-`ArrowLink`, `PillButton`, `BulletLabel`, `Tone`) are in `src/components/ui.tsx`;
-whole sections get their own file.
+file. The shared primitives (`SectionHeader`, `SectionShell`, `PhotoFrame`,
+`Placeholder`, `ArrowLink`, `PillButton`, `BulletLabel`) are in
+`src/components/ui.tsx`, along with the `Tone` union and the two functions
+every primitive in that file derives its own light/dark treatment through,
+`isDark()` and `hair()`. So a page passes a `tone` and never passes colours —
+add a primitive and it should read the tone the same way rather than branch on
+its own. Whole sections get their own file.
 
 Most section components accept optional content and fall back to
 `<Placeholder>` when it is absent — that is how a page stays complete and
@@ -281,6 +316,22 @@ change. Keep them thin.
 
 Structure stays in code and is deliberately *not* in the JSON: section order
 and numbering, tone/`flip`/grid props, and route paths.
+
+With one exception worth knowing before you touch an array: **the four dynamic
+routes are generated from content.** `generateStaticParams` maps
+`pillars`/`experiences`/`insights.articles`/`leadership` to slugs, and each
+page `notFound()`s a slug that is not in its array. So adding an entry adds a
+static route, and renaming a `slug` silently moves a live URL — it still
+builds, because the route list is regenerated from the array; the old address
+just starts returning the 404.
+
+Adding or removing an entry changes the file's shape, which the validator
+refuses, so the admin cannot do that. **Renaming one it can**: `schema.ts` has
+no rule matching `slug`, so it falls to the default `text` rule and renders as
+an ordinary editable field with no note saying what it is. Giving it a
+`structural` note — the mechanism already used for `ctaHref` and
+`insights:published` — would be the consistent fix. Until then, treat any slug
+edit as a URL change and check inbound links.
 
 ### Icons
 
