@@ -5,14 +5,20 @@ import { ProfileGrid } from "@/components/ProfileGrid";
 import { QuoteSection } from "@/components/QuoteSection";
 import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
-import { PhotoFrame, Placeholder, SectionHeader } from "@/components/ui";
+import {
+  BulletLabel,
+  PhotoFrame,
+  Placeholder,
+  SectionHeader,
+} from "@/components/ui";
 import { about } from "@/lib/about";
 import { photoText } from "@/lib/images";
 import { ordinal } from "@/lib/ordinal";
 
-/* SAMPLE COPY in `content/about.json`. The Leadership cards and the philosophy
-   pull-quote stay empty deliberately — both would require inventing a named
-   person. */
+/* SAMPLE COPY in `content/about.json`, with two exceptions that are real and
+   are not rewritten for voice: the three Leadership cards, and the philosophy
+   pull-quote. The quote's attribution is still empty — the words are real,
+   the name is not here yet, and it says so rather than going unsourced. */
 
 const { hero, story, leadership, sections, philosophy, differences } = about;
 
@@ -102,12 +108,40 @@ export default function AboutPage() {
         title={philosophy.title}
         photo={philosophy.photo}
         quote={
-          <Placeholder
-            tone={philosophyText.tone}
-            lead
-            onPhoto
-            note={philosophy.quoteNote}
-          />
+          /* Real words get real treatment; only an empty slot gets the
+             labelled frame. The two used to be one field, so a quote typed
+             into the frame's own note rendered as a placeholder. */
+          philosophy.quote ? (
+            <figure className="flex flex-col items-start gap-5">
+              <blockquote
+                className={`type-display type-h3 ${philosophyText.strong} max-w-sm`}
+              >
+                &ldquo;{philosophy.quote}&rdquo;
+              </blockquote>
+              <figcaption>
+                {philosophy.quoteAttribution ? (
+                  <BulletLabel className={philosophyText.label}>
+                    {philosophy.quoteAttribution}
+                  </BulletLabel>
+                ) : (
+                  /* The words are real; the name is not here yet, and that
+                     part stays visibly unfinished rather than unsourced. */
+                  <Placeholder
+                    tone={philosophyText.tone}
+                    onPhoto
+                    note={philosophy.attributionNote}
+                  />
+                )}
+              </figcaption>
+            </figure>
+          ) : (
+            <Placeholder
+              tone={philosophyText.tone}
+              lead
+              onPhoto
+              note={philosophy.quoteNote}
+            />
+          )
         }
         support={
           <p className={`type-body ${philosophyText.label} max-w-sm`}>

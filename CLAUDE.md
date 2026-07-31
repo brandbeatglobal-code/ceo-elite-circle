@@ -84,10 +84,25 @@ Consequences that are easy to trip over:
 - Anything stating what the Circle will or won't do with member information
   must point at the Trust Framework rather than state the policy.
 - Several things are **deliberately empty and must stay so**: the homepage
-  testimonials, the About philosophy pull-quote, and Expert Advisors on
-  `/councils`. All three need a real named person, which is what the other
-  outreach is for. `docs/brief.md` § *What is still empty, and why* lists them
-  with reasons.
+  testimonials and Expert Advisors on `/councils`. Both need a real named
+  person, which is what the other outreach is for. `docs/brief.md` § *What is
+  still empty, and why* lists them with reasons.
+- **A slot's styling follows its content, never the other way round.** Real
+  words get real treatment — serif, full strength, no dashed border; only a
+  genuinely empty slot gets the labelled placeholder. Every slot that can hold
+  real content is written `value ? <real> : <Placeholder>`, and a new one must
+  be too.
+
+  This is a rule because it broke. A real pull-quote was typed into the About
+  philosophy slot's `quoteNote` — the sentence shown *inside* the empty frame,
+  a brief for whoever fills it — and rendered as a placeholder: dashed border,
+  muted italic, reading as unfinished while being finished. The slot now has
+  its own `quote` and `quoteAttribution` fields, and `schema.ts` marks every
+  `*Note` field in the admin as the empty-state text rather than the content.
+
+  Where a quote is real but its attribution is not, the quote renders properly
+  and the *name* keeps its pending frame. Half-finished is shown as
+  half-finished; it is not rounded up to done or down to empty.
 - **The three About leadership cards are the exception, and are now real.**
   Three named people with real titles and real credentials, supplied by the
   Circle. They are the one place on the site where a text field is a factual

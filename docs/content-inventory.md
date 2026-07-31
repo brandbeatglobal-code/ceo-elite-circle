@@ -122,6 +122,8 @@ Two rules survive the move and are load-bearing:
 | `experiences.featuredSlug` | page.tsx — was `experiences.find(e => e.slug === "ceo-private-dinners")` |
 | `experiences.featuredLinkLabel`, `.listLinkLabel` | page.tsx |
 | `testimonials.eyebrow` / `.title` / `.note` / `.cardLabel` | page.tsx |
+| `testimonials.memberLabel` / `.attributionNote` | new — the filled card's label, and its pending-name note |
+| `testimonials.items[]` — 3 × (`quote`, `attribution`) | new — all null; filling one switches that card to a real quotation |
 | `request.variant` | page.tsx |
 
 Pillar and experience names, summaries and photos come from
@@ -140,7 +142,8 @@ pillars and all seven experiences; nothing is duplicated.
 | `leadership.cards[]` — 3 × (`name`, `title`, `description`, `photo`) | `photos.leadershipOne`…`Four`; the three text fields are new |
 | `sections[]` — 5 × (`title`, `lead`, `body`) | page.tsx — Purpose, Beliefs, Mission, Vision, Who We Serve |
 | `philosophy.eyebrow` / `.title` / `.support` | page.tsx |
-| `philosophy.quoteNote` | page.tsx — the placeholder's stricter note |
+| `philosophy.quote` / `.quoteAttribution` | new — the real pull-quote and who said it |
+| `philosophy.quoteNote` / `.attributionNote` | page.tsx — the text shown *inside* each empty frame |
 | `philosophy.photo` | `photos.aboutPhilosophy` |
 | `differences.eyebrow` / `.title` / `.intro` | page.tsx |
 | `differences.features[]` — 4 × (`icon`, `label`, `body`) | page.tsx |
@@ -374,3 +377,26 @@ visible structural note on its field, and the ones that would change a file's
   control. On an empty slot the value is ignored until a photograph lands.
 - `forms.*.ctaHref` — absent renders a disabled button instead of a link.
 - `forms.*.columns.length` — one column widens to two grid columns.
+
+---
+
+## Content fields vs empty-state notes
+
+Some slots carry two fields that read alike in the admin and are not alike at
+all:
+
+| Field | What it is |
+|---|---|
+| `about.philosophy.quote` | the pull-quote itself |
+| `about.philosophy.quoteNote` | the sentence shown *inside* the dashed frame while there is no quote |
+| `homepage.testimonials.items[].quote` | a member's words |
+| `homepage.testimonials.note` / `.cardLabel` | what the section says while none have been given |
+| `councils.advisors.placeholderNote` | what the empty Expert Advisors section says |
+| `insights.page.emptyNote` | what the index says while nothing is published |
+| `leadership.detail.quoteNote` | the profile template's empty pull-quote frame |
+
+**Real content typed into a `*Note` field renders as a placeholder** — dashed
+border, muted italic — because that is what the note is drawn inside. It has
+happened once: the About philosophy quote. `schema.ts` now puts a note on
+every `*Note` field in the admin saying so, and the slots that can hold real
+content have their own fields beside them.

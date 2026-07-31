@@ -75,6 +75,22 @@
     "eyebrow": "Testimonials",
     "title": "What Members Say",
     "note": "No member quotes have been given or approved yet, so none are shown — these cards are structure only.",
-    "cardLabel": "Awaiting member approval"
+    "cardLabel": "Awaiting member approval",
+    "memberLabel": "Member",
+    "attributionNote": "Attribution pending — a quote needs the name of the member who gave it, and their agreement to be named.",
+    "items": [
+      {
+        "quote": null,
+        "attribution": null
+      },
+      {
+        "quote": null,
+        "attribution": null
+      },
+      {
+        "quote": null,
+        "attribution": null
+      }
+    ]
   }
 }

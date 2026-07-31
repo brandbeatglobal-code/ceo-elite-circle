@@ -188,6 +188,45 @@ const RULES: [RegExp, FieldRule][] = [
       multiline: true,
     },
   ],
+  // ---- The text shown *inside* a labelled empty frame — a brief for whoever
+  // fills the slot, not the slot itself. Named before the content fields
+  // below, because this is the confusion that has actually happened: a real
+  // pull-quote was typed into the philosophy slot's note and rendered with the
+  // placeholder's dashed border, looking unfinished while being finished.
+  [
+    /^[a-z]+:.*(quoteNote|attributionNote|placeholderNote|emptyNote|relatedNote)$/,
+    {
+      kind: "text",
+      nullable: false,
+      structural:
+        "This is not the content — it is the sentence shown inside the dashed \"pending\" frame while the slot is still empty, and it disappears the moment real content is added. Putting real content here renders it as a placeholder: dashed border, muted italic, reading as unfinished. The field that takes the real thing is the one named for it.",
+      multiline: true,
+    },
+  ],
+
+  // ---- Real quoted material. Words attributed to a person are the strictest
+  // case in the copy rule: nothing is written on anyone's behalf.
+  [
+    /^about:philosophy\.(quote|quoteAttribution)$/,
+    {
+      kind: "text",
+      nullable: true,
+      structural:
+        "Real words from a real, named person — never written on their behalf, and never tidied afterwards. Filling the quote switches this section from its pending frame to an actual pull-quote. Leave the attribution empty until you can name the person and they have agreed to be named: the quote then renders properly with the missing name shown as still outstanding, which is honest, rather than appearing as an unsourced quotation.",
+      multiline: true,
+    },
+  ],
+  [
+    /^homepage:testimonials\.items\.\*\.(quote|attribution)$/,
+    {
+      kind: "text",
+      nullable: true,
+      structural:
+        "A member's own words, and their name. Filling the quote turns this card from a labelled waiting card into a real testimonial. Both need the member's agreement — an invented or unapproved quote is manufactured social proof, which is the one thing this section must never carry. Leaving the name empty while the quote is filled shows the attribution as outstanding rather than hiding that it is missing.",
+      multiline: true,
+    },
+  ],
+
   [
     /^leadership:members\.\*\.quote$/,
     {
