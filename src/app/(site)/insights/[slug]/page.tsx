@@ -184,6 +184,7 @@ export default async function ArticlePage({
                         alt: "",
                         note: detail.relatedCardPhotoNote,
                         brightness: null,
+                        textMode: "light",
                       }}
                       tone="black"
                       className="h-48"

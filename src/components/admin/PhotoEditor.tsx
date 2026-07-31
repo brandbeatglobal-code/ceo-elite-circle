@@ -10,6 +10,12 @@ import {
 } from "react";
 import type { PhotoPreview } from "@/lib/admin/schema";
 import {
+  estimateContrast,
+  storedMode,
+  type Photo,
+  type TextMode,
+} from "@/lib/images";
+import {
   savePhoto,
   type SaveState,
 } from "@/app/admin/(panel)/content/[file]/actions";
@@ -19,6 +25,53 @@ const initial: SaveState = { status: "idle" };
 const CLIENT_MAX_DIM = 2000;
 const CLIENT_MAX_BYTES = 12 * 1024 * 1024;
 
+/** What WCAG asks of body text. Quoted, never enforced here. */
+const AA_BODY = 4.5;
+
+/**
+ * Roughly what contrast the copy would get, for the mode currently selected.
+ *
+ * Guidance rather than a gate — the whole point of the toggle is that the
+ * editor judges this by eye, with a number to hand. Two things it is careful
+ * to say rather than imply: the estimate is against the *brightest* area of
+ * the photograph, which is the worst case for white copy and the best case
+ * for dark copy; and a photograph that has never been measured is being
+ * treated as a white one.
+ */
+function contrastReading(
+  photo: Photo,
+  mode: TextMode,
+  clearing: boolean,
+  reselected: boolean,
+): { text: string; comfortable: boolean } {
+  if (clearing || photo.src === null) {
+    return {
+      text: "No photograph in this slot yet, so there is nothing to read a contrast against. The pending frame carries its own label instead.",
+      comfortable: true,
+    };
+  }
+
+  const ratio = estimateContrast({ ...photo, textMode: mode });
+  const comfortable = ratio >= AA_BODY;
+  const headline = `Approximately ${ratio.toFixed(1)}:1 — WCAG recommends ${AA_BODY}:1 for body text.`;
+
+  const against =
+    mode === "dark"
+      ? " Read against the brightest area of the photograph, which is the easiest part of it for dark copy; darker areas of the same picture will read worse."
+      : " Read against the brightest area of the photograph, which is the worst case for white copy.";
+
+  const unmeasured =
+    photo.brightness === null
+      ? " This photograph has never been measured, so the reading assumes a white one — upload it again through here to measure it."
+      : "";
+
+  const stale = reselected
+    ? " This is the photograph currently in the slot; the one you have chosen is measured when you save, and the reading follows it then."
+    : "";
+
+  return { text: headline + against + unmeasured + stale, comfortable };
+}
+
 type Pending =
   | { kind: "processed"; blob: Blob; url: string; name: string }
   /** Could not be decoded in this browser (HEIC on desktop) — sent as-is for
@@ -26,7 +79,8 @@ type Pending =
   | { kind: "raw"; blob: File; name: string };
 
 /**
- * One photo slot: the image, its alt text and its note, edited and saved
+ * One photo slot: the image, its alt text, its note and — where the section
+ * puts words on top of the picture — its text colour, edited and saved
  * together. The preview renders inside the slot's real proportions with
  * `object-cover` — the same treatment the site uses — so what the editor sees
  * cropped is what actually ships cropped.
@@ -36,15 +90,21 @@ export function PhotoEditor({
   path,
   photo,
   previews,
+  textOver,
 }: {
   file: string;
   path: string;
-  photo: { src: string | null; alt: string; note: string };
+  photo: Photo;
   previews: PhotoPreview[];
+  /** What one text mode governs on this slot, or null where it governs
+   *  nothing — a portrait has no copy over it, and a control that changes
+   *  nothing is worse than no control. */
+  textOver: string | null;
 }) {
   const [state, dispatch, pending] = useActionState(savePhoto, initial);
   const [alt, setAlt] = useState(photo.alt);
   const [note, setNote] = useState(photo.note);
+  const [textMode, setTextMode] = useState<TextMode>(storedMode(photo));
   const [selected, setSelected] = useState<Pending | null>(null);
   const [clearing, setClearing] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -67,7 +127,8 @@ export function PhotoEditor({
     selected !== null ||
     clearing ||
     alt !== photo.alt ||
-    note !== photo.note;
+    note !== photo.note ||
+    textMode !== storedMode(photo);
 
   const showingSrc = clearing
     ? null
@@ -76,6 +137,8 @@ export function PhotoEditor({
       : selected?.kind === "raw"
         ? null
         : photo.src;
+
+  const reading = contrastReading(photo, textMode, clearing, selected !== null);
 
   async function takeFile(f: File) {
     setLocalError(null);
@@ -125,6 +188,7 @@ export function PhotoEditor({
     fd.set("path", path);
     fd.set("alt", clearing ? "" : alt);
     fd.set("note", note);
+    fd.set("textMode", textMode);
     if (clearing) fd.set("clear", "1");
     else if (selected) fd.set("image", selected.blob, "upload");
     startTransition(() => dispatch(fd));
@@ -260,6 +324,49 @@ export function PhotoEditor({
           empty.
         </span>
       </label>
+
+      {/* ---- Text colour, where this photograph has words on top of it ----
+          Two choices rather than a colour picker: the site never carries more
+          than two text treatments on one background, and one of them is the
+          near-black ink already used on cream. The contrast reading beneath
+          is information — it never refuses a save. */}
+      {textOver && (
+        <fieldset className="flex flex-col gap-2.5 border-t border-hair pt-5">
+          <legend className="type-label text-olive">
+            Text colour over this photograph
+          </legend>
+
+          <div className="flex gap-2" role="group">
+            {(["light", "dark"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setTextMode(m)}
+                aria-pressed={textMode === m}
+                className={`pill type-link px-5 py-2 border transition-colors ${
+                  textMode === m
+                    ? "bg-ink text-white border-ink"
+                    : "border-hair text-olive hover:border-sage hover:text-sage"
+                }`}
+              >
+                {m === "light" ? "Light — white" : "Dark — near-black"}
+              </button>
+            ))}
+          </div>
+
+          <p className="type-label text-olive/70 max-w-xl">{textOver}</p>
+
+          <p
+            className={`type-label italic border-l-2 pl-3 max-w-xl ${
+              reading.comfortable
+                ? "border-sage text-olive"
+                : "border-ink text-ink"
+            }`}
+          >
+            {reading.text}
+          </p>
+        </fieldset>
+      )}
 
       {/* ---- Actions ---- */}
       <div className="flex items-center gap-4 flex-wrap">

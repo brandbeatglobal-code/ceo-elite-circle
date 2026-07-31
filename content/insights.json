@@ -36,7 +36,8 @@
         "src": null,
         "alt": "",
         "note": "the article's lead image, breaking the body copy.",
-        "brightness": null
+        "brightness": null,
+        "textMode": "light"
       },
       "readingTime": null,
       "author": null,

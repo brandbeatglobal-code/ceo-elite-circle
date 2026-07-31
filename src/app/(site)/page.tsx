@@ -11,7 +11,7 @@ import {
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
-import { scrimVars } from "@/lib/images";
+import { photoText, scrimVars } from "@/lib/images";
 import { home } from "@/lib/home";
 import { ordinal } from "@/lib/ordinal";
 import { pillars } from "@/lib/pillars";
@@ -38,6 +38,11 @@ const featured = experiences.find(
 )!;
 const otherExperiences = experiences.filter((e) => e !== featured);
 
+/* Light or dark copy over the hero photograph, from the slot's own text mode.
+   `Nav` reads the same field for this route, so the bar and the headline
+   under it cannot end up on opposite sides of it. */
+const heroText = photoText(hero.photo);
+
 export default function Home() {
   return (
     <>
@@ -58,9 +63,9 @@ export default function Home() {
         <div className="absolute inset-0 pointer-events-none hidden lg:block">
           <div className="wrap h-full grid grid-cols-4">
             <div />
-            <div className="border-l border-white/15" />
-            <div className="border-l border-white/15" />
-            <div className="border-l border-white/15" />
+            <div className={`border-l ${heroText.rule}`} />
+            <div className={`border-l ${heroText.rule}`} />
+            <div className={`border-l ${heroText.rule}`} />
           </div>
         </div>
 
@@ -73,7 +78,9 @@ export default function Home() {
           <div className="wrap hero-foot">
             {/* The breaks are deliberate — the last line is indented at `lg`,
                 so it has to be its own line. */}
-            <h1 className="type-display type-hero text-white mb-6 lg:mb-10">
+            <h1
+              className={`type-display type-hero ${heroText.strong} mb-6 lg:mb-10`}
+            >
               {hero.headline.map((line, i) => (
                 <Fragment key={line}>
                   {i > 0 && <br />}
@@ -87,11 +94,15 @@ export default function Home() {
             </h1>
 
             <div className="max-w-sm mb-6 lg:mb-10">
-              <p className="type-body text-white mb-3">{hero.lead}</p>
-              <p className="type-body text-white/75">{hero.body}</p>
+              <p className={`type-body ${heroText.strong} mb-3`}>{hero.lead}</p>
+              <p className={`type-body ${heroText.label}`}>{hero.body}</p>
             </div>
 
-            <PillButton href="/contact" variant="outline" className="w-full">
+            <PillButton
+              href="/contact"
+              variant={heroText.pill}
+              className="w-full"
+            >
               {hero.cta}
             </PillButton>
           </div>

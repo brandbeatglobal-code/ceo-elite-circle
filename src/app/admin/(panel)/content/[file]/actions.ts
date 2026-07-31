@@ -128,6 +128,7 @@ export async function savePhoto(
   const fieldPath = String(formData.get("path") ?? "");
   const alt = String(formData.get("alt") ?? "");
   const note = String(formData.get("note") ?? "");
+  const textMode = String(formData.get("textMode") ?? "light");
   const clear = formData.get("clear") === "1";
   const upload = formData.get("image");
 
@@ -187,12 +188,19 @@ export async function savePhoto(
     alt: nextSrc === null ? "" : alt,
     note,
     brightness: nextBrightness,
+    textMode,
   });
   if (!result.ok) return { status: "error", message: result.error };
   entries.push({ path: `content/${cf.fileName}`, content: result.json });
 
   const what =
-    entries.length > 1 ? "photograph replaced" : clear ? "photograph cleared" : "photo text updated";
+    entries.length > 1
+      ? "photograph replaced"
+      : clear
+        ? "photograph cleared"
+        : current.textMode !== result.photo.textMode
+          ? "text colour changed"
+          : "photo text updated";
   const commit = await commitFiles(
     entries,
     deletions,

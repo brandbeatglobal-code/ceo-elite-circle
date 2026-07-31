@@ -4,20 +4,35 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
+import type { TextMode } from "@/lib/images";
 
 /** Grouped by meaning rather than split to balance the count. */
 const { groups, cta } = site.nav;
 
 const allLinks = groups.flatMap((g) => g.links);
 
-export default function Nav() {
+/**
+ * `heroTextModes` maps each route that opens on a full-bleed photograph to
+ * that photograph's copy colour — built in `SiteChrome`, which is a server
+ * component and can read the content files without shipping them here.
+ *
+ * While the bar is transparent it is sitting on the hero's picture, so it has
+ * to wear the hero's mode rather than a hardcoded white: a dark-mode hero on a
+ * pale photograph would otherwise leave white nav links floating on it. Once
+ * the bar goes solid it is on cream and is ink either way.
+ */
+export default function Nav({
+  heroTextModes,
+}: {
+  heroTextModes: Record<string, TextMode>;
+}) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   // Routes that open on a full-bleed photo hero: the bar starts transparent
   // there, and takes a solid background once you scroll past the hero.
-  const overHero = pathname === "/" || pathname === "/about";
+  const overHero = pathname in heroTextModes;
 
   useEffect(() => {
     if (!overHero) return;
@@ -41,7 +56,10 @@ export default function Nav() {
   }, [overHero]);
 
   const transparent = overHero && !scrolled && !open;
-  const text = transparent ? "text-white" : "text-ink";
+  // Transparent over a dark-copy hero. Every colour below reads this one
+  // value, so the bar cannot end up half in one mode and half in the other.
+  const onDarkCopy = transparent && heroTextModes[pathname] === "dark";
+  const text = !transparent || onDarkCopy ? "text-ink" : "text-white";
 
   return (
     <header
@@ -64,7 +82,7 @@ export default function Nav() {
             <div key={group.heading} className="flex flex-col gap-2 w-44">
               <span
                 className={`type-link ${
-                  transparent ? "text-white/75" : "text-olive"
+                  !transparent ? "text-olive" : onDarkCopy ? "text-ink/75" : "text-white/75"
                 }`}
               >
                 {group.heading}
@@ -75,9 +93,11 @@ export default function Nav() {
                     key={l.href}
                     href={l.href}
                     className={`type-label transition-colors ${
-                      transparent
-                        ? "text-white/85 hover:text-white"
-                        : "text-olive hover:text-sage"
+                      !transparent
+                        ? "text-olive hover:text-sage"
+                        : onDarkCopy
+                          ? "text-ink/85 hover:text-ink"
+                          : "text-white/85 hover:text-white"
                     }`}
                   >
                     {l.label}
@@ -92,9 +112,11 @@ export default function Nav() {
           <Link
             href={cta.href}
             className={`pill type-link hidden lg:inline-flex items-center gap-2 px-6 py-3 transition-colors ${
-              transparent
-                ? "border border-white/35 text-white hover:bg-white hover:text-ink"
-                : "bg-ink text-white hover:bg-sage"
+              !transparent
+                ? "bg-ink text-white hover:bg-sage"
+                : onDarkCopy
+                  ? "border border-ink/35 text-ink hover:bg-ink hover:text-white"
+                  : "border border-white/35 text-white hover:bg-white hover:text-ink"
             }`}
           >
             <span aria-hidden="true">•</span>
@@ -103,7 +125,7 @@ export default function Nav() {
 
           <button
             className={`lg:hidden pill type-link border px-4 py-2 ${
-              transparent ? "border-white/40" : "border-hair"
+              !transparent ? "border-hair" : onDarkCopy ? "border-ink/40" : "border-white/40"
             }`}
             onClick={() => setOpen(!open)}
             aria-label={site.nav.menuAriaLabel}

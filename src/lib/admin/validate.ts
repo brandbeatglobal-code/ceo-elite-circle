@@ -81,7 +81,14 @@ function shapeOf(value: unknown): string[] {
   return out;
 }
 
-/** Is this value a photo slot — exactly `{ src, alt, note, brightness }`? */
+/** The two text treatments a photo-backed section may carry. */
+export const TEXT_MODES = ["light", "dark"] as const;
+export type TextModeValue = (typeof TEXT_MODES)[number];
+
+/**
+ * Is this value a photo slot — exactly
+ * `{ src, alt, note, brightness, textMode }`?
+ */
 export function isPhotoObject(
   value: unknown,
 ): value is {
@@ -89,18 +96,20 @@ export function isPhotoObject(
   alt: string;
   note: string;
   brightness: number | null;
+  textMode: TextModeValue;
 } {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
     return false;
   }
   const keys = Object.keys(value).sort().join(",");
-  if (keys !== "alt,brightness,note,src") return false;
+  if (keys !== "alt,brightness,note,src,textMode") return false;
   const v = value as Record<string, unknown>;
   return (
     (typeof v.src === "string" || v.src === null) &&
     typeof v.alt === "string" &&
     typeof v.note === "string" &&
-    (typeof v.brightness === "number" || v.brightness === null)
+    (typeof v.brightness === "number" || v.brightness === null) &&
+    TEXT_MODES.includes(v.textMode as TextModeValue)
   );
 }
 
@@ -114,6 +123,7 @@ export type PhotoEditOk = {
     alt: string;
     note: string;
     brightness: number | null;
+    textMode: TextModeValue;
   };
 };
 
@@ -128,6 +138,10 @@ export type PhotoEditOk = {
  * slot's current value (text-only edit), or a path the server itself just
  * generated for a processed upload — the caller decides which, never the form.
  * `brightness` is the same: measured from the stored bytes, never submitted.
+ *
+ * `textMode` does come from the form, and is checked against the two values
+ * that exist. Anything else would leave the page with a mode nothing knows
+ * how to render.
  */
 export function validatePhotoEdit(
   data: Record<string, unknown>,
@@ -137,6 +151,7 @@ export function validatePhotoEdit(
     alt: string;
     note: string;
     brightness: number | null;
+    textMode: string;
   },
 ): PhotoEditOk | ValidationError {
   const path = parsePath(rawPath);
@@ -195,11 +210,16 @@ export function validatePhotoEdit(
     return { ok: false, error: "An empty slot has no photograph to measure." };
   }
 
+  if (!TEXT_MODES.includes(next.textMode as TextModeValue)) {
+    return { ok: false, error: "That is not one of the two text colours." };
+  }
+
   const cleaned = {
     src: next.src,
     alt: next.alt.trim(),
     note: next.note.trim(),
     brightness: next.brightness,
+    textMode: next.textMode as TextModeValue,
   };
 
   let updated = data as unknown;
@@ -213,12 +233,13 @@ export function validatePhotoEdit(
     return { ok: false, error: "That change would alter the structure of the file." };
   }
   // `brightness` is the one leaf that holds a number rather than text, so its
-  // permitted types differ from the other three.
+  // permitted types differ from the other four.
   const allowedTypes: Record<string, string[]> = {
     src: ["string", "null"],
     alt: ["string", "null"],
     note: ["string", "null"],
     brightness: ["number", "null"],
+    textMode: ["string"],
   };
   const targets = Object.keys(allowedTypes).map((leaf) => ({
     prefix: `.${[...path, leaf].join(".")}=`,

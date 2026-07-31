@@ -84,16 +84,26 @@ export function ArrowLink({
   href,
   children,
   tone = "cream",
+  inherit = false,
   className = "",
 }: {
   href: string;
   children: ReactNode;
   tone?: Tone;
+  /**
+   * Take the colour of whatever it sits in rather than from a tone. For the
+   * one case a tone cannot describe: a photo card whose copy colour changes
+   * with the photograph fading in behind it, so there is no single answer
+   * for the life of the component.
+   */
+  inherit?: boolean;
   className?: string;
 }) {
-  const base = isDark(tone)
-    ? "text-white hover:text-sage"
-    : "text-ink hover:text-sage";
+  const base = inherit
+    ? "hover:text-sage"
+    : isDark(tone)
+      ? "text-white hover:text-sage"
+      : "text-ink hover:text-sage";
   return (
     <Link
       href={href}
@@ -114,13 +124,16 @@ export function PillButton({
 }: {
   href: string;
   children: ReactNode;
-  variant?: "light" | "dark" | "outline";
+  variant?: "light" | "dark" | "outline" | "outline-ink";
   className?: string;
 }) {
   const styles = {
     light: "bg-white text-ink hover:bg-mint",
     dark: "bg-ink text-white hover:bg-sage",
     outline: "border border-white/35 text-white hover:bg-white hover:text-ink",
+    // The outline pill over a photograph carrying dark copy. Same shape, same
+    // weight; only the ink changes, so a section reads as one unit.
+    "outline-ink": "border border-ink/35 text-ink hover:bg-ink hover:text-white",
   }[variant];
 
   return (
@@ -231,21 +244,27 @@ export function Placeholder({
   /** Replaces the default sentence when a slot has a stricter requirement. */
   note?: string;
   /**
-   * Sitting over a photograph rather than a flat dark section. 55% white
-   * clears 4.5:1 comfortably on the near-black ramp; behind the scrim on a
-   * bright photograph it does not, so the floor over an image is 80%.
+   * Sitting over a photograph rather than a flat section. 55% white clears
+   * 4.5:1 comfortably on the near-black ramp; behind the scrim on a bright
+   * photograph it does not, so the floor over an image is 80%. Olive is the
+   * same case on the light side — comfortable on cream, marginal over a
+   * photograph — so it goes to full ink there.
    */
   onPhoto?: boolean;
 }) {
   const dark = isDark(tone);
-  const darkInk = onPhoto
-    ? "border-white/40 text-white/80"
-    : "border-white/25 text-white/55";
+  const ink = dark
+    ? onPhoto
+      ? "border-white/40 text-white/80"
+      : "border-white/25 text-white/55"
+    : onPhoto
+      ? "border-ink/40 text-ink"
+      : "border-hair text-olive";
   return (
     <p
       className={`${lead ? "type-lead" : "type-body"} italic border border-dashed px-4 py-3 ${
         lead ? "max-w-sm" : "max-w-md"
-      } ${dark ? darkInk : "border-hair text-olive"}`}
+      } ${ink}`}
     >
       {note ??
         "Content placeholder — copy for this section is still to be drafted and reviewed."}
