@@ -84,7 +84,7 @@ const RULES: [RegExp, FieldRule][] = [
   // its alt text and its note are edited together, as one unit, through the
   // photo editor — alt text describes the image that is actually there.
   [
-    /^[a-z]+:.*\bphoto\.(src|alt|note|brightness)$/,
+    /^[a-z]+:.*\bphoto\.(src|alt|note|brightness|textMode)$/,
     { kind: "image", nullable: true },
   ],
 
@@ -317,4 +317,44 @@ export function photoPreviews(file: string, path: string[]): PhotoPreview[] {
       { label: "As it renders on the page", ratio: 3 / 2 },
     ]
   );
+}
+
+/**
+ * Which slots actually carry copy over the photograph, and what one text mode
+ * governs on each.
+ *
+ * Every photo slot holds a `textMode` so the shape stays uniform, but on most
+ * of them it does nothing — a leadership portrait has no words on top of it.
+ * Offering a control that changes nothing is worse than not offering it, so
+ * the toggle appears only where this says it does, and the sentence names
+ * every element it moves. A slot used in two places names both: one mode
+ * governs the whole of each, because the site never carries two text
+ * treatments on one background.
+ */
+const TEXT_OVER: [RegExp, string][] = [
+  [
+    /^homepage:hero\.photo$/,
+    "This hero's headline, both lines of copy, the button's border and label, and the navigation bar while it is still transparent over the photograph.",
+  ],
+  [
+    /^about:hero\.photo$/,
+    "This hero's eyebrow, headline and both columns of copy, and the navigation bar while it is still transparent over the photograph.",
+  ],
+  [
+    /^about:philosophy\.photo$/,
+    "The whole Leadership Philosophy section — its header row, headline, pull-quote and supporting paragraph.",
+  ],
+  [
+    /^pillars:items\.\*\.photo$/,
+    "This pillar's detail-page hero — eyebrow, title, summary and the button's border and label — and the homepage card that shows this photograph on hover. On the card the copy changes colour with the photograph, so it stays legible in the state where the picture is not showing.",
+  ],
+  [
+    /^experiences:items\.\*\.photo$/,
+    "This experience's detail-page hero — eyebrow, title, summary and the button's border and label.",
+  ],
+];
+
+export function textOverPhoto(file: string, path: string[]): string | null {
+  const key = `${file}:${genericPath(path)}`;
+  return TEXT_OVER.find(([re]) => re.test(key))?.[1] ?? null;
 }

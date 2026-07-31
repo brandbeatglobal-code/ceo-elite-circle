@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowLink, BulletLabel } from "@/components/ui";
-import type { Photo } from "@/lib/images";
+import { activeMode, scrimVars, type Photo } from "@/lib/images";
 
 /**
  * Tall card with a photograph behind the content, revealed on hover.
@@ -10,11 +10,16 @@ import type { Photo } from "@/lib/images";
  * where there is no hover, the image is shown by default (see `.photo-card`
  * in globals.css) rather than being unreachable.
  *
- * The scrim (see `.photo-card-scrim` in globals.css) is heavy where text sits
- * and light through the empty middle band. A flat overlay dark enough to
- * survive a white photograph behind text would leave the photograph invisible
- * everywhere else; this keeps both. Behind text, white type clears roughly
- * 14:1 even against a pure-white photograph.
+ * The scrim (see `.photo-card-scrim` in globals.css) is the same wash-plus-
+ * field pair the full-bleed sections use, sized to this photograph; the
+ * middle band is empty by construction and stays light.
+ *
+ * The slot's text mode reaches here as `.photo-card-ink`, which changes the
+ * copy colour on exactly the selectors the photograph fades on — because off
+ * hover there is no photograph, only the black section the card sits in,
+ * where white is the only legible colour. That is why the card's copy takes
+ * its colour from CSS custom properties rather than from a `tone`: there is
+ * no single answer for the life of the component.
  */
 export function PhotoCard({
   label,
@@ -35,11 +40,18 @@ export function PhotoCard({
   linkLabel: string;
   delay?: number;
 }) {
+  const ink = photo.src !== null && activeMode(photo) === "dark";
   return (
     <article
-      className="photo-card group relative overflow-hidden flex flex-col justify-between min-h-[20rem] lg:min-h-[34rem] pt-8 pb-10 lg:pt-10 lg:pb-12 px-6 lg:px-7"
+      className={`photo-card group relative overflow-hidden flex flex-col justify-between min-h-[20rem] lg:min-h-[34rem] pt-8 pb-10 lg:pt-10 lg:pb-12 px-6 lg:px-7 ${
+        ink ? "photo-card-ink" : ""
+      }`}
       data-reveal
-      style={{ transitionDelay: `${delay}ms` }}
+      style={
+        photo.src
+          ? { transitionDelay: `${delay}ms`, ...scrimVars(photo) }
+          : { transitionDelay: `${delay}ms` }
+      }
     >
       {photo.src && (
         <div className="photo-card-media absolute inset-0" aria-hidden="true">
@@ -56,17 +68,15 @@ export function PhotoCard({
         </div>
       )}
 
-      <div className="relative">
-        <BulletLabel className="text-white/60">{label}</BulletLabel>
-        <p className="type-body text-white mt-3 pb-5 mb-8 border-b border-hair-dark">
-          {index}
-        </p>
-        <p className="type-body text-white/75">{body}</p>
+      <div className="relative card-ink">
+        <BulletLabel className="card-ink-faint">{label}</BulletLabel>
+        <p className="type-body mt-3 pb-5 mb-8 border-b card-rule">{index}</p>
+        <p className="type-body card-ink-soft">{body}</p>
       </div>
 
-      <div className="relative mt-14">
-        <h3 className="type-display type-h3 text-white mb-5">{title}</h3>
-        <ArrowLink href={href} tone="black">
+      <div className="relative mt-14 card-ink">
+        <h3 className="type-display type-h3 mb-5">{title}</h3>
+        <ArrowLink href={href} inherit>
           {linkLabel}
         </ArrowLink>
       </div>

@@ -329,5 +329,14 @@ visible structural note on its field, and the ones that would change a file's
   `.timeline` / `.expertise` — each null falls back to a placeholder.
 - `insights.articles[].title` and the four metadata fields — same.
 - `photo.src: null` — renders the labelled "photography pending" frame.
+- `photo.textMode` — `light` (white copy) or `dark` (`--color-ink`), for the
+  sections that carry words over the picture. One value governs the whole
+  section, the nav included where the bar is transparent over a hero. Every
+  slot carries the field so the shape stays uniform; it only *does* anything
+  on the slots `textOverPhoto()` in `src/lib/admin/schema.ts` names, which are
+  the two heroes, the About philosophy pull-quote, and the pillar and
+  experience arrays. That list is also what decides whether the admin offers
+  the toggle at all — a leadership portrait has no copy over it, so it gets no
+  control. On an empty slot the value is ignored until a photograph lands.
 - `forms.*.ctaHref` — absent renders a disabled button instead of a link.
 - `forms.*.columns.length` — one column widens to two grid columns.

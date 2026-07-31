@@ -7,6 +7,7 @@ import { RequestSection } from "@/components/RequestSection";
 import { Section } from "@/components/Section";
 import { PhotoFrame, Placeholder, SectionHeader } from "@/components/ui";
 import { about } from "@/lib/about";
+import { photoText } from "@/lib/images";
 import { ordinal } from "@/lib/ordinal";
 
 /* SAMPLE COPY in `content/about.json`. The Leadership cards and the philosophy
@@ -14,6 +15,11 @@ import { ordinal } from "@/lib/ordinal";
    person. */
 
 const { hero, story, leadership, sections, philosophy, differences } = about;
+
+/* Light or dark copy over each of the two photo-backed sections, from those
+   slots' own text modes. `Nav` reads the hero's for this route. */
+const heroText = photoText(hero.photo);
+const philosophyText = photoText(philosophy.photo);
 
 export default function AboutPage() {
   return (
@@ -23,10 +29,10 @@ export default function AboutPage() {
         title={hero.title}
         photo={hero.photo}
         left={
-          <p className="type-body text-white/80 max-w-xs">{hero.left}</p>
+          <p className={`type-body ${heroText.body} max-w-xs`}>{hero.left}</p>
         }
         right={
-          <p className="type-lead text-white max-w-md">{hero.right}</p>
+          <p className={`type-lead ${heroText.strong} max-w-md`}>{hero.right}</p>
         }
       />
 
@@ -94,9 +100,16 @@ export default function AboutPage() {
         eyebrow={philosophy.eyebrow}
         title={philosophy.title}
         photo={philosophy.photo}
-        quote={<Placeholder tone="ramp" lead onPhoto note={philosophy.quoteNote} />}
+        quote={
+          <Placeholder
+            tone={philosophyText.tone}
+            lead
+            onPhoto
+            note={philosophy.quoteNote}
+          />
+        }
         support={
-          <p className="type-body text-white/75 max-w-sm">
+          <p className={`type-body ${philosophyText.label} max-w-sm`}>
             {philosophy.support}
           </p>
         }

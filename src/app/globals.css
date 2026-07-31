@@ -255,51 +255,52 @@ body:not(:has(.draft-banner)) {
 }
 
 /* ---- Text over a photograph -------------------------------------------
-   The same discipline as `.photo-card-scrim` further down, applied to the
-   full-bleed sections. A single flat overlay only works if the photograph
-   happens to be dark, and the admin makes it trivial to upload one that is
-   not — a hero must stay legible whatever gets put behind it.
+   Two layers: a wash over the whole section so the picture sits back, and a
+   heavier field under the copy itself, feathered in over the container's own
+   padding so it has no visible edge. A single flat overlay cannot do both —
+   one dark enough to survive a bright photograph behind text leaves the
+   photograph invisible everywhere else.
 
-   So the wash on the section stays light enough to see the picture, and the
-   copy carries its own field, sized to bring the background behind the copy
-   to 0.081 luminance — about 8.0:1 for white text and 5.4:1 for the 75% white
-   used for secondary lines.
+   Both colours come from `scrimVars()` in `src/lib/images.ts`, which reads
+   the brightness measured on upload *and* the slot's text mode. They are
+   whole colours rather than alphas because the scrim is black under white
+   copy and white under ink copy — an alpha alone cannot say which — and
+   `--scrim-clear` is the same colour at zero alpha, so a gradient fades out
+   to its own hue instead of through the grey that `transparent` would give.
 
-   Both alphas come from the photograph itself: `scrimVars()` in
-   `src/lib/images.ts` reads the brightness measured on upload and solves for
-   the pair that reaches that ceiling. A white photograph gets 0.42 and 0.86 —
-   `(1 − 0.86)(1 − 0.42) = 0.081`, the measured worst case. A dark photograph
-   gets only what it needs to reach the same ceiling, rather than being
-   multiplied into black by an overlay calibrated for a case it is nowhere
-   near. The literals below are the fallback for a section that sets no
-   variables: full strength, which is the safe direction.
+   This is a light touch, deliberately: the text mode is what carries
+   legibility now, and the scrim only keeps a photograph from being left
+   completely unprotected. See the constants in `images.ts` for the two
+   thresholds and why they sit where they do. The literals below are the
+   fallback for a section that sets no variables.
 
-   Nothing over a photograph may be dimmer than 70% white; `Placeholder`
-   takes `onPhoto` for that reason. */
+   Nothing over a photograph may be dimmer than 75% white, or 80% ink;
+   `Placeholder` takes `onPhoto` for that reason. */
 .photo-scrim,
 .photo-scrim-nav {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, var(--scrim-base, 0.42));
+  background: var(--scrim-wash, rgba(0, 0, 0, 0.16));
 }
 
 /* Heroes on `/` and `/about` carry a transparent navigation bar, so the head
-   of the section holds white text too. */
+   of the section holds the section's copy colour too. */
 .photo-scrim-nav {
   background:
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, var(--scrim-copy, 0.86)) 0%,
-      rgba(0, 0, 0, var(--scrim-copy, 0.86)) 8rem,
-      rgba(0, 0, 0, 0) 14rem
+      var(--scrim-field, rgba(0, 0, 0, 0.35)) 0%,
+      var(--scrim-field, rgba(0, 0, 0, 0.35)) 8rem,
+      var(--scrim-clear, rgba(0, 0, 0, 0)) 14rem
     ),
-    rgba(0, 0, 0, var(--scrim-base, 0.42));
+    var(--scrim-wash, rgba(0, 0, 0, 0.16));
 }
 
 .copy-scrim,
 .copy-scrim-top,
 .copy-scrim-band {
-  --scrim: rgba(0, 0, 0, var(--scrim-copy, 0.86));
+  --scrim: var(--scrim-field, rgba(0, 0, 0, 0.35));
+  --scrim-out: var(--scrim-clear, rgba(0, 0, 0, 0));
   --scrim-feather: 7rem;
 }
 
@@ -309,7 +310,7 @@ body:not(:has(.draft-banner)) {
 .copy-scrim {
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0) 2rem,
+    var(--scrim-out) 2rem,
     var(--scrim) 9rem,
     var(--scrim) 100%
   );
@@ -319,7 +320,7 @@ body:not(:has(.draft-banner)) {
   .copy-scrim {
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0) 3rem,
+      var(--scrim-out) 3rem,
       var(--scrim) 11rem,
       var(--scrim) 100%
     );
@@ -336,7 +337,7 @@ body:not(:has(.draft-banner)) {
     to bottom,
     var(--scrim) 0,
     var(--scrim) calc(100% - var(--scrim-feather)),
-    rgba(0, 0, 0, 0) 100%
+    var(--scrim-out) 100%
   );
 }
 
@@ -348,10 +349,10 @@ body:not(:has(.draft-banner)) {
   margin-bottom: calc(-1 * var(--scrim-feather));
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0) 0,
+    var(--scrim-out) 0,
     var(--scrim) var(--scrim-feather),
     var(--scrim) calc(100% - var(--scrim-feather)),
-    rgba(0, 0, 0, 0) 100%
+    var(--scrim-out) 100%
   );
 }
 
@@ -393,29 +394,28 @@ body:not(:has(.draft-banner)) {
 /* Photo-backed cards. The image fades in on hover where hover exists, and is
    simply shown on touch — never a state where anything is unreachable.
 
-   The scrim is heavy where text sits and light through the middle band, which
-   is empty by construction (the card is `justify-between`). A flat overlay
-   dark enough to survive a white photograph behind text leaves the photograph
-   invisible everywhere else. Behind text the composite is ~0.024 effective
-   luminance against a pure-white photo — about 14:1 for white text. Keep card
-   copy short enough to stay inside the top band. */
+   The scrim is the same pair as the full-bleed sections, in the same
+   variables: the wash across the whole card, the field where text sits, and
+   the empty middle band left light. The card is `justify-between`, so the
+   middle is empty by construction. Keep card copy short enough to stay inside
+   the bands. */
 .photo-card-scrim {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.94) 0%,
-      rgba(0, 0, 0, 0.94) 34%,
-      rgba(0, 0, 0, 0) 56%
+      var(--scrim-field, rgba(0, 0, 0, 0.35)) 0%,
+      var(--scrim-field, rgba(0, 0, 0, 0.35)) 34%,
+      var(--scrim-clear, rgba(0, 0, 0, 0)) 56%
     ),
     linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.94) 0%,
-      rgba(0, 0, 0, 0.94) 30%,
-      rgba(0, 0, 0, 0) 52%
+      var(--scrim-field, rgba(0, 0, 0, 0.35)) 0%,
+      var(--scrim-field, rgba(0, 0, 0, 0.35)) 30%,
+      var(--scrim-clear, rgba(0, 0, 0, 0)) 52%
     ),
-    rgba(0, 0, 0, 0.6);
+    var(--scrim-wash, rgba(0, 0, 0, 0.16));
 }
 
 .photo-card-media {
@@ -434,6 +434,62 @@ body:not(:has(.draft-banner)) {
   .photo-card-media {
     opacity: 1;
   }
+}
+
+/* A card's copy colour follows its photograph, not the card.
+   `.photo-card-ink` is set when the slot's text mode is dark — but the
+   photograph is only *there* on hover (or always, on touch), and off hover
+   the card is the black section it sits in, where white is the only legible
+   colour. So the switch rides exactly the selectors the image fades on, and
+   transitions with it. Every word stays legible in both states, which is the
+   whole reason the photograph is decorative. */
+.photo-card {
+  --card-ink: #ffffff;
+  --card-ink-soft: rgba(255, 255, 255, 0.75);
+  --card-ink-faint: rgba(255, 255, 255, 0.6);
+  --card-rule: var(--color-hair-dark);
+}
+
+@media (hover: hover) {
+  .photo-card-ink:hover,
+  .photo-card-ink:focus-within {
+    --card-ink: var(--color-ink);
+    --card-ink-soft: rgba(62, 64, 50, 0.85);
+    --card-ink-faint: rgba(62, 64, 50, 0.7);
+    --card-rule: rgba(62, 64, 50, 0.3);
+  }
+}
+
+@media (hover: none) {
+  .photo-card-ink {
+    --card-ink: var(--color-ink);
+    --card-ink-soft: rgba(62, 64, 50, 0.85);
+    --card-ink-faint: rgba(62, 64, 50, 0.7);
+    --card-rule: rgba(62, 64, 50, 0.3);
+  }
+}
+
+.card-ink,
+.card-ink-soft,
+.card-ink-faint {
+  transition: color 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.card-ink {
+  color: var(--card-ink);
+}
+
+.card-ink-soft {
+  color: var(--card-ink-soft);
+}
+
+.card-ink-faint {
+  color: var(--card-ink-faint);
+}
+
+.card-rule {
+  border-color: var(--card-rule);
+  transition: border-color 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* Photographs lift very slightly under the cursor. */

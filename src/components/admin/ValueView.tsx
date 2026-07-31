@@ -1,5 +1,10 @@
 import { keyLabel } from "@/lib/admin/registry";
-import { fieldRule, isEditableLeaf, photoPreviews } from "@/lib/admin/schema";
+import {
+  fieldRule,
+  isEditableLeaf,
+  photoPreviews,
+  textOverPhoto,
+} from "@/lib/admin/schema";
 import { isPhotoObject } from "@/lib/admin/validate";
 import { FieldEditor } from "@/components/admin/FieldEditor";
 import { PhotoEditor } from "@/components/admin/PhotoEditor";
@@ -37,6 +42,7 @@ export function ValueView({
         path={path.join(".")}
         photo={value}
         previews={photoPreviews(file, path)}
+        textOver={textOverPhoto(file, path)}
       />
     );
   }

@@ -8,7 +8,8 @@
       "src": "/uploads/about-hero-2d27e8a877.jpg",
       "alt": "Above, circle and business people in meeting for teamwork, collaboration or talking in office and workplace. Group, conversation and together for professional planning, negotiation or b2b mockup",
       "note": "Interior of a considered, quiet room — the setting the Circle meets in.",
-      "brightness": 0.962
+      "brightness": 0.962,
+      "textMode": "light"
     }
   },
   "story": {
@@ -20,7 +21,8 @@
       "src": "/uploads/about-story-12ce90441a.jpg",
       "alt": "Empty chairs arranged in circle in modern meeting room with notebooks and pens placed on seats, suggesting preparation for group discussion or workshop session",
       "note": "Wide architectural exterior, daylight. Permanence rather than motion.",
-      "brightness": 0.746
+      "brightness": 0.746,
+      "textMode": "light"
     }
   },
   "leadership": {
@@ -33,7 +35,8 @@
           "src": null,
           "alt": "",
           "note": "a member of Circle leadership.",
-          "brightness": null
+          "brightness": null,
+          "textMode": "light"
         }
       },
       {
@@ -41,7 +44,8 @@
           "src": null,
           "alt": "",
           "note": "a member of Circle leadership.",
-          "brightness": null
+          "brightness": null,
+          "textMode": "light"
         }
       },
       {
@@ -49,7 +53,8 @@
           "src": null,
           "alt": "",
           "note": "a member of Circle leadership.",
-          "brightness": null
+          "brightness": null,
+          "textMode": "light"
         }
       },
       {
@@ -57,7 +62,8 @@
           "src": null,
           "alt": "",
           "note": "a member of Circle leadership.",
-          "brightness": null
+          "brightness": null,
+          "textMode": "light"
         }
       }
     ]
@@ -98,7 +104,8 @@
       "src": null,
       "alt": "",
       "note": "A real working moment — people mid-discussion, not posed to camera.",
-      "brightness": null
+      "brightness": null,
+      "textMode": "light"
     }
   },
   "differences": {

@@ -4,7 +4,8 @@
       "src": "/uploads/homepage-hero-62b1edc7e1.jpg",
       "alt": "City skyline at dusk with illuminated towers",
       "note": "Dramatic, low-light architecture or skyline. Carries the hero.",
-      "brightness": 0.585
+      "brightness": 0.585,
+      "textMode": "light"
     },
     "headline": [
       "A Private Circle for",
@@ -41,7 +42,8 @@
       "src": "/uploads/homepage-whynow-190520e4bd.jpg",
       "alt": "KAFD METRO STATION Abdullah city, Riyadh, Saudi Arabia",
       "note": "Warm, full-colour, wide. Forward motion.",
-      "brightness": 0.997
+      "brightness": 0.997,
+      "textMode": "light"
     }
   },
   "categories": {

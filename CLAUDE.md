@@ -237,9 +237,19 @@ request shape was checked without writing to the repository.
 
 #### Image upload (Phase 4)
 
-A photo, its alt text and its note are edited **together, as one unit**
-(`PhotoEditor`) — alt text describes the image that is actually there, so it
-is never unlocked separately. The in-slot preview renders at the slot's real
+A photo, its alt text, its note and — where the section carries words over the
+picture — its text colour are edited **together, as one unit** (`PhotoEditor`)
+— alt text describes the image that is actually there, so it is never unlocked
+separately.
+
+The text-colour control is two buttons, not a picker, and it appears only on
+the slots `textOverPhoto()` in `schema.ts` names, each with a sentence saying
+what that one value governs. A leadership portrait carries the field in its
+JSON and gets no control: offering one that changes nothing is worse than not
+offering it. Beside it sits an estimated contrast ratio against the actual
+photograph — information, never a block, and explicit that it reads the
+brightest area, which is the worst case for white copy and the best case for
+ink. The in-slot preview renders at the slot's real
 proportions with `object-cover` (ratios per slot in `schema.ts`'s `PREVIEWS`;
 multi-use slots get a frame per treatment), so a bad crop is visible before
 saving. Clearing a slot returns it to the labelled pending frame — the JSON
@@ -387,9 +397,10 @@ accident, including from the admin panel.
 ### Photographs
 
 Photo slots live on the page or item they belong to, in that section's JSON
-file. `src/lib/images.ts` holds only the `Photo` type. A `Photo` with
-`src: null` renders a labelled "photography pending" frame rather than a broken
-image, so a missing photograph reads as deliberate. Slots are filled through
+file. `src/lib/images.ts` holds the `Photo` type, the scrim maths and
+`photoText()`. A `Photo` with `src: null` renders a labelled "photography
+pending" frame rather than a broken image, so a missing photograph reads as
+deliberate. Slots are filled through
 the admin's photo editor (uploads land in `public/uploads/`), or by hand as a
 one-line edit; several slots still carry Unsplash URLs from the design stage.
 
@@ -397,47 +408,87 @@ one-line edit; several slots still carry Unsplash URLs from the design stage.
 proxy blocks it (403)** — images will not render locally, and that is expected,
 not a bug. It also means a wrong photo ID cannot be caught locally.
 
-### Text over a photograph is never calibrated to the photograph
+### Text over a photograph: the mode decides, the scrim helps
 
-Every full-bleed photo section uses the scrim classes in `globals.css`, not a
-flat `bg-black/NN`: a wash on the section so the picture reads, plus a heavier
-field on the copy itself, feathered in over the container's own padding. A
-flat overlay dark enough to survive a white photograph behind text leaves the
-photograph invisible everywhere else, which is why the field belongs to the
-copy rather than to the section.
+Two mechanisms, and the split matters. **`photo.textMode` chooses the copy
+colour per slot** — `light` (white) or `dark` (`--color-ink`, the near-black
+olive used on cream; never pure black). **The scrim is a light touch on top**,
+not the legibility guarantee it used to be.
 
-**Both alphas are computed from the photograph, not fixed.** `scrimVars()` in
-`src/lib/images.ts` reads `photo.brightness` — measured on upload — and solves
-for the pair that brings the background behind the copy to 0.081 luminance,
-about 8:1 for white text. That ceiling is absolute, so the guarantee is the
-same for every image, but what it costs the picture is not: a white photograph
-gets 0.42 and 0.86 (the measured worst case, unchanged), while the homepage's
-night skyline at brightness 0.369 gets 0.35 and 0.66 and keeps 2.7× more of
-itself. Two layers each calibrated for a white photograph compound to ~0.92
-where they overlap, which is most of a hero — that is what crushed the
-skyline, and why the ceiling is enforced on the composite rather than on each
-layer.
+It used to be exactly that: solved to hold the background behind the copy at
+0.081 luminance whatever the image, which on a bright photograph meant a 0.42
+wash plus a 0.86 field composing to 0.92 — a dark rectangle where a photograph
+should be. Reversing that was the point of the change, not a side effect.
 
-`brightness: null` means unmeasured — an Unsplash slot, or anything stored
-before this existed — and is treated exactly as a white photograph. Guessing
-light on an unknown image is the one failure that puts unreadable text on the
-page.
+`photoText(photo)` in `src/lib/images.ts` is the single source for a section's
+colours, and **one call feeds the whole section**: headline, body, the CTA
+pill's variant, the hairline grid — and the nav, on the two routes where it is
+transparent over a hero. `Nav` takes a `heroTextModes` map from `SiteChrome`
+(a server component, so `home.json`/`about.json` stay out of the client
+bundle) instead of hardcoding white; hardcoded white is precisely how a
+dark-mode hero would strand white links on a pale photograph. Do not colour a
+photo-backed element by hand — take it from `photoText`, or the section will
+end up half in one mode.
 
-Three consequences worth knowing before editing one of these sections:
+`Photo.textMode` is typed `string`, not the `TextMode` union, and that is
+deliberate: the loaders in `src/lib/*.ts` assign the imported JSON straight to
+each page's content type, and that assignment is the whole-file structural
+check the build depends on. A JSON import widens `"light"` to `string`, so a
+narrower type would force a cast in seven loaders and throw the check away.
+Every reader goes through `storedMode()`/`activeMode()`, which treat anything
+that is not `dark` as light — the same forgiveness `Icon` gives an unknown
+mark, in the same safe direction. The two values are enforced where it counts,
+in `validatePhotoEdit`.
+
+`scrimVars()` still solves both alphas from `photo.brightness`, and now also
+from the mode:
+
+- Light copy holds the brightest region at or below 0.26 luminance — about
+  **3.4:1** for white text, short of AA on purpose. Dark copy lifts it to at
+  least 0.62, about 6.8:1 for ink. Mirror images about mid-grey.
+- Floor 0.15, cap 0.5: never completely unprotected, never bleached.
+- **The scrim's colour follows the mode** — black under white copy, white
+  under ink. A black wash under ink copy is a control fighting itself. The
+  variables hold whole colours rather than alphas for that reason, plus
+  `--scrim-clear` so a gradient fades to its own hue instead of through the
+  grey `transparent` would give.
+- **Solved in sRGB channel space, not by multiplying a luminance.** That is
+  where a browser composites an overlay. The old code multiplied the measured
+  luminance directly, which overstates an overlay's effect by roughly an order
+  of magnitude — part of why the result was so heavy.
+
+`brightness: null` means unmeasured and is treated as a white photograph.
+Guessing light on an unknown image is the one failure that puts unreadable
+white text on the page. Note what the number is, though: the brightest
+*region*. That is the worst case for white copy and the **best** case for ink,
+so the admin's contrast estimate is a floor in light mode and a ceiling in
+dark mode, and it says so. Nothing stored knows how dark a picture's dark
+parts are; if dark mode gets used much, a darkest-region measurement is the
+next thing to add.
+
+Consequences worth knowing before editing one of these sections:
 
 - `.copy-scrim`'s gradient stops track the container's `pt-36` / `lg:pt-44`.
   Change one and change the other, or the field starts in the wrong place.
-- Nothing over a photograph may be dimmer than 75% white. `Placeholder` takes
-  `onPhoto` for that; 55% white clears 4.5:1 on the ramp but not here.
-- **No photograph, no scrim** — each component checks `photo.src` and skips
-  both classes. An empty slot is the dark ramp with a labelled pending frame,
-  and a field would only bury the frame's own label. The classes are
-  background-only or padding-and-negative-margin balanced, so dropping them
-  moves nothing.
+- Nothing over a photograph may be dimmer than 75% white, or 80% ink.
+  `Placeholder` takes `onPhoto` for that, on both sides: 55% white clears
+  4.5:1 on the ramp but not here, and olive is the same case on cream.
+- **No photograph, no scrim, and no dark mode** — each component checks
+  `photo.src` and skips both classes, and `activeMode()` forces light. An
+  empty slot is the dark ramp with a labelled pending frame; a field would
+  only bury the frame's own label, and ink on the ramp would be invisible.
+- `PhotoCard` is on the same variables, but its **copy colour switches on the
+  selectors the image fades on** (`.photo-card-ink` plus the `hover` /
+  `hover: none` queries), because off hover there is no photograph — only the
+  black section the card sits in. That is also why the card's copy takes its
+  colour from CSS custom properties rather than a `tone`: there is no single
+  answer for the life of the component. `ArrowLink` grew an `inherit` prop for
+  the same reason.
 
 Verify by measurement against a deliberately high-key image, not by reading
-the CSS — `docs/brief.md` § *Verification* describes the method and the three
-traps in it.
+the CSS — `docs/brief.md` § *Verification* describes the method and the traps
+in it, including that a Tailwind colour and a hand-written `rgba()` cannot be
+string-compared.
 
 ### `PhotoFrame` owns its `position`
 

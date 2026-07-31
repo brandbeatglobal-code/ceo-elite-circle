@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { SectionHeader } from "@/components/ui";
 import { PhotoFrame } from "@/components/ui";
-import { scrimVars, type Photo } from "@/lib/images";
+import { photoText, scrimVars, type Photo } from "@/lib/images";
 
 /**
  * Pull-quote over a photograph: a large headline across the upper half, with
@@ -27,14 +27,15 @@ export function QuoteSection({
 }) {
   // No photograph, no scrim — see `PhotoHero` for the reasoning.
   const scrim = photo.src !== null;
+  const t = photoText(photo);
   return (
     <section
-      className="relative bg-ramp text-white overflow-hidden"
+      className={`relative overflow-hidden ${t.surface}`}
       style={scrim ? scrimVars(photo) : undefined}
     >
       <PhotoFrame
         photo={photo}
-        tone="ramp"
+        tone={t.tone}
         cover
         className="h-full"
         sizes="100vw"
@@ -45,7 +46,7 @@ export function QuoteSection({
           whole of it — there is no empty band to leave light. */}
       <div className={`relative ${scrim ? "copy-scrim-band" : ""}`}>
         <div className="wrap">
-          <SectionHeader index={index} eyebrow={eyebrow} tone="ramp" />
+          <SectionHeader index={index} eyebrow={eyebrow} tone={t.tone} />
 
           <div className="pt-16 pb-16 lg:pt-36 lg:pb-40">
             <h2 className="type-h2 max-w-5xl lg:[text-indent:22%] mb-16 lg:mb-28">
