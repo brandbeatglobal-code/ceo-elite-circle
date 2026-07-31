@@ -27,7 +27,7 @@
         "src": "https://images.unsplash.com/photo-1511376979163-f804dff7ad7b",
         "alt": "A working advisory session, two people in close conversation",
         "note": "a working advisory session — two or three people, close in.",
-        "brightness": null
+        "brightness": 0.708
       },
       "summary": "Considered counsel on the decisions that carry weight.",
       "intro": "Members bring live questions to a small group of peers who have stood on comparable ground. The purpose is not to be handed a prescription, but to leave with a clearer view of the trade-offs and the confidence to choose.",
@@ -75,7 +75,7 @@
         "src": "https://images.unsplash.com/photo-1610374792793-f016b77ca51a",
         "alt": "A room of people in conversation, shot wide",
         "note": "a room of people mid-conversation, shot wide.",
-        "brightness": null
+        "brightness": 0.982
       },
       "summary": "Introductions made with intent.",
       "intro": "The Circle connects members deliberately and sparingly. A directory invites volume; the Circle is built on the view that one well-judged introduction is worth more than a long list of contacts.",
@@ -110,7 +110,7 @@
         "src": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0",
         "alt": "A forum in session around a table",
         "note": "a forum in session — seated circle or roundtable.",
-        "brightness": null
+        "brightness": 1
       },
       "summary": "Closed sessions, held in confidence, on one question at a time.",
       "intro": "A small group works through a single question in depth. There is no audience, no record and no performance — only the conversation that becomes possible once nobody is presenting.",
@@ -158,7 +158,7 @@
         "src": "https://images.unsplash.com/photo-1573164574572-cb89e39749b4",
         "alt": "A quiet study setting, considered and unhurried",
         "note": "a quiet study or reading setting. Considered, unhurried.",
-        "brightness": null
+        "brightness": 1
       },
       "summary": "Briefings written for people who already know their sector.",
       "intro": "Analysis prepared to be read quickly and used immediately. The Circle publishes less than it could, on the principle that a member's attention is the scarcest thing in the room.",
@@ -193,7 +193,7 @@
         "src": "https://images.unsplash.com/photo-1771270759486-1f7703945072",
         "alt": "A formal council table",
         "note": "a formal council table, empty or mid-session.",
-        "brightness": null
+        "brightness": 0.551
       },
       "summary": "Standing groups that meet through the year, so context accumulates.",
       "intro": "Councils are organised around a shared discipline or region and hold their membership across the year. The work compounds: each meeting begins where the last one ended rather than starting again.",
