@@ -3,31 +3,60 @@
   "hero": {
     "eyebrow": "Governance",
     "title": "Trust Framework",
-    "intro": "The Trust Framework is being finalised. The ten areas it will cover are listed below; the wording of each is with the Circle for sign off and is not published until it is settled."
+    "intro": "The Trust Framework is agreed and published in full. Its ten areas set out the terms every member enters into on joining, and the terms the Circle holds itself to in return."
   },
   "status": {
     "eyebrow": "Status",
-    "title": "Written once, not drafted twice",
+    "title": "Agreed once, and held to",
     "lead": "Everything on this page is a commitment rather than a description.",
-    "body": "Confidentiality, conduct, review and removal are the terms a member is asked to rely on. Placeholder wording in those places would read as settled policy long before it is, so the areas below are named and left empty until each one has been agreed."
+    "body": "Confidentiality, conduct, review and removal are the terms a member is asked to rely on, and the terms the Circle is held to in return. Each of the ten areas below carries its agreed wording in full."
   },
   "areas": {
     "eyebrow": "Policy areas",
     "title": "The ten areas",
-    "label": "Awaiting sign-off",
-    "body": "Open any area to see its current state. Each will carry its full wording once agreed.",
-    "placeholderNote": "Policy text pending sign-off. This section states a commitment members may rely on, so nothing is drafted here in the meantime.",
+    "label": "In force",
+    "body": "Open any area to read its full wording.",
     "items": [
-      "Our Commitment",
-      "CEO Charter",
-      "Moderation Standards",
-      "Confidentiality",
-      "Governance",
-      "Member Conduct",
-      "Privacy",
-      "Conflict Resolution",
-      "Membership Review",
-      "Removal Policy"
+      {
+        "name": "Our Commitment",
+        "body": "The Circle exists to give its members a room where candour costs nothing. Everything in this framework follows from that single undertaking: that what a member brings into the Circle — a problem, a doubt, a half-formed plan — will be met with judgment on the merits and nothing else."
+      },
+      {
+        "name": "CEO Charter",
+        "body": "Every member agrees to the same terms on joining. To speak plainly and expect the same in return. To treat what is shared by others as their own to hold, not to repeat. To bring the same seriousness to the Circle's councils and forums as to their own board. Membership is a standing agreement to these terms, not a one-time formality."
+      },
+      {
+        "name": "Moderation Standards",
+        "body": "Sessions are structured to protect candour, not performance. A convenor is present at every forum and council to keep the conversation on the question at hand, ensure no member goes unheard, and close a session the moment it stops serving the people in the room."
+      },
+      {
+        "name": "Confidentiality",
+        "body": "Nothing said within the Circle — in a forum, a council, a dinner, or a private conversation between members — is repeated outside it without the speaker's explicit agreement. This extends to the fact that a conversation took place at all. Confidentiality is the condition the Circle depends on, not a courtesy extended around its edges."
+      },
+      {
+        "name": "Governance",
+        "body": "The Circle is convened by its founding members, who hold responsibility for admission, standards, and the direction of the membership as a whole. Governance decisions are made by this group and communicated to the membership; day-to-day matters are handled by the team that runs the Circle's programme."
+      },
+      {
+        "name": "Member Conduct",
+        "body": "Members are expected to engage in good faith: to contribute as well as draw on the Circle, to respect confidentiality without exception, and to treat every other member with the same regard they would want extended to themselves. Conduct that undermines trust in the room is grounds for review under the terms below."
+      },
+      {
+        "name": "Privacy",
+        "body": "Personal and business information shared with the Circle — in an application, a conversation, or a member profile — is used only to run the Circle's programme and is not shared with third parties without consent. Members control what is visible to other members and what is not."
+      },
+      {
+        "name": "Conflict Resolution",
+        "body": "Disagreements between members, or between a member and the Circle, are addressed directly and privately in the first instance. Where that does not resolve the matter, it is brought to the convening group, who hear both sides and decide plainly rather than let it linger unresolved."
+      },
+      {
+        "name": "Membership Review",
+        "body": "Membership is reviewed periodically to confirm it continues to reflect the standard the Circle was built around — seniority, disposition, and genuine engagement with the room. Review is not adversarial; it exists to keep the membership what it was meant to be."
+      },
+      {
+        "name": "Removal Policy",
+        "body": "Membership can be ended for a serious breach of confidentiality, conduct that damages trust in the room, or sustained disengagement from the Circle's programme. Removal follows a conversation, not a notice — a member is told plainly why, and given the chance to respond, before any decision is final."
+      }
     ]
   }
 }

@@ -1,6 +1,7 @@
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
 import {
+  ArrowLink,
   BulletLabel,
   PhotoFrame,
   Placeholder,
@@ -35,34 +36,59 @@ export default function InsightsPage() {
             </div>
           </div>
 
-          {/* No real articles exist yet, so nothing is linked. These are
-              labelled pending cards, not posts. */}
+          {/* One card per published article. While nothing is published these
+              are labelled pending cards instead — present and on-system, but
+              not pretending to be posts. */}
           <div className="grid grid-cols-1 md:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <article
-                key={i}
-                className={`flex flex-col gap-6 py-10 lg:py-14 md:px-8 first:md:pl-0 ${
-                  i > 0 ? "md:border-l border-hair" : ""
-                } border-t md:border-t-0 border-hair`}
-              >
-                <BulletLabel className="text-olive">
-                  {page.pendingCardLabel}
-                </BulletLabel>
-                <PhotoFrame
-                  photo={{
-                    src: null,
-                    alt: "",
-                    note: page.pendingCardPhotoNote,
-                    brightness: null,
-                    textMode: "light",
-                  }}
-                  className="h-56"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                <Placeholder lead />
-                <Placeholder />
-              </article>
-            ))}
+            {published.length > 0
+              ? published.map((article, i) => (
+                  <article
+                    key={article.slug}
+                    className={`flex flex-col gap-6 py-10 lg:py-14 md:px-8 first:md:pl-0 ${
+                      i > 0 ? "md:border-l border-hair" : ""
+                    } border-t md:border-t-0 border-hair`}
+                    data-reveal
+                    style={{ transitionDelay: `${i * 70}ms` }}
+                  >
+                    <BulletLabel className="text-olive">
+                      {article.date ?? page.listEyebrow}
+                    </BulletLabel>
+                    <PhotoFrame
+                      photo={article.photo}
+                      className="h-56"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <h3 className="type-lead text-ink">{article.title}</h3>
+                    <ArrowLink href={`/insights/${article.slug}`}>
+                      {page.cardLinkLabel}
+                    </ArrowLink>
+                  </article>
+                ))
+              : [0, 1, 2].map((i) => (
+                  <article
+                    key={i}
+                    className={`flex flex-col gap-6 py-10 lg:py-14 md:px-8 first:md:pl-0 ${
+                      i > 0 ? "md:border-l border-hair" : ""
+                    } border-t md:border-t-0 border-hair`}
+                  >
+                    <BulletLabel className="text-olive">
+                      {page.pendingCardLabel}
+                    </BulletLabel>
+                    <PhotoFrame
+                      photo={{
+                        src: null,
+                        alt: "",
+                        note: page.pendingCardPhotoNote,
+                        brightness: null,
+                        textMode: "light",
+                      }}
+                      className="h-56"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <Placeholder lead />
+                    <Placeholder />
+                  </article>
+                ))}
           </div>
 
           {published.length === 0 && (

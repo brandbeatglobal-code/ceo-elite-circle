@@ -1,21 +1,26 @@
 import { Accordion } from "@/components/Accordion";
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
-import { BulletLabel, Placeholder, SectionHeader } from "@/components/ui";
+import { BulletLabel, SectionHeader } from "@/components/ui";
 import { ordinal } from "@/lib/ordinal";
 import { trust } from "@/lib/trust";
 
 export const metadata = { title: trust.metaTitle };
 
 /**
- * NO SAMPLE COPY ON THIS PAGE.
+ * SIGNED-OFF POLICY TEXT ON THIS PAGE — the only page of the site that carries
+ * any.
  *
- * The ten areas in `content/trust.json` are commitments a prospective member
- * could reasonably rely on. Draft wording would read as binding whether or not
- * it is finished, so each area carries a labelled placeholder and nothing else
- * — the content file holds names, and has no field for policy text at all. The
- * visual treatment — numbering, the accordion, the two columns — is what stops
- * the page being flat. Do not fill these in without sign-off.
+ * The ten areas are commitments a member is held to and can hold the Circle
+ * to. They were empty for most of this project because draft wording reads as
+ * binding whether or not it is finished; they are filled now because the
+ * founder signed them off. The rule that replaces "do not draft these" is "do
+ * not edit these" — not for rhythm, not for length, not to match the voice of
+ * the rest of the site. See `src/lib/trust.ts`.
+ *
+ * Everything outside the accordion — the hero, the Status section, the labels
+ * — is ordinary descriptive copy about the framework, and is not a commitment.
+ * Keep the two straight.
  */
 const { hero, status, areas } = trust;
 
@@ -25,14 +30,14 @@ function AreaColumn({ from, to }: { from: number; to: number }) {
   return (
     <Accordion
       initial={-1}
-      items={areas.items.slice(from, to).map((name, i) => ({
+      items={areas.items.slice(from, to).map((area, i) => ({
         title: (
           <span className="flex items-baseline gap-4">
             <span className="text-olive tabular-nums">{pad(from + i)}</span>
-            <span>{name}</span>
+            <span>{area.name}</span>
           </span>
         ),
-        body: <Placeholder note={areas.placeholderNote} />,
+        body: <p className="type-body text-olive max-w-xl">{area.body}</p>,
       }))}
     />
   );
@@ -47,7 +52,7 @@ export default function TrustPage() {
         intro={hero.intro}
       />
 
-      {/* Why the page reads as it does — meta, not policy. */}
+      {/* What the framework is and where it stands — meta, not policy. */}
       <section className="bg-black text-white">
         <div className="wrap">
           <SectionHeader index={ordinal(0)} eyebrow={status.eyebrow} tone="black" />

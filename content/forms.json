@@ -111,8 +111,8 @@
   "governance": {
     "eyebrow": "Governance",
     "heading": "Ask a governance question",
-    "lead": "The Trust Framework is being finalised and is not published yet.",
-    "body": "If you have a question about how the Circle is governed, or would like the framework when it is settled, say so here.",
+    "lead": "The Trust Framework is agreed and published in full above.",
+    "body": "If you have a question about how the Circle is governed, or about any area of the framework, say so here.",
     "columns": [
       {
         "legend": "Contact information",

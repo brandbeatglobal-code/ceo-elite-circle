@@ -151,7 +151,18 @@ const RULES: [RegExp, FieldRule][] = [
       kind: "group",
       nullable: false,
       structural:
-        "The Insights index renders from this list. While it is empty the page shows labelled \"article pending\" cards instead of pretending to have posts.",
+        "Which articles the Insights index links, named by their web addresses. While it is empty the page shows labelled \"article pending\" cards instead of pretending to have posts. An article that is written but not listed here is reachable at its own address and linked from nowhere — which is exactly how the unpublished template is kept out of sight.",
+    },
+  ],
+  [
+    // An entry is a reference to an article's address, not a title. It is the
+    // switch that publishes a piece, so a typo here silently unpublishes one.
+    /^insights:published\.\*$/,
+    {
+      kind: "slug",
+      nullable: false,
+      structural:
+        "One article, named by the last part of its web address rather than by its title. It has to match an article exactly — a value matching none of them does not break the site, it just quietly drops that article off the Insights index while leaving it reachable at its own address. Copy the address from the article rather than typing it. Lowercase letters, numbers and hyphens only.",
     },
   ],
   // The three About leadership cards are real, named people — the one place
@@ -211,13 +222,28 @@ const RULES: [RegExp, FieldRule][] = [
   ],
 
   // ---- Content-honesty guardrails that are not about absence.
+  // ---- The Trust Framework's ten areas. This field did not exist until the
+  // wording was signed off, which was the point: nothing could be drafted here
+  // by accident. Now that it holds approved policy, the guardrail changes
+  // shape rather than disappearing — it is the one text field on the site that
+  // a member is entitled to rely on as written.
   [
-    /^trust:areas\.items\.\*$/,
+    /^trust:areas\.items\.\*\.body$/,
     {
       kind: "text",
       nullable: false,
       structural:
-        "Area names only. Each area is a commitment a member could rely on, so the Trust Framework carries no policy wording until it is signed off — there is deliberately no field for that text here.",
+        "Signed-off policy text. A member reads this as a term they are held to and can hold the Circle to, so it is changed only when the wording itself has been agreed again — never tidied for rhythm, shortened to fit, or rephrased to match the rest of the site. If what you want to change is how the framework is described rather than what it commits to, the hero and Status section above are the place for that.",
+      multiline: true,
+    },
+  ],
+  [
+    /^trust:areas\.items\.\*\.name$/,
+    {
+      kind: "text",
+      nullable: false,
+      structural:
+        "The name of a policy area, as signed off alongside its wording. Renaming one changes what the framework says it covers, so it travels with the text beneath it rather than being edited on its own.",
     },
   ],
   [

@@ -23,7 +23,8 @@
 06. Trust Framework (`/trust`) — Our Commitment, CEO Charter, Moderation
     Standards, Confidentiality, Governance, Member Conduct, Privacy,
     Conflict Resolution, Membership Review, Removal Policy. **Policy-level
-    content — nothing here should be drafted without sign-off.**
+    content. Signed off by the founder and published in full; the rule is now
+    that it is not edited without the same sign-off.**
 07. Executive Councils (`/councils`) — Purpose, Councils, Meeting Format,
     Benefits, Annual Calendar, Expert Advisors.
 08. Contact / Apply (`/contact`) — Application Form, Selection Process,
@@ -401,11 +402,16 @@ Two rules follow from (b) and are worth stating outright:
 
 - **Sample copy contains no numerals**, deliberately. A figure reads as a
   statistic even in draft.
-- **The Trust Framework carries no sample copy at all.** Confidentiality,
-  Member Conduct, Conflict Resolution and Removal Policy are commitments a
-  prospective member could rely on; draft wording there reads as binding. The
-  page gets visual treatment — numbering, accordion, two columns — and nothing
-  else. Membership category descriptions are placeholders for the same reason.
+- **The Trust Framework carries no sample copy — it carries signed-off policy
+  text.** Confidentiality, Member Conduct, Conflict Resolution and Removal
+  Policy are commitments a prospective member could rely on, so draft wording
+  there would read as binding. For most of this project the page therefore had
+  visual treatment and nothing else, and `trust.json` had no field to draft
+  into. The founder signed the ten areas off, so they are published in full and
+  the guardrail changed shape: **an area's wording is not edited without the
+  same sign-off**, and never tidied, shortened or rephrased into the site's
+  voice. Membership category descriptions are still placeholders, for the
+  reason the framework used to be.
 
 While sample copy is live, `DraftBanner` shows a dismissible work-in-progress
 notice site-wide. It is **server-rendered**, so it is present for a visitor
@@ -440,12 +446,13 @@ Their headshots have not — each slot keeps the pending frame, labelled with
 whose photograph belongs in it, which is the honest state rather than a stock
 face standing in for someone who exists.
 
-Plus **Trust Framework policy text** (ten areas), which is a commitment rather
-than a description, and the **"article pending" cards** on `/insights` and in
-the article template's related row — an invented headline implies published
-writing that does not exist.
+Two more came off the list at the same time as the leadership cards. **Trust
+Framework policy text** is signed off and published in full. **Insights** has
+its first real article, so `/insights` lists a post rather than "article
+pending" cards — though the *related* row inside an article still shows them,
+correctly, because there is only one article and it has no siblings yet.
 
-One real bio and one real quote close most of this.
+One real quote closes most of what is left.
 
 ## Motion
 
@@ -500,8 +507,8 @@ Two constraints, both enforced rather than assumed:
 - The homepage hero uses the client's exact copy.
 - **Every headline on the homepage is a section name taken from this brief.**
   No marketing prose has been written. Supporting copy is the `Placeholder`
-  component throughout. Do not replace placeholder text with invented claims,
-  especially on `/trust`, without explicit sign-off first.
+  component throughout. Do not replace placeholder text with invented claims
+  without explicit sign-off first.
 - Several reference sections are deliberately **not built**, because they
   would require facts the Circle does not have yet:
   - **Impact stats** ("15+ years", "10,000+ procedures") and the smaller
@@ -522,11 +529,16 @@ Two constraints, both enforced rather than assumed:
   cards have no names, and minting a slug would mean inventing a person to
   hang it on. Adding a real member means filling the name, credentials, role,
   timeline and quote together, then linking the card.
-- **Insights** has no real articles. `/insights` shows three labelled
-  "article pending" cards that link nowhere, and `/insights/[slug]` exists as
-  a structural template at `template`, unlinked, on the same reasoning. No
-  invented statistics or claims anywhere in it — the reference article's
-  "70% of adults" style line has no equivalent here.
+- **Insights has its first published article** — "Why the best counsel rarely
+  comes from a consultant", approved by the founder. `/insights` lists it and
+  links to it; `/insights/[slug]` renders it at its own address. The
+  structural template stays at `template`, in `articles` and out of
+  `published`, which is precisely what keeps it reachable directly and linked
+  from nowhere. It is credited to the Circle as publisher with no individual
+  author, on the same reasoning as the leadership bios: a name on a byline is
+  that person's to give. Its lead image, side note and pull-quote are all
+  empty — three slots the design offers that this piece did not arrive with.
+  No invented statistics or claims anywhere in it.
 - **Leadership** (`/about`, section Two) carries three real, named people —
   Dr Essa Al-Ahmad, Arshad Ali and Cicero Carvalho — each with a title line
   and one line of description. **Three cards, not four**: the row sizes itself
@@ -642,6 +654,26 @@ Two constraints, both enforced rather than assumed:
   capital or a space still builds and still routes, which is exactly why it
   needed catching: the failure is an address nobody can type or repeat, not an
   error anyone would see.
+- **The Trust Framework is published.** Its ten areas were the most protected
+  thing in the repo — `trust.json` had no field for policy text at all, so
+  nothing could be drafted into it by accident or through the admin. The
+  founder signed the wording off, so the field exists now and carries it. The
+  page was rewritten around that in one pass rather than piecemeal: the hero no
+  longer says the framework is being finalised, the Status section no longer
+  explains why the page is empty, the "Awaiting sign-off" label reads "In
+  force", and the governance form no longer opens by saying the framework is
+  unpublished. Its button stays disabled, because form handling is still not
+  wired up anywhere on the site — that is a separate change. One statement
+  outside `/trust` was false too and is fixed: `/membership`'s FAQ told
+  visitors the framework "is being finalised".
+- **Insights has a first real article**, "Why the best counsel rarely comes
+  from a consultant". `published` changed from a second copy of each article to
+  a list of slugs, so an article exists once and the list says which are live;
+  the template stays out of it and therefore stays unlinked. The article body
+  became a `sections` array in the same pass — the fixed
+  opening/list/closing shape could only carry the one article it was written
+  around, and the real piece has four prose sections and no bulleted list.
+  Nothing was invented to fill the old shape.
 - **Copy over a photograph is light or dark, chosen per slot, and the scrim
   has stepped back to a light touch.** The overlay was carrying legibility on
   its own and charging the photograph everything for it: 0.92 total on a

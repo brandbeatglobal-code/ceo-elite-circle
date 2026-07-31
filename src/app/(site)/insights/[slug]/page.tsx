@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import { Carousel } from "@/components/Carousel";
 import { RequestSection } from "@/components/RequestSection";
@@ -7,7 +8,7 @@ import {
   Placeholder,
   SectionHeader,
 } from "@/components/ui";
-import { articleBySlug, articles, insights } from "@/lib/insights";
+import { articleBySlug, articles, insights, isPublished } from "@/lib/insights";
 import { ordinal } from "@/lib/ordinal";
 import { site } from "@/lib/site";
 
@@ -48,6 +49,14 @@ export default async function ArticlePage({
   if (!article) notFound();
 
   const body = article.body;
+  // On the unpublished template a missing field renders as "pending", which is
+  // the honest state for something never published. On a real article it is
+  // simply omitted: "Author — pending" under a live post reads as broken
+  // rather than as deliberately unattributed.
+  const live = isPublished(slug);
+  const metaRows = live
+    ? meta.filter((m) => article[m.key] !== null)
+    : meta;
 
   return (
     <>
@@ -67,7 +76,7 @@ export default async function ArticlePage({
               )}
 
               <dl className="border-t border-hair">
-                {meta.map((m) => (
+                {metaRows.map((m) => (
                   <div
                     key={m.label}
                     className="flex items-baseline justify-between gap-4 border-b border-hair py-4"
@@ -85,67 +94,66 @@ export default async function ArticlePage({
               </dl>
             </aside>
 
-            {/* Body */}
+            {/* Body — the article in its own order. The lead image breaks the
+                copy after the first section, wherever that section ends. */}
             <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-14 flex flex-col gap-10">
-              <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">{body.openingHeading}</h2>
-                {body.openingParagraphs.map((p) => (
-                  <p key={p} className="type-body text-olive">
-                    {p}
-                  </p>
-                ))}
-              </div>
+              {body.sections.map((section, i) => (
+                <Fragment key={section.heading}>
+                  <div className="flex flex-col gap-5">
+                    <h2 className="type-display type-h3">{section.heading}</h2>
+                    {section.paragraphs.map((p) => (
+                      <p key={p} className="type-body text-olive">
+                        {p}
+                      </p>
+                    ))}
 
-              <PhotoFrame
-                photo={article.photo}
-                className="h-64 lg:h-80"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+                    {/* Plain bulleted list — not a card grid */}
+                    {section.listItems && (
+                      <ul className="flex flex-col gap-2.5">
+                        {section.listItems.map((item, j) => (
+                          <li key={j} className="flex gap-3 items-baseline">
+                            <span className="text-sage shrink-0" aria-hidden="true">
+                              •
+                            </span>
+                            <span className="type-body text-olive">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
 
-              <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">{body.listHeading}</h2>
-                <p className="type-body text-olive">{body.listIntro}</p>
-
-                {/* Plain bulleted list — not a card grid */}
-                <ul className="flex flex-col gap-2.5">
-                  {body.listItems.map((item, i) => (
-                    <li key={i} className="flex gap-3 items-baseline">
-                      <span className="text-sage shrink-0" aria-hidden="true">
-                        •
-                      </span>
-                      <span className="type-body text-olive">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="flex flex-col gap-5">
-                <h2 className="type-display type-h3">{body.closingHeading}</h2>
-                {body.closingParagraphs.map((p) => (
-                  <p key={p} className="type-body text-olive">
-                    {p}
-                  </p>
-                ))}
-              </div>
+                  {i === 0 && (
+                    <PhotoFrame
+                      photo={article.photo}
+                      className="h-64 lg:h-80"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  )}
+                </Fragment>
+              ))}
             </div>
 
-            {/* Side-note callout */}
-            <div className="lg:border-l border-hair lg:pl-8 py-14">
-              <BulletLabel className="text-olive">
-                {detail.noteLabel}
-              </BulletLabel>
-              <div className="mt-4">
-                <p className="type-body text-olive">{body.note}</p>
+            {/* Side-note callout, where the piece came with one. */}
+            {body.note && (
+              <div className="lg:border-l border-hair lg:pl-8 py-14">
+                <BulletLabel className="text-olive">
+                  {detail.noteLabel}
+                </BulletLabel>
+                <div className="mt-4">
+                  <p className="type-body text-olive">{body.note}</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Closing statement */}
-          <div className="border-t border-hair py-16 lg:py-36">
-            <div className="lg:[text-indent:22%] max-w-5xl">
-              <p className="type-h2">{body.pullQuote}</p>
+          {/* Closing statement, where the piece came with one. */}
+          {body.pullQuote && (
+            <div className="border-t border-hair py-16 lg:py-36">
+              <div className="lg:[text-indent:22%] max-w-5xl">
+                <p className="type-h2">{body.pullQuote}</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
