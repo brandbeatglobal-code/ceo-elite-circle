@@ -35,10 +35,10 @@
         "title": "Founder",
         "description": "A physician turned leadership mentor, grounding the Circle’s guidance in resilience and sustainable performance.",
         "photo": {
-          "src": null,
-          "alt": "",
+          "src": "/uploads/about-leadership-cards-0-95bb3def1d.jpg",
+          "alt": "Dr Essa Al-Ahmad photo",
           "note": "Dr Essa Al-Ahmad",
-          "brightness": null,
+          "brightness": 1,
           "textMode": "light"
         }
       },
