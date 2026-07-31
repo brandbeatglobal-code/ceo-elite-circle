@@ -122,9 +122,11 @@ reused rather than re-cut per page:
 - `PhotoCard` — tall card with a photograph behind it, revealed on hover. The
   photograph is decorative: every word is legible with or without it, and on
   touch (`@media (hover: none)`) it simply shows, so nothing is unreachable.
-  The `black/85` overlay is set so white text clears 4.5:1 even against a
-  pure-white region of the photograph — an average-luminance overlay fails
-  exactly where a blown-out highlight sits behind a line of text.
+  Its scrim is the same brightness-and-mode pair the full-bleed sections use,
+  heavy where text sits and light through the middle band, which is empty by
+  construction. Its copy colour follows the slot's text mode on the same
+  selectors the image fades on, because off hover there is no photograph —
+  only the black section the card sits in.
 
 Patterns are applied per item, not stamped: pillars carry `VariantCards` only
 where named formats plausibly exist (`variants` in `src/lib/pillars.ts`), and
@@ -180,87 +182,130 @@ through the admin, which is the case the next rule exists for.
 
 ### Text over a photograph
 
-**An overlay is calibrated against a white photograph, never against the one
-that happens to be there today.** The mood above is a direction, not a
-guarantee: anyone can upload a bright image through the admin in one click,
-and a hero whose legibility depended on the photographer choosing dusk breaks
-the moment they don't.
+**The copy colour is chosen per section; the overlay only helps.** That is a
+deliberate reversal. The overlay used to carry legibility on its own —
+calibrated against a white photograph, solved to hold the background behind
+the copy at `0.081` luminance whatever the image. It worked, and on a bright
+photograph it meant a `0.42` wash plus a `0.86` field composing to `0.92`,
+which is near enough black. The night skyline on the homepage was a dark
+rectangle.
 
-The rule is the one `PhotoCard` already followed, applied to every full-bleed
-section (`.photo-scrim` and the `.copy-scrim*` classes in `globals.css`):
+So there are two mechanisms now, and it matters which does what.
 
-- A wash on the section so the photograph reads, and a heavier field on the
-  copy itself, feathered in over the container's own padding so it has no
-  visible edge.
-- **Both alphas are solved from the photograph, not fixed.** The rule is a
-  ceiling: whatever the image, the background behind the copy is brought to
-  `0.081` luminance — about 8:1 for white text — and no further. A white
-  photograph therefore gets `black/42` and `black/86`, which composite to
-  `(1 − 0.86)(1 − 0.42) = 0.081`; the homepage's night skyline, measured at
-  brightness 0.369, gets `black/35` and `black/66` and keeps 2.7× more of
-  itself for exactly the same contrast.
-- The brightness is measured on upload — the brightest *region* of the image,
-  not its mean, because a dark photograph with a blown-out window in it
-  averages dark and the headline lands on the window. An unmeasured slot
-  (`brightness: null`) is treated as white.
-- A ceiling on the *composite* is the point. Two layers each calibrated
-  against a white photograph compound to ~0.92 where they overlap, which is
-  most of a hero; that is what flattened the skyline to near-black even though
-  each layer was correct on its own.
-- Nothing over a photograph is dimmer than 75% white — 55% clears 4.5:1 on the
-  near-black ramp but not against a bright image behind a scrim. `Placeholder`
-  takes `onPhoto` for exactly this.
+**1. `photo.textMode`, light or dark.** Every photo slot carries it; the
+sections that hold words over a picture read it. `light` is white copy, as
+before; `dark` is `--color-ink`, the near-black olive already used on cream —
+never pure black. Two values rather than a picker, because the site never
+carries more than two text treatments on one background.
+
+- **One value governs a whole section**: headline, body, the CTA pill's border
+  and label, the hairline grid, and the navigation bar while it is still
+  transparent over that hero. `Nav` reads the hero's mode through `SiteChrome`
+  (a server component, so the content files stay out of the client bundle)
+  rather than hardcoding white — that hardcoding is exactly how a dark-mode
+  hero would strand white links on a pale photograph.
+- The slots it does anything on are listed in `textOverPhoto()` in
+  `src/lib/admin/schema.ts`, which is also what decides whether the admin
+  offers the toggle. A leadership portrait carries the field and no control.
+- On an empty slot the mode is ignored: the pending frame sits on the dark
+  ramp, where white is the only legible colour.
+- Everything defaults to `light`, so nothing on the site changed colour when
+  this landed.
+
+**2. The scrim, now a light touch.** Same brightness-aware curve, much lower.
+Across the fifteen photographs actually on the site the total falls from
+0.81–0.92 to 0.21–0.45, and the section-wide wash to 0.07–0.16.
+
+- Still a wash on the section plus a heavier field under the copy, feathered
+  over the container's own padding so it has no visible edge (`.photo-scrim`
+  and the `.copy-scrim*` classes). `PhotoCard` is on the same pair now instead
+  of its own fixed `0.94 / 0.94 / 0.6`.
+- Both alphas are still solved from the photograph. Light copy holds the
+  brightest region at or below `0.26` luminance — about **3.4:1** for white
+  text, short of AA on purpose. Dark copy lifts it to at least `0.62`, about
+  6.8:1 for ink; the two thresholds are mirror images about mid-grey. A floor
+  of 0.15 means no photograph is ever completely unprotected, and a cap of 0.5
+  means none is darkened or bleached past a light touch.
+- **The scrim's colour follows the mode** — black under white copy, white
+  under ink. A black wash under ink copy would be a control fighting itself.
+- **The alphas are solved in sRGB channel space, not by multiplying a
+  luminance.** That is where a browser actually composites an overlay; the old
+  model treated the measured luminance as if it multiplied like a channel
+  value, which overstated an overlay's effect by roughly an order of magnitude
+  and is part of why the result was so heavy.
+- The brightness is measured on upload — the brightest *region*, not the mean,
+  because a dark photograph with a blown-out window in it averages dark and
+  the headline lands on the window. An unmeasured slot (`brightness: null`) is
+  treated as white.
+- Nothing over a photograph is dimmer than 75% white, or 80% ink. `Placeholder`
+  takes `onPhoto` for exactly this, on both sides now — olive is comfortable on
+  cream and marginal over a picture, so `onPhoto` takes it to full ink.
 - **No photograph, no scrim.** An empty slot renders the pending frame on the
   dark ramp, where the copy is already legible and a field would only bury the
   frame's label.
 
+**3. The contrast maths is kept, as guidance.** The admin's photo editor shows
+an estimated ratio beside the toggle — "Approximately 3.4:1 — WCAG recommends
+4.5:1 for body text" — and never refuses a save. It says what it is measured
+against, because that differs by mode: the brightest region is the **worst**
+case for white copy and the **best** case for ink, and nothing stored knows how
+dark the dark parts of a picture are. In light mode the reading sits at 3.4:1
+for essentially every photograph, by construction; that is the honest number
+now, not an edge case.
+
 `/about`'s philosophy pull-quote is copy from top to bottom, so its field
-covers the whole section and the photograph reads as texture rather than as an
-image. That is the honest cost of the rule, not an oversight: there is no
-empty band there to leave light.
+covers the whole section. At the old strength the photograph read as texture
+rather than as an image; at the new one it survives.
 
 Verified by measurement rather than by reading the CSS — see *Verification*.
 
-#### What the design-stage photographs actually measure
+#### What the photographs on the site actually measure
 
-Every slot filled by hand at design stage was measured in place, through the
-admin, on 30 July 2026 — commits `093f255`, `83b4764`, `cf2c899`. Each one was
-`null` beforehand, so this table is the whole record; the images, their URLs
-and their licensing were not touched.
+Every filled slot, its measured brightness, and the total scrim it gets — the
+old figure alongside, because the size of the change is the point. All
+nineteen are `light`; the dark column is what each would get if it were
+switched. Snapshot: photographs are replaced through the admin and remeasured
+on the way in, so re-derive rather than trust this if it matters.
 
-| Slot | Brightness | Scrim it now gets |
-|---|---|---|
-| Strategic Advisory | 0.708 | 0.399 / 0.810 |
-| Elite Network | 0.982 | 0.413 / 0.860 |
-| Executive Forums | 1.0 | 0.414 / 0.862 |
-| Knowledge & Insights | 1.0 | 0.414 / 0.862 |
-| Executive Councils | 0.551 | 0.384 / 0.761 |
-| CEO Leadership Summit | 0.834 | 0.406 / 0.836 |
-| Chairman's Majlis | 0.999 | 0.414 / 0.862 |
-| Executive Leadership Retreat | 1.0 | 0.414 / 0.862 |
-| Future Leadership Forum | 0.971 | 0.413 / 0.858 |
-| Elite Excellence Awards | 0.48 | 0.374 / 0.730 |
-| International CEO Delegation | 0.611 | 0.390 / 0.783 |
-| CEO Private Dinners | 0.905 | 0.410 / 0.848 |
-| Executive Circle | 1.0 | 0.414 / 0.862 |
-| Elite Circle | 0.998 | 0.414 / 0.862 |
-| Chairman's Circle | 0.803 | 0.405 / 0.831 |
+| Slot | Brightness | Was | Light now | Dark |
+|---|---|---|---|---|
+| homepage — hero | 0.585 | 0.86 | 0.31 | 0.15 |
+| homepage — whyNow | 0.997 | 0.92 | 0.45 | 0.15 |
+| about — hero | 0.962 | 0.92 | 0.44 | 0.15 |
+| about — story | 0.746 | 0.89 | 0.38 | 0.15 |
+| Strategic Advisory | 1 | 0.92 | 0.45 | 0.15 |
+| Elite Network | 1 | 0.92 | 0.45 | 0.15 |
+| Executive Forums | 0.991 | 0.92 | 0.45 | 0.15 |
+| Knowledge & Insights | 1 | 0.92 | 0.45 | 0.15 |
+| Executive Councils | 0.98 | 0.92 | 0.45 | 0.15 |
+| CEO Leadership Summit | 0.435 | 0.81 | 0.21 | 0.38 |
+| Chairman's Majlis | 0.606 | 0.87 | 0.32 | 0.15 |
+| Executive Leadership Retreat | 1 | 0.92 | 0.45 | 0.15 |
+| Future Leadership Forum | 0.971 | 0.92 | 0.45 | 0.15 |
+| Elite Excellence Awards | 0.48 | 0.83 | 0.24 | 0.31 |
+| International CEO Delegation | 0.611 | 0.87 | 0.32 | 0.15 |
+| CEO Private Dinners | 0.578 | 0.86 | 0.30 | 0.15 |
+| Executive Circle | 0.693 | 0.88 | 0.36 | 0.15 |
+| Elite Circle | 1 | 0.92 | 0.45 | 0.15 |
+| Chairman's Circle | 0.747 | 0.89 | 0.38 | 0.15 |
 
-**Eleven of the fifteen measure 0.8 or brighter, and three are 1.0.** This
-stock photography skews light, which is precisely the case the ceiling exists
-for — most of these were already getting close to the treatment they needed,
-and the three at 1.0 resolve to `0.4136 / 0.8619`, byte-identical to the
-unmeasured default. Nothing about them changed; the measurement only made that
-provable rather than incidental.
+Two things worth reading off it. **The old column is nearly flat** — 0.81 to
+0.92 across a set whose brightness ranges from 0.435 to 1.0 — because
+`1 − 0.081/b` saturates almost immediately. It was brightness-aware in form
+and barely in effect. The new column spans 0.21 to 0.45 over the same set,
+which is what "a bright photograph gets more help than a dark one" was meant
+to mean.
 
-The two genuinely mid-toned images — Executive Councils at 0.551 and Elite
-Excellence Awards at 0.48 — are the ones that gain, and even they are nowhere
-near the homepage's night skyline at 0.369. Worth knowing when judging the
-rule: it looks generous on this set because this set is bright. It earns its
-keep on the dark ones.
+And **the photography on the site skews light**: seventeen of nineteen measure
+0.58 or brighter, six are 1.0. So the set does not flatter the change — the
+photographs that gain most from a lighter scrim are the dark ones, and there
+are few of them here.
 
-The route that produced this has been deleted. Measuring a *new* image is not
-its job — uploads are measured on the way in.
+The slots filled by hand at design stage were measured in place through a
+one-time route, on 30 July 2026 — commits `093f255`, `83b4764`, `cf2c899`.
+That route has been deleted; measuring a *new* image is not its job, since
+uploads are measured on the way in. Several of the figures above post-date it,
+because those photographs have since been replaced through the admin.
 
 ## Closing forms
 
@@ -299,6 +344,17 @@ while being visibly broken (height was the axis that mattered), and the fixed
 draft notice overlapping the hero CTA was invisible in full-page captures,
 because fixed elements render at the capture origin rather than the viewport
 bottom. Both needed the other method to find.
+
+**A colour that changes with a mode is verified by resolving it, not by
+reading the class.** Tailwind v4 computes `text-white/75` to
+`oklab(0.999994 … / 0.75)`, which cannot be string-compared to the
+`rgba(255, 255, 255, 0.75)` a hand-written rule produces — and `PhotoCard`'s
+copy moved from the first form to the second when its colours became custom
+properties. Paint the computed value into a 1×1 canvas over black and over
+white and solve for the triple and its alpha; that is the only way the two
+notations can be compared, and it is what proved the card's copy is the same
+white it always was. Allow for 8-bit quantisation: an alpha of 0.75 reads back
+as 191/255 = 0.749.
 
 **Contrast over a photograph is measured, not calculated.** Point every photo
 slot at a deliberately high-key (pure white) image, capture the page, then
@@ -503,10 +559,11 @@ Two constraints, both enforced rather than assumed:
   and Insights fields — carry a visible note saying so, so clearing one never
   feels like clearing a sentence. Adding or removing whole list entries is
   deferred.
-- **Image upload works** (Phase 4). A photo, its alt text and its note are
-  edited together, as one unit. Uploads are validated by magic bytes (JPEG,
-  PNG, WebP, HEIC only — HEIC converts to JPEG server-side, since iPhones
-  default to it), re-encoded with metadata stripped, stored under
+- **Image upload works** (Phase 4). A photo, its alt text, its note and its
+  text colour are edited together, as one unit. Uploads are validated by
+  magic bytes (JPEG, PNG, WebP, HEIC only — HEIC converts to JPEG
+  server-side, since iPhones default to it), re-encoded with metadata
+  stripped, stored under
   `public/uploads/` with generated names, and committed in the same commit as
   the JSON pointing at them; a replaced upload is deleted in that commit too.
   The editor previews the crop inside the slot's real proportions before
@@ -566,6 +623,26 @@ Two constraints, both enforced rather than assumed:
   capital or a space still builds and still routes, which is exactly why it
   needed catching: the failure is an address nobody can type or repeat, not an
   error anyone would see.
+- **Copy over a photograph is light or dark, chosen per slot, and the scrim
+  has stepped back to a light touch.** The overlay was carrying legibility on
+  its own and charging the photograph everything for it: 0.92 total on a
+  bright image, which is a dark rectangle. Now `photo.textMode` decides the
+  copy colour — white, or the near-black ink used on cream — and one value
+  governs the whole section including the transparent nav above a hero, which
+  `Nav` reads rather than hardcoding. The scrim keeps the same
+  brightness-aware curve at a fraction of the strength (0.21–0.45 across the
+  real set, against 0.81–0.92 before), flips colour with the mode, and is now
+  solved in sRGB channel space rather than by multiplying a luminance — which
+  the old code did, overstating an overlay's effect by about an order of
+  magnitude. `PhotoCard` joined the same system instead of its own fixed
+  0.94/0.94/0.6; on a card the copy colour switches on the same selectors the
+  photograph fades on, since off hover there is no photograph. Every slot
+  defaults to `light`, and sixteen copy colours across the three photo-backed
+  patterns were resolved numerically and checked against the values the
+  previous code produced — the card's move from Tailwind classes to custom
+  properties is the one place a colour could have shifted silently, and it did
+  not. The contrast maths survives as guidance in the admin, saying plainly
+  that its number is the worst case for white copy and the best case for ink.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —
