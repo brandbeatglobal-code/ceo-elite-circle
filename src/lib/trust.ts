@@ -1,15 +1,29 @@
 import data from "../../content/trust.json";
 
 /**
- * NO SAMPLE COPY. `content/trust.json` holds ten area **names** and the
- * labelled placeholder that stands in for each one's wording — and must go on
- * holding nothing more until the wording is signed off.
+ * The Trust Framework — **signed-off policy text, not copy.**
  *
- * Each area is a commitment a prospective member could rely on, so draft text
- * reads as binding whether or not it is finished. There is deliberately no
- * `body` field on an area: the schema itself makes the rule hard to break by
- * accident, including from the admin panel.
+ * For most of this project `content/trust.json` deliberately had no field for
+ * an area's wording at all: each of the ten areas is a commitment a
+ * prospective member could rely on, and draft text reads as binding whether or
+ * not it is finished. The schema itself was the guardrail, so nothing could be
+ * drafted here by accident or from the admin panel.
+ *
+ * That guardrail has been satisfied, not removed. The ten areas were signed
+ * off by the founder and published; `body` exists now because there is
+ * approved wording to put in it.
+ *
+ * What follows is a different rule rather than a weaker one: **an area's
+ * wording changes only by the route it arrived through.** It is not tidied for
+ * rhythm, not shortened to fit a layout, and not rephrased to match the voice
+ * of the rest of the site. A member reads these as terms they are held to.
  */
+export type TrustArea = {
+  name: string;
+  /** The signed-off wording. See the rule above before touching it. */
+  body: string;
+};
+
 export type TrustContent = {
   metaTitle: string;
   hero: { eyebrow: string; title: string; intro: string };
@@ -19,8 +33,7 @@ export type TrustContent = {
     title: string;
     label: string;
     body: string;
-    placeholderNote: string;
-    items: string[];
+    items: TrustArea[];
   };
 };
 

@@ -225,13 +225,21 @@ and state no fee, no headcount and no entitlement that reads as a term.
 | `hero.*` | page.tsx |
 | `status.eyebrow` / `.title` / `.lead` / `.body` | page.tsx |
 | `areas.eyebrow` / `.title` / `.label` / `.body` | page.tsx |
-| `areas.items[]` — ten names | page.tsx |
-| `areas.placeholderNote` | page.tsx |
+| `areas.items[]` — ten × (`name`, `body`) | page.tsx; `body` is new |
 
-**No policy text is stored, and none should be added through the admin.** The
-ten areas carry a name and a labelled placeholder. Each is a commitment a
-member could rely on, so draft wording reads as binding whether or not it is
-finished. Phase 3 should treat this file as name-only until sign-off exists.
+**This file holds the site's only signed-off policy text.** For most of the
+project an area was a bare name and `areas.placeholderNote` stood in for its
+wording — there was deliberately no field to draft into, because each area is
+a commitment a member could rely on and draft wording reads as binding whether
+or not it is finished.
+
+The founder signed the ten areas off, so `body` exists and carries them, and
+`placeholderNote` is gone. The rule that replaced "do not draft these" is **do
+not edit these**: an area's wording changes only when the wording itself has
+been agreed again, never tidied for rhythm, shortened to fit or rephrased into
+the site's voice. `schema.ts` puts that on both fields in the admin. Note the
+split on the page — everything outside the accordion (hero, Status, labels) is
+ordinary descriptive copy about the framework and carries no commitment.
 
 ## `/councils` — `content/councils.json`
 
@@ -259,14 +267,27 @@ pending-card photo note, and the "template exists / stays unlinked" note.
 labels (Reading time / Author / Published by / Date of publication), the
 "pending" value word, the related-articles heading and note.
 
-`articles[]`: one entry, `template`. `slug`, `title`, `photo`, `readingTime`,
-`author`, `publisher`, `date` (all four metadata fields null on purpose), and
-`body` — the article prose, which was hardcoded in `insights/[slug]/page.tsx`:
-`openingHeading`, `openingParagraphs[]`, `listHeading`, `listIntro`,
-`listItems[]`, `closingHeading`, `closingParagraphs[]`, `note`, `pullQuote`.
+`articles[]`: every article the site can render. `slug`, `title`, `photo`,
+`readingTime`, `author`, `publisher`, `date`, and `body` — the prose, which was
+originally hardcoded in `insights/[slug]/page.tsx`.
 
-`published[]` is empty and drives the list page. The `template` article is a
-real route linked from nowhere; keep it that way.
+`body` is `{ sections[], note, pullQuote }`, where a section is
+`{ heading, paragraphs[], listItems }`. It began as fixed
+opening/list/closing slots and became an array when the first real article
+arrived with four prose sections and no bulleted list: the old shape could only
+carry the one article it had been written around. `note` and `pullQuote` are
+nullable — slots the design offers, not things every piece comes with.
+
+Two entries now. `template` keeps every metadata field null, which renders as
+"pending" and is honest for something never published. The first real article,
+`why-the-best-counsel-rarely-comes-from-a-consultant`, is credited to the
+Circle as publisher with no individual author; on a published article a null
+metadata field is omitted rather than shown as "pending".
+
+**`published[]` is a list of slugs**, not a second copy of each article — two
+copies would drift, and the admin only ever edits one field at a time. It is
+what the index links, and it is what keeps `template` unlinked: the template is
+in `articles` and out of `published`. Keep it that way.
 
 ## `/about/leadership/[slug]` — `content/leadership.json`
 
@@ -333,8 +354,11 @@ visible structural note on its field, and the ones that would change a file's
 - `pillars.items[].variants` — absent removes the Formats section, and shifts
   that page's running index. It also flips the criteria section's tone from
   `black` to `cream`, because two dark sections would otherwise stack.
-- `insights.published` — empty renders the "article pending" cards and the
-  "template stays unlinked" note; non-empty would render real cards.
+- `insights.published` — the slugs the index links. Empty renders the "article
+  pending" cards and the "template stays unlinked" note instead of real ones.
+  A slug listed here that matches no article is silently dropped rather than
+  crashing the build, but it also means the article is not linked from
+  anywhere.
 - `leadership.members[].name` / `.credentials` / `.intro` / `.quote` /
   `.timeline` / `.expertise` — each null falls back to a placeholder.
 - `insights.articles[].title` and the four metadata fields — same.

@@ -3,10 +3,11 @@
     "metaTitle": "Insights — CEO Elite Circle",
     "heroEyebrow": "Knowledge & Insights",
     "heroTitle": "Insights",
-    "heroIntro": "Writing from the Circle. No articles have been published yet — the cards below are structure, not posts.",
+    "heroIntro": "Writing from the Circle. Short essays and notes, published when there is something worth a member’s attention.",
     "listEyebrow": "Articles",
     "listTitle": "Latest writing",
     "listIntro": "Briefings, notes and short essays from members and from the people who convene them. Published sparingly, and only when there is something worth a member’s attention.",
+    "cardLinkLabel": "Read the article",
     "pendingCardLabel": "Article pending",
     "pendingCardPhotoNote": "the article's lead image.",
     "emptyNote": "The article template exists and is ready to receive a first post. It stays unlinked until one is written."
@@ -44,28 +45,95 @@
       "publisher": null,
       "date": null,
       "body": {
-        "openingHeading": "The problem with good advice",
-        "openingParagraphs": [
-          "A chief executive is rarely short of input. Boards offer direction, advisers offer options, and the market offers an opinion whether or not one was sought. What is scarce is the conversation that asks nothing in return.",
-          "The distinction matters more than it sounds. Advice arrives with a position already taken. Counsel begins by establishing what the question actually is, which is often not the question that was brought into the room."
-        ],
-        "listHeading": "What a closed room allows",
-        "listIntro": "Once a conversation is genuinely private, several things become possible that are not possible anywhere else:",
-        "listItems": [
-          "A question can be described accurately, rather than in the version prepared for the board.",
-          "Disagreement costs nothing, so the strongest objection actually gets voiced.",
-          "Nobody is performing for a promotion, an investor, or the room itself.",
-          "Being wrong out loud carries no consequence beyond the conversation."
-        ],
-        "closingHeading": "Where this leaves a chair",
-        "closingParagraphs": [
-          "None of this removes the weight of the decision. The chief executive still signs, still answers for it, and still carries the consequence alone. What changes is the quality of thinking that precedes the signature.",
-          "That is the whole of the argument for a room like this one, and it is a narrower claim than most gatherings make."
+        "sections": [
+          {
+            "heading": "The problem with good advice",
+            "paragraphs": [
+              "A chief executive is rarely short of input. Boards offer direction, advisers offer options, and the market offers an opinion whether or not one was sought. What is scarce is the conversation that asks nothing in return.",
+              "The distinction matters more than it sounds. Advice arrives with a position already taken. Counsel begins by establishing what the question actually is, which is often not the question that was brought into the room."
+            ],
+            "listItems": null
+          },
+          {
+            "heading": "What a closed room allows",
+            "paragraphs": [
+              "Once a conversation is genuinely private, several things become possible that are not possible anywhere else:"
+            ],
+            "listItems": [
+              "A question can be described accurately, rather than in the version prepared for the board.",
+              "Disagreement costs nothing, so the strongest objection actually gets voiced.",
+              "Nobody is performing for a promotion, an investor, or the room itself.",
+              "Being wrong out loud carries no consequence beyond the conversation."
+            ]
+          },
+          {
+            "heading": "Where this leaves a chair",
+            "paragraphs": [
+              "None of this removes the weight of the decision. The chief executive still signs, still answers for it, and still carries the consequence alone. What changes is the quality of thinking that precedes the signature.",
+              "That is the whole of the argument for a room like this one, and it is a narrower claim than most gatherings make."
+            ],
+            "listItems": null
+          }
         ],
         "note": "Members raise questions ahead of each forum, so the session is shaped by the room rather than presented to it.",
         "pullQuote": "The scarcest thing at this level is not information. It is a room with nothing to sell."
       }
+    },
+    {
+      "slug": "why-the-best-counsel-rarely-comes-from-a-consultant",
+      "title": "Why the best counsel rarely comes from a consultant",
+      "photo": {
+        "src": null,
+        "alt": "",
+        "note": "the article's lead image, breaking the body copy.",
+        "brightness": null,
+        "textMode": "light"
+      },
+      "readingTime": "3 minutes",
+      "author": null,
+      "publisher": "CEO Elite Circle",
+      "date": "31 July 2026",
+      "body": {
+        "sections": [
+          {
+            "heading": "Why the best counsel rarely comes from a consultant",
+            "paragraphs": [
+              "There is a particular kind of advice a chief executive receives constantly and trusts least: the kind that arrives with a proposal attached. A consultant's recommendation, however sound, carries the shape of the engagement that produced it. A board member's counsel carries the weight of the seat they hold. Even a trusted deputy's advice is coloured, fairly or not, by what they stand to gain from the direction it points.",
+              "None of this makes the advice wrong. It makes it hard to fully trust — not because the person is untrustworthy, but because the incentive is impossible to fully separate from the recommendation."
+            ],
+            "listItems": null
+          },
+          {
+            "heading": "What peer counsel offers instead",
+            "paragraphs": [
+              "A peer with no stake in the outcome offers something structurally different. They are not selling a follow-on engagement. They do not report to the person receiving the advice, and the advice does not reflect back on their own performance review. What they offer costs them nothing to give honestly, which is precisely what makes it worth more than most of what a chief executive hears in a given week.",
+              "This is not a claim that peers are wiser than consultants or boards — often they are not, on the specific technical question at hand. It is a claim about incentive, not intelligence. The value of a peer's counsel lies less in expertise than in the fact that it has nothing riding on the answer."
+            ],
+            "listItems": null
+          },
+          {
+            "heading": "Why this is harder to find than it sounds",
+            "paragraphs": [
+              "In principle, any chief executive could assemble a handful of peers and ask for candour. In practice, this rarely happens on its own. Peer relationships at this level tend to form around proximity — the same industry, the same city, the same conference circuit — which means they often carry exactly the competitive tension that candour requires the absence of. A genuine peer, in the sense that matters here, is someone with no reason to want a particular answer and no relationship to protect by giving one.",
+              "Building a room of people who meet that description, and who return to it regularly enough that the conversation deepens rather than starting over each time, takes more structure than most executives have the time to build on their own. It is, in a fairly literal sense, the reason standing peer groups exist at all — not because the individual conversations are hard to have once the room exists, but because the room itself is hard to assemble."
+            ],
+            "listItems": null
+          },
+          {
+            "heading": "What this means in practice",
+            "paragraphs": [
+              "The test worth applying to any piece of advice, consultant or peer alike, is not \"is this person smart\" but \"what happens to them if I take this advice and it goes badly.\" Where the honest answer is \"nothing\" — where the person has no engagement to protect, no report to file, no reputation staked on the direction — that is where the counsel tends to be least filtered, whatever its source.",
+              "It is not the only kind of advice a chief executive needs. But it is the kind most consistently missing, and the kind worth deliberately building a room for rather than hoping to encounter by chance."
+            ],
+            "listItems": null
+          }
+        ],
+        "note": "The test worth applying to any piece of advice, consultant or peer alike, is not 'is this person smart' but 'what happens to them if I take this advice and it goes badly.'",
+        "pullQuote": "It is not the only kind of advice a chief executive needs. But it is the kind most consistently missing, and the kind worth deliberately building a room for rather than hoping to encounter by chance."
+      }
     }
   ],
-  "published": []
+  "published": [
+    "why-the-best-counsel-rarely-comes-from-a-consultant"
+  ]
 }

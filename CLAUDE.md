@@ -74,14 +74,20 @@ Consequences that are easy to trip over:
 
 - Sample copy contains **no numerals**, deliberately. A figure reads as a
   statistic even in draft.
-- `/trust` carries **no sample copy at all** — its ten areas are commitments a
-  member could rely on. Same for membership category entitlements.
+- `/trust` carries **no sample copy, and now carries signed-off policy text
+  instead.** Its ten areas were empty for most of this project because a
+  commitment reads as binding whether or not the wording is finished; they were
+  signed off by the founder and published, so the rule became "do not edit
+  these" rather than "do not draft these". Do not tidy them for rhythm, shorten
+  them to fit, or rephrase them into the site's voice. Membership category
+  entitlements are still in the no-sample-copy state.
 - Anything stating what the Circle will or won't do with member information
   must point at the Trust Framework rather than state the policy.
 - Several things are **deliberately empty and must stay so**: the homepage
-  testimonials, the About philosophy pull-quote, Expert Advisors on
-  `/councils`, and the "article pending" cards on `/insights`.
-  `docs/brief.md` § *What is still empty, and why* lists them with reasons.
+  testimonials, the About philosophy pull-quote, and Expert Advisors on
+  `/councils`. All three need a real named person, which is what the other
+  outreach is for. `docs/brief.md` § *What is still empty, and why* lists them
+  with reasons.
 - **The three About leadership cards are the exception, and are now real.**
   Three named people with real titles and real credentials, supplied by the
   Circle. They are the one place on the site where a text field is a factual
@@ -391,15 +397,28 @@ teaser reads them from there, so a teaser and its full page cannot drift. An
 admin editing the homepage will not find category copy under `homepage.json` —
 that is correct, not an omission.
 
-`leadership.json` and `insights.json` type every text field as `string | null`
-and currently hold nulls — the templates render placeholders per empty slot, so
-adding a real person or article is a data edit, not a template rewrite.
-`insights.json` also separates `articles` (includes the unlinked template) from
-`published` (empty); the list page renders from `published`.
+`leadership.json` types every text field as `string | null` and holds nulls —
+the profile template renders a placeholder per empty slot, so adding a real
+person there is a data edit rather than a template rewrite.
 
-`trust.json` deliberately has **no field for policy text** — only the ten area
-names. The schema itself makes the no-sample-copy rule hard to break by
-accident, including from the admin panel.
+`insights.json` holds every article in `articles`, and **`published` is a list
+of slugs** naming the ones the index links. That is what makes an article
+public: the structural template is in `articles` and not in `published`, which
+is exactly why it is reachable directly and linked from nowhere. Slugs rather
+than a second copy of the article, because two copies drift and the admin only
+ever edits one of them.
+
+An article's `body` is a `sections` array — heading, paragraphs, and an
+optional bulleted list — not the fixed opening/list/closing slots it started
+as. The first real article ran to four prose sections and no list, which the
+old shape could not carry without inventing bullet points. `note` and
+`pullQuote` are nullable for the same reason: they are slots the design offers,
+not things every piece arrives with.
+
+`trust.json` **now has a `body` on each of the ten areas**, and did not until
+the wording was signed off — the absence of the field was the guardrail, and it
+was satisfied rather than removed. See § *The content-honesty rule* for what
+replaced it.
 
 ### Photographs
 
