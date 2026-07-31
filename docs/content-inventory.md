@@ -137,7 +137,7 @@ pillars and all seven experiences; nothing is duplicated.
 | `story.eyebrow` / `.title` / `.lead` / `.body` | page.tsx |
 | `story.photo` | `photos.aboutStory` |
 | `leadership.eyebrow` / `.title` / `.intro` | page.tsx |
-| `leadership.cards[].photo` | `photos.leadershipOne`…`Four` |
+| `leadership.cards[]` — 3 × (`name`, `title`, `description`, `photo`) | `photos.leadershipOne`…`Four`; the three text fields are new |
 | `sections[]` — 5 × (`title`, `lead`, `body`) | page.tsx — Purpose, Beliefs, Mission, Vision, Who We Serve |
 | `philosophy.eyebrow` / `.title` / `.support` | page.tsx |
 | `philosophy.quoteNote` | page.tsx — the placeholder's stricter note |
@@ -147,6 +147,16 @@ pillars and all seven experiences; nothing is duplicated.
 
 `icon` is a key (`rings` / `arcs` / `stack` / `orbit`) resolved to a component
 in the page. The icon set is design; the label and body are content.
+
+`leadership.cards[]` went from four photo-only slots to **three cards with
+real people in them** — name, title line, one-line description, and a photo
+slot still pending. The count is content, not layout: `ProfileGrid` sizes its
+row to however many cards it is handed, so a fourth would appear without a
+code change (and the grid would need one, since three columns are hardcoded
+for three people). The three text fields are the only place in `content/`
+where a string is a factual claim about a named person; `schema.ts` gives
+them a note in the admin saying they are changed only on that person's
+say-so.
 
 **Section order is code.** `sections[0..3]` render as Three–Six, the philosophy
 pull-quote as Seven, `sections[4]` as Eight. That split is layout, so the array

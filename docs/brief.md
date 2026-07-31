@@ -420,19 +420,25 @@ rules in `globals.css`.
 
 ### What is still empty, and why
 
-Sample copy now fills the site. Five things stay pending, all for the same
+Sample copy now fills the site. Four things stay pending, all for the same
 reason — each would require inventing a specific real person or a published
 artefact that does not exist:
 
-1. **Leadership cards** (`/about`, 4 cards) — a name, face and bio would be a
-   fictional person presented as running a real company.
-2. **The leadership profile template** (`/about/leadership/template`) — same,
-   and it is unlinked.
-3. **Testimonials** (homepage, 3 cards) — an invented quote is manufactured
+1. **The leadership profile template** (`/about/leadership/template`) — a
+   full profile for a real person needs a career timeline, areas of expertise
+   and a quote, none of which we have. It is unlinked.
+2. **Testimonials** (homepage, 3 cards) — an invented quote is manufactured
    social proof.
-4. **The Leadership Philosophy pull-quote** (`/about`) — an attributed quote
-   needs a real named person. Its supporting paragraph is filled.
-5. **Expert Advisors** (`/councils`) — named individuals.
+3. **The Leadership Philosophy pull-quote** (`/about`) — an attributed quote
+   needs real words from a real named person. Its supporting paragraph is
+   filled.
+4. **Expert Advisors** (`/councils`) — named individuals.
+
+**The About leadership cards came off this list**, which is what it was for.
+Three real people, supplied by the Circle, with real titles and credentials.
+Their headshots have not — each slot keeps the pending frame, labelled with
+whose photograph belongs in it, which is the honest state rather than a stock
+face standing in for someone who exists.
 
 Plus **Trust Framework policy text** (ten areas), which is a commitment rather
 than a description, and the **"article pending" cards** on `/insights` and in
@@ -521,14 +527,27 @@ Two constraints, both enforced rather than assumed:
   a structural template at `template`, unlinked, on the same reasoning. No
   invented statistics or claims anywhere in it — the reference article's
   "70% of adults" style line has no equivalent here.
-- **Leadership** (`/about`, section Two) is built as honest empty structure,
-  the same way Testimonials is on the homepage: four profile cards with the
-  card shape intact — portrait, name/credentials slot, one-line description —
-  and every slot a labelled placeholder. No stand-in names, no stock
-  headshots, and no "learn more" link, since there is no roster page to point
-  at. Filling a leadership portrait means naming a real person, so the card's
-  name and bio have to be written in the same pass: a real face beside
-  placeholder text reads as an unnamed real member.
+- **Leadership** (`/about`, section Two) carries three real, named people —
+  Dr Essa Al-Ahmad, Arshad Ali and Cicero Carvalho — each with a title line
+  and one line of description. **Three cards, not four**: the row sizes itself
+  to what it is given rather than holding a fixed four with a hole in it,
+  which would read as a fourth person gone missing. Equal thirds at 768 and
+  1440, stacked below.
+
+  Two things stay as they were, deliberately. The photographs are still
+  pending, so each slot renders the standard frame labelled with the person's
+  name — a stock headshot on a real person is worse than no headshot. And the
+  cards still carry no "learn more" link: the profile template is real but has
+  no content for these three, so pointing at it would promise a page that does
+  not exist yet.
+
+  These fields are the one place on the site where the text is a factual claim
+  about a person rather than copy. They are not sample copy and are not
+  rewritten for voice — which is why "25+ years" carries a numeral that the
+  no-numerals rule forbids everywhere else. That rule exists so draft prose
+  cannot be mistaken for a statistic; a real figure about a real person is the
+  case it was never aimed at. `schema.ts` gives all three fields a note in the
+  admin saying so.
 - Testimonials render as an empty carousel shell. No photo and no quote is
   shown, because pairing a stock portrait with invented words would read as
   a real member.

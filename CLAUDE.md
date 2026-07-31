@@ -78,11 +78,18 @@ Consequences that are easy to trip over:
   member could rely on. Same for membership category entitlements.
 - Anything stating what the Circle will or won't do with member information
   must point at the Trust Framework rather than state the policy.
-- Several things are **deliberately empty and must stay so**: the four
-  leadership cards on `/about`, the homepage testimonials, the About philosophy
-  pull-quote, Expert Advisors on `/councils`, and the "article pending" cards
-  on `/insights`. `docs/brief.md` § *What is still empty, and why* lists them
-  with reasons.
+- Several things are **deliberately empty and must stay so**: the homepage
+  testimonials, the About philosophy pull-quote, Expert Advisors on
+  `/councils`, and the "article pending" cards on `/insights`.
+  `docs/brief.md` § *What is still empty, and why* lists them with reasons.
+- **The three About leadership cards are the exception, and are now real.**
+  Three named people with real titles and real credentials, supplied by the
+  Circle. They are the one place on the site where a text field is a factual
+  claim about a person, so nothing in them is rewritten for voice, shortened
+  for rhythm, or filled in by inference — including the numeral in "25+
+  years", which the no-numerals rule below does not reach because it is not
+  sample copy. Their photo slots stay empty, each pending frame labelled with
+  whose headshot belongs in it.
 - `/about/leadership/template` and `/insights/template` are real routes that
   are **deliberately linked from nowhere**. Do not link them.
 

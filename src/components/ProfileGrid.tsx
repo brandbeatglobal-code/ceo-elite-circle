@@ -1,28 +1,43 @@
 import { ReactNode } from "react";
-import { PhotoFrame, Placeholder, SectionHeader } from "@/components/ui";
+import { PhotoFrame, SectionHeader } from "@/components/ui";
 import type { Photo } from "@/lib/images";
 
+export type ProfileCard = {
+  name: string;
+  /** The title or credentials line, under the name. */
+  title: string;
+  /** One short line. The card holds a line, not a paragraph. */
+  description: string;
+  photo: Photo;
+};
+
 /**
- * Profile card row: portrait, then the name/credentials slot, then a one-line
+ * Profile card row: portrait, then the name, its title line, and a one-line
  * description.
  *
- * Every slot is a labelled placeholder. Nothing here is invented — no stand-in
- * name, no stock portrait — because a placeholder name still reads as a name,
- * and a stock headshot still reads as a person. The card carries no link
- * either: there is nothing real to point at yet.
+ * These are real, named people. The photographs are not yet — each slot
+ * renders the standard pending frame labelled with whose headshot belongs
+ * there, which is the honest state rather than a stock face standing in for
+ * someone who exists. The card carries no link: the profile template is real
+ * but unlinked, and pointing at it would promise a page that has no content
+ * for these three.
+ *
+ * The row sizes itself to however many cards it is given — three columns for
+ * three people. It is deliberately not a fixed four with a hole in it, which
+ * would read as a fourth person who has gone missing.
  */
 export function ProfileGrid({
   index,
   eyebrow,
   title,
   intro,
-  photos,
+  cards,
 }: {
   index: string;
   eyebrow: string;
   title: string;
   intro?: ReactNode;
-  photos: Photo[];
+  cards: ProfileCard[];
 }) {
   return (
     <section className="bg-cream text-ink">
@@ -40,12 +55,15 @@ export function ProfileGrid({
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          {photos.map((photo, i) => (
+        {/* One column stacked, three across from `md`. Two columns would leave
+            an odd card hanging alone on a second row, and `sm` is too narrow
+            to carry three names side by side. */}
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {cards.map((card, i) => (
             <article
-              key={i}
-              className={`flex flex-col gap-6 py-10 lg:py-14 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 border-t sm:border-t-0 border-hair ${
-                i > 0 ? "sm:border-l border-hair" : ""
+              key={card.name}
+              className={`flex flex-col gap-6 py-10 lg:py-14 md:px-6 lg:px-8 first:md:pl-0 border-t md:border-t-0 border-hair ${
+                i > 0 ? "md:border-l border-hair" : ""
               }`}
               data-reveal
               style={{ transitionDelay: `${i * 70}ms` }}
@@ -54,15 +72,18 @@ export function ProfileGrid({
                   to the grid edge and so is wider, which an aspect ratio would
                   turn into a taller photo than the rest of the row. */}
               <PhotoFrame
-                photo={photo}
+                photo={card.photo}
                 greyscale
                 className="h-72 lg:h-[22rem]"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
-              {/* Name and credentials — the serif slot on a finished card. */}
-              <Placeholder lead />
-              {/* One-line description. */}
-              <Placeholder />
+
+              <div className="flex flex-col gap-2">
+                <p className="type-lead text-ink">{card.name}</p>
+                <p className="type-label text-olive">{card.title}</p>
+              </div>
+
+              <p className="type-body text-olive">{card.description}</p>
             </article>
           ))}
         </div>

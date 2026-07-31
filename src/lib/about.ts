@@ -3,9 +3,16 @@ import type { Photo } from "@/lib/images";
 import data from "../../content/about.json";
 
 /**
- * SAMPLE COPY, with two deliberate exceptions that must stay empty: the four
- * leadership cards carry a photo slot and nothing else, and the philosophy
- * pull-quote carries only its note. Filling either means naming a real person.
+ * SAMPLE COPY, with two deliberate exceptions.
+ *
+ * The **leadership cards are real** — three named people, their titles and a
+ * line each, supplied by the Circle. Nothing in them is sample copy, so
+ * nothing in them may be rewritten to suit the voice: every word is a factual
+ * claim about a real person. Their photo slots are deliberately still empty,
+ * which is the honest state until real headshots exist.
+ *
+ * The philosophy pull-quote carries only its note, and stays that way:
+ * filling it means putting words in a named person's mouth.
  *
  * `sections` is read positionally: the first four render as Three–Six, the
  * philosophy pull-quote as Seven, and the fifth as Eight. That split is layout,
@@ -33,7 +40,17 @@ export type AboutContent = {
     eyebrow: string;
     title: string;
     intro: string;
-    cards: { photo: Photo }[];
+    /**
+     * Real, named people. Every field is required: a name beside an empty
+     * title or description is the half-published person the placeholder era
+     * existed to avoid, so there is no null to fall back to.
+     */
+    cards: {
+      name: string;
+      title: string;
+      description: string;
+      photo: Photo;
+    }[];
   };
   sections: AboutSection[];
   philosophy: {
