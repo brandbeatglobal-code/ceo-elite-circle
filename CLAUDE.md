@@ -156,8 +156,9 @@ without review and a bad value breaks the production build. In order: the path
 must resolve to a leaf that already exists; the leaf must be a string or null
 (never an object, array, or photograph); the value is length- and
 control-character-checked; empty is only allowed where the rule says nullable;
-link fields must be a single-slash site path (`//host` is protocol-relative and
-would leave the site). Then the backstop — **the file's whole shape after the
+slug fields must be `^[a-z0-9-]+$`; link fields must be a single-slash site
+path (`//host` is protocol-relative and would leave the site). Then the
+backstop — **the file's whole shape after the
 edit must be identical to its shape before at every other position**, and the
 serialised bytes must re-parse to exactly what was validated. Nothing reaches
 GitHub until all of that passes.
@@ -327,10 +328,18 @@ just starts returning the 404.
 
 Adding or removing an entry changes the file's shape, which the validator
 refuses, so the admin cannot do that. **Renaming one it can**, deliberately —
-renaming a page before launch is a real thing to want, so `schema.ts` carries
-a `structural` note on `slug` rather than blocking the field. Nothing inside
-the site breaks: every internal link is built from `.slug` and follows it.
-What does not follow is anything outside the site, which is what the note says.
+renaming a page before launch is a real thing to want, so `schema.ts` gives
+`slug` its own `kind` and a `structural` note rather than blocking the field.
+Nothing inside the site breaks: every internal link is built from `.slug` and
+follows it. What does not follow is anything outside the site, which is what
+the note says.
+
+`kind: "slug"` also constrains the *shape* of the value — `^[a-z0-9-]+$`,
+refused at save time with a message naming the allowed characters. This is the
+one field where a merely ugly value is a real defect: a capital or a space
+still builds and still routes, it just produces an address that cannot be
+typed, said aloud or pasted back reliably, and that some clients percent-encode
+and others do not.
 
 One slug is load-bearing beyond its own URL. `homepage.json`'s
 `experiences.featuredSlug` selects the featured experience by

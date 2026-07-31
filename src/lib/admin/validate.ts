@@ -320,6 +320,21 @@ export function validateEdit(
     next = trimmed;
   }
 
+  if (rule.kind === "slug" && next !== null) {
+    // What a URL can carry without being rewritten by something downstream.
+    // A capital or a space would still build — it would produce an address
+    // that cannot be typed, said aloud or pasted back reliably, and one that
+    // some clients would percent-encode and others would not. Refusing the
+    // save is the cheaper failure.
+    if (!/^[a-z0-9-]+$/.test(next)) {
+      return {
+        ok: false,
+        error:
+          "A web address can only use lowercase letters, numbers and hyphens — for example strategic-advisory. Nothing has been changed.",
+      };
+    }
+  }
+
   if (rule.kind === "path" && next !== null) {
     // A single leading slash only. `//host` is protocol-relative and would
     // navigate off this site entirely, which is the one thing a link field

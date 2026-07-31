@@ -560,6 +560,12 @@ Two constraints, both enforced rather than assumed:
   is not. `homepage.json`'s `featuredSlug` got the same treatment, and says
   the harder thing — it is resolved with a non-null assertion, so a value
   matching no experience does not 404, it stops the site building.
+- **And a slug is held to what a web address can carry** — `^[a-z0-9-]+$`,
+  refused at save time. Editing the field was always meant to be allowed; what
+  was not meant to be allowed is `Strategic Advisory` becoming a live URL. A
+  capital or a space still builds and still routes, which is exactly why it
+  needed catching: the failure is an address nobody can type or repeat, not an
+  error anyone would see.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

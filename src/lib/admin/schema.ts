@@ -16,6 +16,14 @@ export type FieldKind =
   /** An internal route. Validated to start with `/`. */
   | "path"
   /**
+   * The last part of a page's web address, or a reference to one. Unlike an
+   * ordinary string this ends up in a URL, so it is held to what a URL can
+   * carry cleanly: lowercase letters, numbers and hyphens. A capital or a
+   * space would still build — it would just produce an address nobody can
+   * type or repeat correctly, which is worse than a refused save.
+   */
+  | "slug"
+  /**
    * A leaf of a photo slot. Never edited individually — the photo, its alt
    * text and its note change together through the photo editor.
    */
@@ -93,28 +101,28 @@ const RULES: [RegExp, FieldRule][] = [
     // a moved address and belongs on the field it applies to.
     /^experiences:items\.\*\.slug$/,
     {
-      kind: "text",
+      kind: "slug",
       nullable: false,
       structural:
-        "The last part of this experience's web address. Changing it moves the live page: the old address starts returning the site's \"page not found\", so any link, bookmark or search result pointing at it stops working. Links inside the site are built from this value and follow it on their own. One experience is also named on the homepage as the featured one — if this is that experience, the homepage's featured field has to be changed to match at the same time, or the site will not build.",
+        "The last part of this experience's web address. Changing it moves the live page: the old address starts returning the site's \"page not found\", so any link, bookmark or search result pointing at it stops working. Links inside the site are built from this value and follow it on their own. One experience is also named on the homepage as the featured one — if this is that experience, the homepage's featured field has to be changed to match at the same time, or the site will not build. Lowercase letters, numbers and hyphens only.",
     },
   ],
   [
     /^[a-z]+:.*\.slug$/,
     {
-      kind: "text",
+      kind: "slug",
       nullable: false,
       structural:
-        "The last part of this page's web address. Changing it moves the live page: the old address starts returning the site's \"page not found\", so any link, bookmark or search result pointing at it stops working. Links inside the site are built from this value and follow it on their own; nothing outside the site does.",
+        "The last part of this page's web address. Changing it moves the live page: the old address starts returning the site's \"page not found\", so any link, bookmark or search result pointing at it stops working. Links inside the site are built from this value and follow it on their own; nothing outside the site does. Lowercase letters, numbers and hyphens only.",
     },
   ],
   [
     /^homepage:experiences\.featuredSlug$/,
     {
-      kind: "text",
+      kind: "slug",
       nullable: false,
       structural:
-        "Which experience gets the large panel on this section, named by the last part of its web address rather than by its title. It has to match one of the experiences exactly — a value matching none of them stops the site building — so change it by copying the address of the experience you want.",
+        "Which experience gets the large panel on this section, named by the last part of its web address rather than by its title. It has to match one of the experiences exactly — a value matching none of them stops the site building — so change it by copying the address of the experience you want. Lowercase letters, numbers and hyphens only.",
     },
   ],
 
