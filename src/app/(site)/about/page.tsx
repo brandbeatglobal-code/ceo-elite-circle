@@ -76,7 +76,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Two — Leadership: honest empty structure until there are real people */}
+      {/* Two — Leadership: three real, named people. Their headshots are not
+          here yet, so each photo slot keeps its labelled pending frame. */}
       <ProfileGrid
         index={ordinal(1)}
         eyebrow={leadership.eyebrow}
@@ -84,7 +85,7 @@ export default function AboutPage() {
         intro={
           <p className="type-lead text-ink max-w-lg">{leadership.intro}</p>
         }
-        photos={leadership.cards.map((c) => c.photo)}
+        cards={leadership.cards}
       />
 
       {sections.slice(0, 4).map((s, i) => (

@@ -31,37 +31,37 @@
     "intro": "The Circle is convened by a small group who hold its governance and decide who is invited to join.",
     "cards": [
       {
+        "name": "Dr Essa Al-Ahmad",
+        "title": "Founder",
+        "description": "A physician turned leadership mentor, grounding the Circle’s guidance in resilience and sustainable performance.",
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership.",
+          "note": "Dr Essa Al-Ahmad",
           "brightness": null,
           "textMode": "light"
         }
       },
       {
+        "name": "Arshad Ali",
+        "title": "Strategic Mentor & Transformation Specialist",
+        "description": "A former global Pfizer executive, now advising CEOs on peer learning and high-performance leadership.",
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership.",
+          "note": "Arshad Ali",
           "brightness": null,
           "textMode": "light"
         }
       },
       {
+        "name": "Cicero Carvalho",
+        "title": "Senior Leadership Consultant & Master Coach",
+        "description": "Founder of LeaderArt International, drawing on 25+ years in pharmaceutical leadership and executive coaching.",
         "photo": {
           "src": null,
           "alt": "",
-          "note": "a member of Circle leadership.",
-          "brightness": null,
-          "textMode": "light"
-        }
-      },
-      {
-        "photo": {
-          "src": null,
-          "alt": "",
-          "note": "a member of Circle leadership.",
+          "note": "Cicero Carvalho",
           "brightness": null,
           "textMode": "light"
         }

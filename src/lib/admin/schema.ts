@@ -154,6 +154,19 @@ const RULES: [RegExp, FieldRule][] = [
         "The Insights index renders from this list. While it is empty the page shows labelled \"article pending\" cards instead of pretending to have posts.",
     },
   ],
+  // The three About leadership cards are real, named people — the one place
+  // on the site where a text field is a factual claim about someone rather
+  // than copy. Nothing here may be reworded to suit the voice.
+  [
+    /^about:leadership\.cards\.\*\.(name|title|description)$/,
+    {
+      kind: "text",
+      nullable: false,
+      structural:
+        "This is a real, named person. Every word here is a claim about them — a title they hold, a company they worked for, a qualification they earned — so it is changed only on their say-so, never rephrased to read better. The card holds a name, one title line and one short line of description; longer copy belongs on a profile page rather than here.",
+      multiline: true,
+    },
+  ],
   [
     /^leadership:members\.\*\.(name|credentials|role|intro)$/,
     {
@@ -304,7 +317,18 @@ const PREVIEWS: [RegExp, PhotoPreview[]][] = [
   [/^about:hero\.photo$/, [{ label: "About hero (full-bleed)", ratio: 16 / 9 }]],
   [/^about:story\.photo$/, [{ label: "Full-width band", ratio: 21 / 9 }]],
   [/^about:philosophy\.photo$/, [{ label: "Section background (wide)", ratio: 16 / 9 }]],
-  [/^about:leadership\.cards\.\*\.photo$/, [{ label: "Leadership portrait", ratio: 3 / 4 }]],
+  // Measured, not assumed. The slot is a fixed height inside a card that is a
+  // third of the row, so it is landscape at desktop (1.10) and mobile (1.19)
+  // and portrait only in the narrow band between them (0.62 at 768). Both
+  // frames are shown, because a headshot that survives one and not the other
+  // is worth seeing before it is uploaded rather than after.
+  [
+    /^about:leadership\.cards\.\*\.photo$/,
+    [
+      { label: "Leadership card (desktop and mobile)", ratio: 11 / 10 },
+      { label: "Leadership card (tablet)", ratio: 5 / 8 },
+    ],
+  ],
   [/^leadership:members\.\*\.photo$/, [{ label: "Profile portrait", ratio: 3 / 4 }]],
   [/^membership:categories\.items\.\*\.photo$/, [{ label: "Category row (short, wide)", ratio: 2 / 1 }]],
   [/^insights:articles\.\*\.photo$/, [{ label: "Article lead image", ratio: 2 / 1 }]],
