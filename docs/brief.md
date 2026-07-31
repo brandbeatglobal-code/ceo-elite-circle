@@ -550,6 +550,16 @@ Two constraints, both enforced rather than assumed:
   measurement and therefore get the heaviest scrim by default. A one-time
   maintenance route measures them in place — the images, their URLs and their
   licensing are untouched — and is deleted once it has run.
+- **A slug now says in the admin that it is a web address.** The four detail
+  routes are generated from the content arrays, so `slug` is the page's
+  address rather than a label — but no rule in `schema.ts` matched it, so it
+  fell through to the default and rendered as an ordinary field with nothing
+  distinguishing it from the name beneath it. It carries a `structural` note
+  now, the same treatment as `ctaHref`. The field is still editable on
+  purpose: renaming a page before launch is reasonable, doing it unknowingly
+  is not. `homepage.json`'s `featuredSlug` got the same treatment, and says
+  the harder thing — it is resolved with a non-null assertion, so a value
+  matching no experience does not 404, it stops the site building.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

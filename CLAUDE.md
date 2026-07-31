@@ -326,12 +326,18 @@ builds, because the route list is regenerated from the array; the old address
 just starts returning the 404.
 
 Adding or removing an entry changes the file's shape, which the validator
-refuses, so the admin cannot do that. **Renaming one it can**: `schema.ts` has
-no rule matching `slug`, so it falls to the default `text` rule and renders as
-an ordinary editable field with no note saying what it is. Giving it a
-`structural` note — the mechanism already used for `ctaHref` and
-`insights:published` — would be the consistent fix. Until then, treat any slug
-edit as a URL change and check inbound links.
+refuses, so the admin cannot do that. **Renaming one it can**, deliberately —
+renaming a page before launch is a real thing to want, so `schema.ts` carries
+a `structural` note on `slug` rather than blocking the field. Nothing inside
+the site breaks: every internal link is built from `.slug` and follows it.
+What does not follow is anything outside the site, which is what the note says.
+
+One slug is load-bearing beyond its own URL. `homepage.json`'s
+`experiences.featuredSlug` selects the featured experience by
+`experiences.find(…)!` in `(site)/page.tsx` — a non-null assertion, so a value
+matching no experience is not a 404 but a homepage that **fails to build**.
+Renaming the featured experience's slug and editing `featuredSlug` are
+therefore one edit in two places; both fields carry a note saying so.
 
 ### Icons
 

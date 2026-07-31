@@ -80,6 +80,44 @@ const RULES: [RegExp, FieldRule][] = [
     { kind: "image", nullable: true },
   ],
 
+  // ---- Web addresses. The four detail routes are generated from these
+  // arrays, so a slug is not a label — it *is* the page's address, and
+  // changing one moves a live URL. Every link inside the site is built from
+  // the value and follows it on its own; nothing outside the site does.
+  // Editing is allowed, because renaming a page before launch is a real and
+  // reasonable thing to want. Doing it unknowingly is what the note prevents.
+  [
+    // The featured experience is found by slug with a non-null assertion, so
+    // a slug this no longer matches is a homepage that cannot be built.
+    // Named ahead of the general rule because that consequence is worse than
+    // a moved address and belongs on the field it applies to.
+    /^experiences:items\.\*\.slug$/,
+    {
+      kind: "text",
+      nullable: false,
+      structural:
+        "The last part of this experience's web address. Changing it moves the live page: the old address starts returning the site's \"page not found\", so any link, bookmark or search result pointing at it stops working. Links inside the site are built from this value and follow it on their own. One experience is also named on the homepage as the featured one — if this is that experience, the homepage's featured field has to be changed to match at the same time, or the site will not build.",
+    },
+  ],
+  [
+    /^[a-z]+:.*\.slug$/,
+    {
+      kind: "text",
+      nullable: false,
+      structural:
+        "The last part of this page's web address. Changing it moves the live page: the old address starts returning the site's \"page not found\", so any link, bookmark or search result pointing at it stops working. Links inside the site are built from this value and follow it on their own; nothing outside the site does.",
+    },
+  ],
+  [
+    /^homepage:experiences\.featuredSlug$/,
+    {
+      kind: "text",
+      nullable: false,
+      structural:
+        "Which experience gets the large panel on this section, named by the last part of its web address rather than by its title. It has to match one of the experiences exactly — a value matching none of them stops the site building — so change it by copying the address of the experience you want.",
+    },
+  ],
+
   // ---- Structural: absence changes what renders, not just what it says.
   [
     /^forms:[a-z]+\.ctaHref$/,
