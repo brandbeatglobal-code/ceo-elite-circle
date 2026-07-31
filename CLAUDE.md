@@ -173,18 +173,21 @@ The regression test for all of this is the two-save sequence described in
 `docs/brief.md` § *Verification*. A single-edit test passes against the broken
 code.
 
-#### One-time maintenance
+#### One-time maintenance, and why there is none now
 
-`admin/(panel)/maintenance/brightness` is a job, not a feature: it fills in
-`photo.brightness` for the slots that were filled by hand at design stage, by
-fetching each image from the URL the content already points at and running the
-same `measureBrightness` the upload path uses. It writes through `editBase` and
-`validatePhotoEdit` like any other save, one commit per file.
+There was briefly a route at `admin/(panel)/maintenance/brightness` that filled
+in `photo.brightness` for the slots filled by hand at design stage. It ran once
+(`093f255`, `83b4764`, `cf2c899` — results recorded in `docs/brief.md`) and was
+deleted, which was the plan from the moment it was written.
 
-It exists because the alternative — re-uploading each image through the admin
-to get it measured — would replace curated licensed photography with
-duplicates of itself. It is unlinked from the admin's navigation, and **should
-be deleted once it has run**.
+Worth keeping the shape of it in mind if a similar job comes up: it wrote
+through `editBase` and `validatePhotoEdit` exactly like any other save, rather
+than editing `content/` directly, so a one-off script got the same shape
+backstop and the same compare-and-swap as the admin itself. A maintenance job
+is the *worst* place to bypass those, because nobody is watching it field by
+field. And it was a page rather than a script because the work needed
+production's network and production's token; running it anywhere else could not
+have reached the images.
 
 Deferred: adding or removing whole array entries, and creating a key that is
 currently absent. Both change a file's shape, which is exactly what the

@@ -221,6 +221,47 @@ empty band there to leave light.
 
 Verified by measurement rather than by reading the CSS — see *Verification*.
 
+#### What the design-stage photographs actually measure
+
+Every slot filled by hand at design stage was measured in place, through the
+admin, on 30 July 2026 — commits `093f255`, `83b4764`, `cf2c899`. Each one was
+`null` beforehand, so this table is the whole record; the images, their URLs
+and their licensing were not touched.
+
+| Slot | Brightness | Scrim it now gets |
+|---|---|---|
+| Strategic Advisory | 0.708 | 0.399 / 0.810 |
+| Elite Network | 0.982 | 0.413 / 0.860 |
+| Executive Forums | 1.0 | 0.414 / 0.862 |
+| Knowledge & Insights | 1.0 | 0.414 / 0.862 |
+| Executive Councils | 0.551 | 0.384 / 0.761 |
+| CEO Leadership Summit | 0.834 | 0.406 / 0.836 |
+| Chairman's Majlis | 0.999 | 0.414 / 0.862 |
+| Executive Leadership Retreat | 1.0 | 0.414 / 0.862 |
+| Future Leadership Forum | 0.971 | 0.413 / 0.858 |
+| Elite Excellence Awards | 0.48 | 0.374 / 0.730 |
+| International CEO Delegation | 0.611 | 0.390 / 0.783 |
+| CEO Private Dinners | 0.905 | 0.410 / 0.848 |
+| Executive Circle | 1.0 | 0.414 / 0.862 |
+| Elite Circle | 0.998 | 0.414 / 0.862 |
+| Chairman's Circle | 0.803 | 0.405 / 0.831 |
+
+**Eleven of the fifteen measure 0.8 or brighter, and three are 1.0.** This
+stock photography skews light, which is precisely the case the ceiling exists
+for — most of these were already getting close to the treatment they needed,
+and the three at 1.0 resolve to `0.4136 / 0.8619`, byte-identical to the
+unmeasured default. Nothing about them changed; the measurement only made that
+provable rather than incidental.
+
+The two genuinely mid-toned images — Executive Councils at 0.551 and Elite
+Excellence Awards at 0.48 — are the ones that gain, and even they are nowhere
+near the homepage's night skyline at 0.369. Worth knowing when judging the
+rule: it looks generous on this set because this set is bright. It earns its
+keep on the dark ones.
+
+The route that produced this has been deleted. Measuring a *new* image is not
+its job — uploads are measured on the way in.
+
 ## Closing forms
 
 Every page ends with `RequestSection`, which takes a `variant` — one component,
