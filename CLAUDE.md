@@ -610,11 +610,54 @@ Two behaviours worth knowing before editing it. A refusal hands the visitor's
 answers back and remounts the fields carrying them (`attempt` as a `key`) —
 React clears an uncontrolled form once its action completes, which is right
 after a send and wrong after a refusal, and without this the form empties the
-field it has just asked someone to correct. And selects only exist where real
-content defines the options (`membership.json`, `trust.json`, `councils.json`);
-every other `<select>` in the design had exactly one `<option>` carrying the
-field's own label, which is an unusable control implying a taxonomy that does
-not exist, so those render as text fields.
+field it has just asked someone to correct. And a dropdown only exists where a
+real list of answers does; every other `<select>` in the design carried exactly
+one `<option>` holding the field's own label, which is an unusable control
+implying a taxonomy that does not exist, so those render as text fields. The
+lists themselves come from two places, and which one is a decision:
+`formSpec.ts` reads them from content where the site already publishes them
+(membership categories, framework areas, councils) and holds them literally
+where they are a fixed taxonomy nothing displays (region, referral type, and
+so on).
+
+#### The dropdowns are not `<select>` once JavaScript has run
+
+`FormSelect.tsx`. A `<select>` styles correctly while closed and then renders
+its open state in the browser's own chrome — white panel, system font, blue
+highlight — which no CSS reaches. The one moment the control is in use is the
+one moment it does not belong to the page.
+
+`appearance: base-select` with `::picker(select)` is the right fix and is not
+usable yet: Chrome and Edge shipped it in 135, Safari has it in the 27 beta
+rather than a public release, Firefox is behind a flag, and it is explicitly
+not Baseline. Today it would leave every Firefox and current-Safari visitor
+looking at the native panel, which is the bug. **When Safari 27 ships and
+Firefox follows, `FormSelect.tsx` collapses into about fifteen lines of CSS** —
+that is the intended end state, not a permanent custom widget.
+
+Until then it is the APG select-only combobox, and three things about it are
+load-bearing:
+
+- **Progressive enhancement, so nothing a native select gives is lost.** The
+  server renders a real `<select>`, and it stays one until the component
+  mounts. With JavaScript off, or before hydration, the field *is* the native
+  control — operable, and submitting under the same name. Anything chosen in
+  that window is carried across on the swap.
+- **The value travels in a hidden input** under the field's own name, so
+  `formSpec`, the server action's validation and the email body see exactly
+  what they saw from a `<select>`. Nothing downstream knows the difference —
+  which is also why tampering with it is still caught: the injected-value test
+  now rewrites that input and is refused the same way.
+- **Focus never leaves the trigger**; `aria-activedescendant` moves through the
+  options. Arrow keys, Home/End, Enter, Escape, Tab-commits and letter
+  typeahead all behave as the native control does, including that rapid
+  letters build one search string rather than jumping per key.
+
+The panel opens upward when there is not room below, measuring the fixed nav
+and the fixed draft notice rather than assuming the viewport is free — a
+dropdown low on the page would otherwise put its last options under a bar.
+Sage is the accent on the highlighted row as a left rule, never a background
+fill, per the palette rule in `docs/brief.md`.
 
 ### Spacing
 

@@ -192,6 +192,108 @@ h1, h2, h3, h4 {
   cursor: not-allowed;
 }
 
+/* The form dropdowns — see `FormSelect.tsx` for why they are not `<select>`
+   once JavaScript has run. The closed control is a `.field` like any other;
+   everything below is the open state, which a native select renders itself in
+   the browser's own white-and-blue chrome.
+
+   Sage is a rule, a mark and a hover, never a background fill (the palette in
+   docs/brief.md says so), so the highlighted row is a white wash with a sage
+   edge rather than a sage block — which also keeps every option's text at full
+   white instead of on a mid-tone ground. */
+.select-wrap {
+  position: relative;
+}
+
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.select-trigger.is-empty {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.select-trigger[aria-expanded="true"] {
+  border-bottom-color: var(--color-sage);
+}
+
+.select-chevron {
+  flex: none;
+  opacity: 0.55;
+  transition: transform 180ms ease-out;
+}
+
+.select-trigger[aria-expanded="true"] .select-chevron {
+  transform: rotate(180deg);
+}
+
+.select-panel {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Opaque: the section behind is a gradient, and a translucent panel would
+     put two backgrounds behind the same word. */
+  background: #14150f;
+  border: 1px solid var(--color-hair-dark);
+  border-top-color: var(--color-sage);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* Opened upwards, because there was not room below it. The sage edge follows
+   the field, so it stays on the side the panel is attached from. */
+.select-panel.is-up {
+  top: auto;
+  bottom: calc(100% + 1px);
+  border-top-color: var(--color-hair-dark);
+  border-bottom-color: var(--color-sage);
+  box-shadow: 0 -18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.select-option {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--color-hair-dark);
+  border-left: 2px solid transparent;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.select-option:last-child {
+  border-bottom: 0;
+}
+
+/* The unset row, carrying the field's own name — the way back to no answer. */
+.select-option.is-empty {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.select-option.is-active {
+  background: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--color-sage);
+}
+
+.select-mark {
+  flex: none;
+  width: 0.5rem;
+  color: var(--color-sage);
+}
+
 /* Admin editing fields. Boxed rather than underlined like the site's own
    forms — these are working controls, not part of the Spectra layout, and an
    editor needs to see the edge of the box they are typing in. A structural

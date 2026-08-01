@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { usePathname } from "next/navigation";
 import { submitForm, type SubmitState } from "@/app/(site)/submit";
+import { FormSelect } from "@/components/FormSelect";
 import type { FormColumnSpec, FieldSpec } from "@/lib/formSpec";
 
 const initial: SubmitState = { status: "idle" };
@@ -186,21 +187,11 @@ function Field({
 
   if (field.kind === "select") {
     return (
-      <select
-        name={field.label}
-        className="field"
-        aria-label={label}
-        required={field.required}
+      <FormSelect
+        field={field}
+        value={field.options?.includes(value) ? value : ""}
         disabled={disabled}
-        defaultValue={field.options?.includes(value) ? value : ""}
-      >
-        <option value="">{field.label}</option>
-        {field.options?.map((o) => (
-          <option key={o} value={o}>
-            {o}
-          </option>
-        ))}
-      </select>
+      />
     );
   }
 

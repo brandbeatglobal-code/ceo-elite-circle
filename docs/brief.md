@@ -377,10 +377,24 @@ Rules that came out of building it:
   fields remount holding them. Without it the form empties the field it has
   just asked someone to correct.
 - **A select needs a real list behind it.** Options come from the content that
-  already defines them — membership categories, framework areas, councils.
+  already defines them — membership categories, framework areas, councils — or,
+  for a fixed taxonomy nothing on the site displays, from `formSpec.ts` itself.
   Every other `<select>` in the design had one `<option>` carrying the field's
   own label: an unusable control implying a taxonomy that does not exist. Those
   are text inputs now, so the visitor answers in their own words.
+- **A dropdown has to belong to the page when it is open, not only when it is
+  closed.** A native `<select>` hands its open state to the browser — white
+  panel, system font, blue highlight — so the one moment the control was in use
+  was the one moment it broke the design. The CSS answer,
+  `appearance: base-select` with `::picker(select)`, is the right fix and is not
+  usable yet: Chrome and Edge from 135, Safari only in the 27 beta, Firefox
+  behind a flag, and not Baseline — it would leave Firefox and current-Safari
+  visitors looking at exactly the bug. So `FormSelect.tsx` is the APG
+  select-only combobox, built as **progressive enhancement over a real
+  `<select>`**: with JavaScript off, or before hydration, the field is still the
+  native control, and the value always travels under the field's own name.
+  Revisit when Safari 27 ships and Firefox follows — the component becomes
+  about fifteen lines of CSS.
 - **`ctaHref` is gone.** It existed to distinguish a CTA that linked somewhere
   real from one that had to stay a dead button. Every button now submits its
   own form, which is what its label always said.
