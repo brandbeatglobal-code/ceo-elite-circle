@@ -17,8 +17,8 @@ headless browser — see *Verifying changes* below.
 
 ### Environment
 
-Five variables, none of which has a fallback that guesses. The public site
-needs none of them; they are all the admin's.
+Seven variables, none of which has a fallback that guesses. Five are the
+admin's; two are the forms'.
 
 | Variable | Default | Unset |
 | --- | --- | --- |
@@ -27,23 +27,31 @@ needs none of them; they are all the admin's.
 | `GITHUB_REPO` | `brandbeatglobal-code/ceo-elite-circle` | — |
 | `GITHUB_BRANCH` | `main` | — |
 | `GITHUB_API_BASE` | `https://api.github.com` | — |
+| `RESEND_API_KEY` | none | every form refuses to send, with a message saying so — never a false confirmation |
+| `RESEND_API_BASE` | `https://api.resend.com` | — |
 
-The two secrets are set only in Vercel's dashboard, never in the repo, and a
-redeploy is needed to pick either up. The token is a fine-grained PAT scoped to
-this repository with Contents: read and write and nothing else.
+The three secrets are set only in Vercel's dashboard, never in the repo, and a
+redeploy is needed to pick any of them up. The GitHub token is a fine-grained
+PAT scoped to this repository with Contents: read and write and nothing else.
+`RESEND_API_KEY` is read only inside `src/lib/mail.ts`, which is `server-only`,
+so it cannot reach a client bundle even by accident.
 
 Locally, `ADMIN_PASSWORD` alone gets you into the panel and is enough for
 anything read-only. To exercise a *save* without touching the real repository,
 point `GITHUB_API_BASE` at a stand-in API and set any non-empty `GITHUB_TOKEN`
 — that is how the commit path was checked. `GITHUB_REPO`/`GITHUB_BRANCH` exist
-for the same reason and should not be set in production.
+for the same reason and should not be set in production. `RESEND_API_BASE`
+plays exactly the same role for the forms: point it at a stand-in and set any
+non-empty `RESEND_API_KEY`, and every send is recorded rather than delivered.
 
 ## What this is
 
 A marketing site for CEO Elite Circle, a private membership organisation.
-Next.js 16 App Router, React 19, Tailwind v4, TypeScript. Every route is static
-(`generateStaticParams` for the dynamic ones); there is no database, no API
-route, and no form submission — every form on the site is deliberately disabled.
+Next.js 16 App Router, React 19, Tailwind v4, TypeScript. Every public route is
+static (`generateStaticParams` for the dynamic ones) and there is no database
+and no API route. Forms are the one exception and are no longer inert: all nine
+post to a single server action which sends the submission as email through
+Resend — see § *Closing forms*. Nothing is stored; the inbox is the record.
 
 Three documents, and it matters which one you reach for:
 
@@ -251,8 +259,7 @@ have reached the images.
 
 Deferred: adding or removing whole array entries, and creating a key that is
 currently absent. Both change a file's shape, which is exactly what the
-validator refuses. Six form variants have no `ctaHref` key at all, so the admin
-cannot make those buttons live — which is the safe direction.
+validator refuses.
 
 `content/*.json` is stored in exactly the format `JSON.stringify(data, null, 2)`
 produces, plus a trailing newline. Keep it that way: a save rewrites the whole
@@ -568,12 +575,46 @@ implying a capability that doesn't exist (upload, scheduling, payment);
 pre-filled context rendered inert rather than as an editable field; only the
 two application variants may call themselves an application.
 
-**A variant's CTA renders as a link only when `ctaHref` is set**, and it is set
-only where the destination does what the label promises. Everything else
-renders a disabled button, like the fields. This matters more than it looks: a
-disabled field is visibly unfinished, but a working button that navigates
-somewhere other than what it offered gives no such signal. Today only the
-membership and application variants have a real destination (`/contact`).
+**They send.** The eight variants plus `/contact`'s own form are nine kinds
+posting to one server action, `src/app/(site)/submit.ts`, which emails the
+submission through Resend. `ctaHref` is gone: it existed because the CTA was
+either a link somewhere else or a dead button, and now every variant's button
+submits its own form, which is the thing it always said it would do.
+
+Four files, and the split is the point:
+
+- `src/lib/mail.ts` — the Resend call and the two named constants,
+  `FORM_RECIPIENT` and `FORM_SENDER`. `import "server-only"` at the top, so a
+  client import is a build error rather than a leaked key. Everything lands at
+  one address because Resend has no verified sending domain for this project
+  yet; splitting it per form later is a change to that constant and nothing
+  else, which is why the subject line carries the form's identity.
+- `src/lib/formSpec.ts` — **the one place saying how a named field behaves**:
+  its input type, whether it is required, and the options if it is a select.
+  The renderer and the server-side validator both read it, so a field can never
+  be offered and then rejected as unknown, or accepted having never been shown.
+  Same discipline as `admin/schema.ts`. The subject-line map lives here too.
+- `src/app/(site)/submit.ts` — the action. Nothing from the browser is trusted:
+  the field list comes from `formSpec`, not from the submitted form, so a value
+  under a name this form does not have is dropped rather than forwarded — the
+  inbox cannot be used as a relay for arbitrary text. Length cap, control-
+  character refusal, required fields, a deliberately loose email check, and a
+  select may only carry an option it was actually offered. An off-screen
+  honeypot answers as though it sent, so a bot learns nothing.
+- `src/components/RequestForm.tsx` — the only client component in the path. It
+  renders the fields and the three honest states: sending, sent, and failed.
+  **A failure never reads as a success**, and the unconfigured case says the
+  site cannot send rather than pretending.
+
+Two behaviours worth knowing before editing it. A refusal hands the visitor's
+answers back and remounts the fields carrying them (`attempt` as a `key`) —
+React clears an uncontrolled form once its action completes, which is right
+after a send and wrong after a refusal, and without this the form empties the
+field it has just asked someone to correct. And selects only exist where real
+content defines the options (`membership.json`, `trust.json`, `councils.json`);
+every other `<select>` in the design had exactly one `<option>` carrying the
+field's own label, which is an unusable control implying a taxonomy that does
+not exist, so those render as text fields.
 
 ### Spacing
 

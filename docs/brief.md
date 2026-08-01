@@ -333,6 +333,58 @@ scheduling or payment); pre-filled context is rendered inert rather than as an
 editable field; only the two application variants may call themselves an
 application.
 
+### They send
+
+All nine — the eight variants and `/contact`'s own form — post to one server
+action, `src/app/(site)/submit.ts`, which emails the submission through Resend.
+Nothing is stored anywhere; the inbox is the record. `RESEND_API_KEY` is set in
+Vercel's dashboard only, and is read solely inside `src/lib/mail.ts`, which is
+`server-only` — a client import of it is a build error rather than a leaked
+key.
+
+Everything currently lands at one address, `FORM_RECIPIENT` in `mail.ts`,
+because Resend has no verified sending domain for this project yet. That is why
+the subject line carries the form's identity:
+
+| Form | Subject |
+|---|---|
+| `membership` | `Membership Request — [Name]` |
+| `application` | `Membership Application — [Name]` |
+| `pillar` | `Pillar Enquiry: [Pillar] — [Name]` |
+| `experience` | `Experience Enquiry: [Experience] — [Name]` |
+| `governance` | `Governance Question — [Name]` |
+| `council` | `Council Interest — [Name]` |
+| `briefings` | `Briefings Subscription — [Email]` |
+| `contact` | `Contact Form — [Name]` |
+| `enquiry` | `Leadership Enquiry — [Name]` |
+
+The last is not in the owner's list — the leadership profile pages that carry
+it are built but deliberately linked from nowhere, so no visitor can reach it
+today. It is named to the same pattern rather than left to fall through.
+
+The body is every submitted field, labelled, then the form's kind, the
+pre-filled context where there is one, and the page it was sent from.
+`reply_to` is the sender's own address, so a reply goes straight back.
+
+Rules that came out of building it:
+
+- **A failure never reads as a success.** Sending, sent and failed are three
+  distinct states; with no key set the message says the site cannot send rather
+  than pretending. Nothing is claimed unless the server said so.
+- **A refusal gives the answers back.** React clears an uncontrolled form once
+  its action completes — right after a send, wrong after a refusal. The error
+  state carries the values and an `attempt` counter used as a `key`, so the
+  fields remount holding them. Without it the form empties the field it has
+  just asked someone to correct.
+- **A select needs a real list behind it.** Options come from the content that
+  already defines them — membership categories, framework areas, councils.
+  Every other `<select>` in the design had one `<option>` carrying the field's
+  own label: an unusable control implying a taxonomy that does not exist. Those
+  are text inputs now, so the visitor answers in their own words.
+- **`ctaHref` is gone.** It existed to distinguish a CTA that linked somewhere
+  real from one that had to stay a dead button. Every button now submits its
+  own form, which is what its label always said.
+
 ## Verification
 
 Measurement and screenshots catch different failures, so do both on any visual
@@ -499,10 +551,10 @@ Two constraints, both enforced rather than assumed:
 ## Current status
 - Every page above exists as a real route with working navigation.
 - Every page except `/contact` closes with the shared `RequestSection` —
-  the two-column request form, disabled, taking the next number in that
-  page's own running index. `/contact` is excluded because its own form is
-  the real, wired-up version rather than a teaser of itself. Wiring the
-  fields up is a change in one component, not seven pages.
+  the two-column request form, taking the next number in that page's own
+  running index. `/contact` is excluded because it carries its own form
+  rather than a teaser of itself. All of them now send; see § *Closing
+  forms* → *They send*.
 - The homepage is built on the confirmed system above: photo hero, then
   eight indexed sections (Our Philosophy, Structure, Timing, Membership,
   Governance, Experiences, Testimonials, Begin), then the footer.
@@ -588,10 +640,9 @@ Two constraints, both enforced rather than assumed:
 - **Text editing works** (Phase 3). A field is edited and saved one at a time;
   the save is validated server-side, committed to `main` through the GitHub
   API, and published by the existing deploy. Fields whose absence changes what
-  renders — a form's `ctaHref`, a pillar's `variants`, the nullable leadership
-  and Insights fields — carry a visible note saying so, so clearing one never
-  feels like clearing a sentence. Adding or removing whole list entries is
-  deferred.
+  renders — a pillar's `variants`, the nullable leadership and Insights fields
+  — carry a visible note saying so, so clearing one never feels like clearing a
+  sentence. Adding or removing whole list entries is deferred.
 - **Image upload works** (Phase 4). A photo, its alt text, its note and its
   text colour are edited together, as one unit. Uploads are validated by
   magic bytes (JPEG, PNG, WebP, HEIC only — HEIC converts to JPEG
@@ -645,7 +696,7 @@ Two constraints, both enforced rather than assumed:
   address rather than a label — but no rule in `schema.ts` matched it, so it
   fell through to the default and rendered as an ordinary field with nothing
   distinguishing it from the name beneath it. It carries a `structural` note
-  now, the same treatment as `ctaHref`. The field is still editable on
+  now. The field is still editable on
   purpose: renaming a page before launch is reasonable, doing it unknowingly
   is not. `homepage.json`'s `featuredSlug` got the same treatment, and says
   the harder thing — it is resolved with a non-null assertion, so a value
@@ -682,10 +733,10 @@ Two constraints, both enforced rather than assumed:
   longer says the framework is being finalised, the Status section no longer
   explains why the page is empty, the "Awaiting sign-off" label reads "In
   force", and the governance form no longer opens by saying the framework is
-  unpublished. Its button stays disabled, because form handling is still not
-  wired up anywhere on the site — that is a separate change. One statement
-  outside `/trust` was false too and is fixed: `/membership`'s FAQ told
-  visitors the framework "is being finalised".
+  unpublished. Its button stayed disabled at the time, because form handling
+  was not wired up anywhere on the site; it was, in the change below. One
+  statement outside `/trust` was false too and is fixed: `/membership`'s FAQ
+  told visitors the framework "is being finalised".
 - **Insights has a first real article**, "Why the best counsel rarely comes
   from a consultant". `published` changed from a second copy of each article to
   a list of slugs, so an article exists once and the list says which are live;
@@ -714,6 +765,22 @@ Two constraints, both enforced rather than assumed:
   properties is the one place a colour could have shifted silently, and it did
   not. The contrast maths survives as guidance in the admin, saying plainly
   that its number is the worst case for white copy and the best case for ink.
+- **The forms send.** All nine — the eight closing variants and `/contact`'s
+  own — post to one server action which emails the submission through Resend,
+  to a single named recipient, with a per-form subject line. Nothing is stored;
+  the inbox is the record. The key is read only inside a `server-only` module,
+  and no secret, sender or recipient string reaches any asset the browser
+  downloads. Details and the rules that came out of it are in § *Closing
+  forms* → *They send*. Three things were decided rather than inherited:
+  a `<select>` with no options behind it became a text input, since a dropdown
+  implying a taxonomy that does not exist is the same failure as inventing
+  copy; `ctaHref` was deleted, because a button that submits its own form has
+  no destination to get wrong; and a refused submission hands the answers back
+  rather than clearing the form, which React does by default after a form
+  action and which would otherwise empty the field it has just asked someone to
+  fix. **`RESEND_API_KEY` must be set in Vercel before any of this can send.**
+  Until it is, every form refuses with a message saying the site cannot send —
+  it never claims a submission went through.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

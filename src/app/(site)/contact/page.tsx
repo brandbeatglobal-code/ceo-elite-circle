@@ -1,7 +1,9 @@
 import { NumberedSteps } from "@/components/NumberedSteps";
+import { RequestForm } from "@/components/RequestForm";
 import { PageHero } from "@/components/PageHero";
 import { SectionHeader } from "@/components/ui";
 import { contact } from "@/lib/contact";
+import { formColumns } from "@/lib/formSpec";
 import { ordinal } from "@/lib/ordinal";
 
 export const metadata = { title: contact.metaTitle };
@@ -20,7 +22,8 @@ export default function ContactPage() {
         intro={hero.intro}
       />
 
-      {/* The application form — plain underlined fields, no boxes */}
+      {/* The application form — plain underlined fields, no boxes. Real:
+          it posts to the `submitForm` server action like every other form. */}
       <section className="bg-ramp-low text-white">
         <div className="wrap">
           <SectionHeader
@@ -29,59 +32,16 @@ export default function ContactPage() {
             tone="ramp-low"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-28">
-            <div className="hidden lg:block" />
-
-            <div className="lg:pr-8" data-reveal>
-              <p className="type-link text-white mb-7">{form.contactLegend}</p>
-              <div className="flex flex-col gap-6">
-                {form.contactFields.map((f) => (
-                  <input
-                    key={f}
-                    className="field"
-                    placeholder={f}
-                    aria-label={f}
-                    disabled
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div
-              className="lg:border-l border-hair-dark lg:pl-8 mt-12 lg:mt-0"
-              data-reveal
-              style={{ transitionDelay: "90ms" }}
-            >
-              <p className="type-link text-white mb-7">{form.detailsLegend}</p>
-              <div className="flex flex-col gap-6">
-                {form.detailsFields.map((f) => (
-                  <select key={f} className="field" aria-label={f} disabled>
-                    <option>{f}</option>
-                  </select>
-                ))}
-              </div>
-            </div>
-
-            <div className="hidden lg:block" />
-          </div>
-
-          <div className="pb-20 flex flex-col items-center gap-8">
-            <label className="type-label text-white/70 flex items-center gap-3">
-              <input type="checkbox" disabled className="accent-sage" />
-              {form.consentLabel}
-            </label>
-            <button
-              type="button"
-              disabled
-              className="pill type-link bg-white text-ink w-full max-w-2xl px-8 py-4 opacity-55 cursor-not-allowed inline-flex items-center justify-center gap-2"
-            >
-              <span aria-hidden="true">•</span>
-              {form.cta}
-            </button>
+          <RequestForm
+            kind="contact"
+            columns={formColumns("contact")}
+            cta={form.cta}
+            consentLabel={form.consentLabel}
+          >
             <p className="type-label text-white/55 italic text-center max-w-md">
               {form.note}
             </p>
-          </div>
+          </RequestForm>
         </div>
       </section>
 

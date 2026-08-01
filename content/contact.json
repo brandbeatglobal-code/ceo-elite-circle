@@ -23,7 +23,7 @@
     ],
     "consentLabel": "I have read and agree to the Privacy policy",
     "cta": "Request Membership Consideration",
-    "note": "Form disabled in this scaffold — it will be wired up once the fields and submission handling are confirmed."
+    "note": "Your details go straight to the Circle. Sending this begins consideration; it does not confirm membership, and someone will be in touch about what follows."
   },
   "selection": {
     "eyebrow": "Selection process",
