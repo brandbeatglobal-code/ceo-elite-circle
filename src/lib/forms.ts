@@ -3,11 +3,15 @@ import data from "../../content/forms.json";
 /**
  * The closing-form variants — see `RequestSection`.
  *
- * `ctaHref` is set only where the destination does what the label promises.
- * Without it the button renders disabled, the same way the fields do. That is
- * the one field here worth guarding: a disabled control is visibly unfinished,
- * whereas a working button that navigates somewhere other than what it offered
- * gives no such signal.
+ * `ctaHref` used to live here, and is gone. It made a variant's button a link
+ * to `/contact`, and existed only because nothing on this section could send:
+ * two variants pointed at the one page with a real form, and the rest rendered
+ * a disabled button. Every variant sends now, so the button is a submit and
+ * there is nowhere else for it to point.
+ *
+ * The field lists are still just labels. How each one behaves — required or
+ * not, text or a real dropdown — is `src/lib/formSpec.ts`, which the renderer
+ * and the server-side validator both read.
  */
 export type RequestVariant =
   | "membership"
@@ -33,7 +37,6 @@ export type FormConfig = {
   columns: FormColumn[];
   note: string;
   cta: string;
-  ctaHref?: string;
 };
 
 export const forms: Record<RequestVariant, FormConfig> = data;

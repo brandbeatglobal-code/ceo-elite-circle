@@ -1,5 +1,7 @@
-import { PillButton, SectionHeader } from "@/components/ui";
+import { RequestForm } from "@/components/RequestForm";
+import { SectionHeader } from "@/components/ui";
 import { forms, type RequestVariant } from "@/lib/forms";
+import { formColumns } from "@/lib/formSpec";
 
 /**
  * The closing form. One component, one variant per context — a governance
@@ -13,11 +15,11 @@ import { forms, type RequestVariant } from "@/lib/forms";
  *   editable field nobody can correct.
  * - Every variant carries its own honest note. Only the two application
  *   variants may describe themselves as an application.
- * - `ctaHref` is set only where the button genuinely lands somewhere that does
- *   what the label promises. Without it the button renders disabled, the same
- *   way the fields do — a working button that navigates somewhere else is the
- *   one part of this section that could mislead, because nothing about it
- *   looks unfinished.
+ *
+ * The fields are real now: `RequestForm` posts to the `submitForm` server
+ * action, which mails the submission. `ctaHref` is gone — it existed to send
+ * the two application variants to `/contact` while nothing here could send,
+ * and a form that sends does not need somewhere else to point.
  */
 export type { RequestVariant };
 
@@ -32,7 +34,6 @@ export function RequestSection({
   context?: { label: string; value: string };
 }) {
   const c = forms[variant];
-  const single = c.columns.length === 1;
 
   return (
     <section className="bg-ramp-low text-white">
@@ -50,85 +51,16 @@ export function RequestSection({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 py-12 lg:py-28">
-          <div className="hidden lg:block" />
-
-          <div className={`lg:pr-8 ${single ? "lg:col-span-2" : ""}`}>
-            {context && (
-              // Inert on purpose: the visitor can see the context the form
-              // carries, and cannot mistype it.
-              <div className="border border-hair-dark px-4 py-3 mb-8 flex flex-col gap-1">
-                <span className="type-label text-white/55">{context.label}</span>
-                <span className="type-body text-white">{context.value}</span>
-              </div>
-            )}
-            <p className="type-link text-white mb-7">{c.columns[0].legend}</p>
-            <div className="flex flex-col gap-6">
-              {c.columns[0].inputs?.map((f) => (
-                <input
-                  key={f}
-                  className="field"
-                  placeholder={f}
-                  aria-label={f}
-                  disabled
-                />
-              ))}
-              {c.columns[0].selects?.map((f) => (
-                <select key={f} className="field" aria-label={f} disabled>
-                  <option>{f}</option>
-                </select>
-              ))}
-            </div>
-          </div>
-
-          {c.columns[1] && (
-            <div className="lg:border-l border-hair-dark lg:pl-8 mt-12 lg:mt-0">
-              <p className="type-link text-white mb-7">{c.columns[1].legend}</p>
-              <div className="flex flex-col gap-6">
-                {c.columns[1].inputs?.map((f) => (
-                  <input
-                    key={f}
-                    className="field"
-                    placeholder={f}
-                    aria-label={f}
-                    disabled
-                  />
-                ))}
-                {c.columns[1].selects?.map((f) => (
-                  <select key={f} className="field" aria-label={f} disabled>
-                    <option>{f}</option>
-                  </select>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="hidden lg:block" />
-        </div>
-
-        <div className="pb-20 flex flex-col items-center gap-8">
+        <RequestForm
+          kind={variant}
+          columns={formColumns(variant)}
+          cta={c.cta}
+          context={context}
+        >
           <p className="type-label text-white/55 italic text-center max-w-md">
             {c.note}
           </p>
-          {c.ctaHref ? (
-            <PillButton
-              href={c.ctaHref}
-              variant="light"
-              className="w-full max-w-2xl"
-            >
-              {c.cta}
-            </PillButton>
-          ) : (
-            <button
-              type="button"
-              disabled
-              className="pill type-link bg-white text-ink w-full max-w-2xl px-8 py-4 opacity-55 cursor-not-allowed inline-flex items-center justify-center gap-2"
-            >
-              <span aria-hidden="true">•</span>
-              {c.cta}
-            </button>
-          )}
-        </div>
+        </RequestForm>
       </div>
     </section>
   );

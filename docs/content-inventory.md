@@ -77,21 +77,31 @@ An admin editing the homepage will not find category copy under `homepage.json`
 ### `content/forms.json`
 
 The eight closing-form variants. Each carries: `eyebrow`, `heading`, `lead`,
-`body`, `columns[]` (`legend` + `inputs[]` or `selects[]`), `note`, `cta`, and
-an optional `ctaHref`.
+`body`, `columns[]` (`legend` + `inputs[]` or `selects[]`), `note` and `cta`.
 
 Was: the `configs` record in `src/components/RequestSection.tsx`.
 
 Variants: `membership`, `application`, `pillar`, `experience`, `governance`,
 `council`, `briefings`, `enquiry`.
 
-Two rules survive the move and are load-bearing:
+Rules that are load-bearing here:
 
-- **`ctaHref` is set only where the destination does what the label promises.**
-  Today that is `membership` and `application` only (both → `/contact`).
-  Everything else renders a disabled button. Adding a `ctaHref` to a variant
-  whose CTA has nowhere honest to go turns a visibly-unfinished control into a
-  working one that lies.
+- **`ctaHref` used to be a ninth key and is gone.** It made a variant's button
+  a link, and was set only where the destination did what the label promised —
+  which was `membership` and `application` only, both → `/contact`, with the
+  rest rendering a disabled button. The forms send now, so every button submits
+  its own form and there is no destination to get wrong.
+- **`columns[].inputs[]` and `columns[].selects[]` name the fields, and
+  `src/lib/formSpec.ts` says how each named field behaves** — its input type,
+  whether it is required, and its options if it is a select. Renaming a field
+  here therefore changes what the email says, and a name `formSpec` has no
+  entry for becomes an optional free-text field. A name listed under `selects`
+  only renders as a dropdown if `formSpec` has a real list for it; otherwise it
+  is a text input, because a dropdown with no options is an unusable control
+  implying a taxonomy that does not exist.
+- **`note` is the sentence under the fields, and it is real copy, not an
+  empty-state label.** It was rewritten when the forms went live — the old
+  wording said submissions were not yet wired up.
 - The shared `CONTACT` column (Name / Surname / Phone number / Email) was one
   object reused by two variants. It is now written out in both, because a JSON
   file cannot hold a reference and an admin editing one variant should not
@@ -375,8 +385,9 @@ visible structural note on its field, and the ones that would change a file's
   experience arrays. That list is also what decides whether the admin offers
   the toggle at all — a leadership portrait has no copy over it, so it gets no
   control. On an empty slot the value is ignored until a photograph lands.
-- `forms.*.ctaHref` — absent renders a disabled button instead of a link.
 - `forms.*.columns.length` — one column widens to two grid columns.
+- `forms.*.columns[].selects[]` — a name `formSpec.ts` has real options for
+  renders as a dropdown; any other name renders as a text input.
 
 ---
 

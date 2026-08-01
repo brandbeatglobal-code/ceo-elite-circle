@@ -24,9 +24,8 @@
         ]
       }
     ],
-    "note": "Fields are not yet wired up — the application questions are still being confirmed. The button below opens the full request page.",
-    "cta": "Request Membership Consideration",
-    "ctaHref": "/contact"
+    "note": "Your details go straight to the Circle. Membership is by consideration — a request is the start of a conversation, not an application, and nothing is committed on either side by sending it.",
+    "cta": "Request Membership Consideration"
   },
   "application": {
     "eyebrow": "Apply",
@@ -53,9 +52,8 @@
         ]
       }
     ],
-    "note": "Fields are not yet wired up — the application questions are still being confirmed. The button below opens the full request page.",
-    "cta": "Request Membership Consideration",
-    "ctaHref": "/contact"
+    "note": "Your details go straight to the Circle. Sending this begins consideration; it does not confirm membership, and someone will be in touch about what follows.",
+    "cta": "Request Membership Consideration"
   },
   "pillar": {
     "eyebrow": "Enquire",
@@ -79,7 +77,7 @@
         ]
       }
     ],
-    "note": "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
+    "note": "Your enquiry goes straight to the Circle. This is an enquiry rather than a membership application, and someone will reply to the address you give.",
     "cta": "Send an Enquiry"
   },
   "experience": {
@@ -105,7 +103,7 @@
         ]
       }
     ],
-    "note": "Fields and button are not yet wired up — registration handling is still to be built. Registering interest is not a membership application.",
+    "note": "Your details go straight to the Circle. Registering interest is not a booking — places are confirmed separately, and someone will be in touch.",
     "cta": "Register Interest"
   },
   "governance": {
@@ -129,7 +127,7 @@
         ]
       }
     ],
-    "note": "Fields and button are not yet wired up. This is not a membership application, and it does not yet reach anyone.",
+    "note": "Your question goes straight to the Circle. This is not a membership application. The Trust Framework is published in full above; this is for anything it does not answer.",
     "cta": "Send a Governance Question"
   },
   "council": {
@@ -155,7 +153,7 @@
         ]
       }
     ],
-    "note": "Fields and button are not yet wired up — council interest handling is still to be built. This is not a membership application.",
+    "note": "Your details go straight to the Circle. Expressing interest is not a place on a council — councils form around what members have in common, and someone will be in touch.",
     "cta": "Express Interest"
   },
   "briefings": {
@@ -172,7 +170,7 @@
         ]
       }
     ],
-    "note": "Fields and button are not yet wired up — subscription handling is still to be built. This is not a membership application.",
+    "note": "Your details go straight to the Circle. Briefings are sent as they are written; how the address you give is held is set out in the Trust Framework.",
     "cta": "Subscribe to Briefings"
   },
   "enquiry": {
@@ -197,7 +195,7 @@
         ]
       }
     ],
-    "note": "Fields and button are not yet wired up — enquiry handling is still to be built. This is an enquiry, not a membership application.",
+    "note": "Your enquiry goes straight to the Circle. This is an enquiry rather than a membership application, and someone will reply to the address you give.",
     "cta": "Send an Enquiry"
   }
 }

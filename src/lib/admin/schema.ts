@@ -128,12 +128,13 @@ const RULES: [RegExp, FieldRule][] = [
 
   // ---- Structural: absence changes what renders, not just what it says.
   [
-    /^forms:[a-z]+\.ctaHref$/,
+    /^forms:[a-z]+\.note$/,
     {
-      kind: "path",
-      nullable: true,
+      kind: "text",
+      nullable: false,
       structural:
-        "This is what makes the button a live link instead of a disabled one. Leave it empty and the button stays visibly unfinished, like the fields above it. Only set it to a page that actually does what the button's label promises — a working button that goes somewhere else is the one thing on this section that could mislead.",
+        "The sentence under the form's button. These forms send real email to the Circle now, so this is where a visitor is told what sending actually does — and, just as importantly, what it does not do. Only the two application variants may describe themselves as an application; the rest must not imply a booking, a place, or a decision that sending does not produce.",
+      multiline: true,
     },
   ],
   [
