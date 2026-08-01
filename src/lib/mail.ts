@@ -50,10 +50,18 @@ export function mailConfigured(): boolean {
 
 export async function sendFormMail({
   subject,
+  html,
   text,
   replyTo,
 }: {
   subject: string;
+  /** The designed half. See `src/emails/FormSubmission.tsx`. */
+  html: string;
+  /**
+   * The same content as plain text. Sent alongside rather than instead of, so
+   * the message goes out as multipart/alternative — better deliverability, and
+   * some clients and screen readers would rather have the text.
+   */
   text: string;
   /** The submitter's own address, so a reply goes straight back to them. */
   replyTo?: string;
@@ -73,6 +81,9 @@ export async function sendFormMail({
         from: FORM_SENDER,
         to: [FORM_RECIPIENT],
         subject,
+        // Both, always. Resend sends them as multipart/alternative and the
+        // reader's client picks.
+        html,
         text,
         ...(replyTo ? { reply_to: replyTo } : {}),
       }),

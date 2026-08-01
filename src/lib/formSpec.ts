@@ -147,6 +147,32 @@ export function subjectFor(
   return SUBJECTS[kind](values, context);
 }
 
+/**
+ * The same nine forms in words, for the eyebrow line of the notification
+ * email. Sentence case rather than the subject line's title case: it is a
+ * label on a page, not a subject.
+ */
+const LABELS: Record<FormKind, string> = {
+  membership: "Membership request",
+  application: "Membership application",
+  pillar: "Pillar enquiry",
+  experience: "Experience enquiry",
+  governance: "Governance question",
+  council: "Council interest",
+  briefings: "Briefings subscription",
+  contact: "Contact form",
+  enquiry: "Leadership enquiry",
+};
+
+export function labelFor(kind: FormKind): string {
+  return LABELS[kind];
+}
+
+/** What the pre-filled context is called, per form. Only two carry one. */
+export function contextLabelFor(kind: FormKind): string {
+  return kind === "pillar" ? "Pillar" : kind === "experience" ? "Experience" : "Context";
+}
+
 /** The consent tick on `/contact`, which is the only form that carries one. */
 export function needsConsent(kind: FormKind): boolean {
   return kind === "contact";

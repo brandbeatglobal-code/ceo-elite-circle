@@ -362,9 +362,40 @@ The last is not in the owner's list — the leadership profile pages that carry
 it are built but deliberately linked from nowhere, so no visitor can reach it
 today. It is named to the same pattern rather than left to fall through.
 
-The body is every submitted field, labelled, then the form's kind, the
-pre-filled context where there is one, and the page it was sent from.
-`reply_to` is the sender's own address, so a reply goes straight back.
+The body is every submitted field, labelled, then the pre-filled context where
+there is one, and the page it was sent from. `reply_to` is the sender's own
+address, so a reply goes straight back.
+
+### What the email looks like
+
+`src/emails/FormSubmission.tsx` — **one template for all nine forms**, built on
+React Email, whose primitives compile to tables with inline styles. Every
+message goes out as HTML *and* plain text (multipart/alternative); the text
+half is written from the same props rather than scraped from the markup, so the
+two cannot say different things.
+
+Reading down: a small wordmark, a sage hairline, then a sage `•` and the form's
+name in small uppercase — the site's own section-header convention. The
+sender's name follows as a serif line, the one place the contrast is worth
+spending. Where the form carries pre-filled context, it sits in a block with a
+sage left edge. Then one row per answer: label small, uppercase, olive; value
+larger in ink; a hairline between each. A quiet two-line footer closes it.
+
+It is the site's language, not its CSS, and three departures are on purpose:
+
+- **Cream, never the dark ramp.** A business notification defaults to a light
+  background in every client and under every reader's own dark-mode setting.
+  Forcing dark risks looking broken somewhere nobody can test.
+- **No web fonts.** Sora and Fraunces are not requested — most clients would not
+  load them. A safe sans stack approximates Sora, Georgia stands in for
+  Fraunces, and nothing depends on a class or a `<style>` block.
+- **Sage stays an accent.** A rule, a bullet, a left edge; never a background
+  fill, exactly as the palette above says. It is also the safest choice, since
+  a colour block is what a client's dark mode inverts worst.
+
+**Not verifiable from here:** how it renders in Outlook, Gmail and Apple Mail.
+The constraints are checked mechanically and the output is rendered and read,
+but only a real received message in each client settles it.
 
 Rules that came out of building it:
 
@@ -795,6 +826,16 @@ Two constraints, both enforced rather than assumed:
   fix. **`RESEND_API_KEY` must be set in Vercel before any of this can send.**
   Until it is, every form refuses with a message saying the site cannot send —
   it never claims a submission went through.
+- **The key is set, and a real submission has arrived.** The path is confirmed
+  end to end against production, not only against the stand-in.
+- **The notification email is designed**, through one shared React Email
+  template rather than nine copies, and sends as HTML and plain text together.
+  Cream rather than the site's dark ramp, no web fonts, sage as an accent only
+  — the reasons are in § *Closing forms* → *What the email looks like*, along
+  with the one thing that cannot be checked from here.
+- **A dropdown looks like the site when it is open.** `FormSelect.tsx` replaces
+  the native picker with the APG select-only combobox, as progressive
+  enhancement over a real `<select>` — see the same section.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

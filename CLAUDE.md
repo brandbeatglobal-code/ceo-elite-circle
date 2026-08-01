@@ -588,7 +588,11 @@ Four files, and the split is the point:
   client import is a build error rather than a leaked key. Everything lands at
   one address because Resend has no verified sending domain for this project
   yet; splitting it per form later is a change to that constant and nothing
-  else, which is why the subject line carries the form's identity.
+  else, which is why the subject line carries the form's identity. It is
+  transport only — it takes an `html` and a `text` and posts both, so every
+  message goes out as multipart/alternative.
+- `src/emails/FormSubmission.tsx` — **one template for all nine forms**, built
+  on `@react-email/components`. See § *The notification email* below.
 - `src/lib/formSpec.ts` — **the one place saying how a named field behaves**:
   its input type, whether it is required, and the options if it is a select.
   The renderer and the server-side validator both read it, so a field can never
@@ -619,6 +623,47 @@ lists themselves come from two places, and which one is a decision:
 (membership categories, framework areas, councils) and holds them literally
 where they are a fixed taxonomy nothing displays (region, referral type, and
 so on).
+
+#### The notification email
+
+`src/emails/FormSubmission.tsx`, one template, not nine — the same discipline
+as `formSpec.ts` and `admin/schema.ts`. Everything that differs between forms
+arrives as props; the template does not know which form it is rendering beyond
+the label it is handed. `submit.ts` builds those props from the same
+`formFields()` list it validates against, so the email cannot carry a field the
+form does not have.
+
+React Email rather than hand-written HTML, because the primitives compile to
+tables with inline styles and that is what survives Outlook's Word renderer.
+`renderFormSubmission()` returns **both halves** — the HTML and a plain-text
+version written from the same props rather than scraped out of the markup, so
+the two cannot drift. Both go to Resend, which sends them as
+multipart/alternative.
+
+**It is the site's language, not a copy of its CSS**, and the differences are
+deliberate:
+
+- **Cream, never the dark ramp.** A business notification defaults to light in
+  every client and under every reader's own dark-mode setting. Forcing dark is
+  a real risk of looking broken somewhere nobody can test.
+- **No web fonts.** Sora and Fraunces are not requested at all — most clients
+  would not load them and would fall back silently. A safe sans stack
+  approximates Sora; Georgia stands in for Fraunces, and only on the one
+  headline moment where the contrast earns itself.
+- **Sage is a rule, a bullet and a left edge — never a fill.** That is the
+  palette rule in `docs/brief.md`, and it is also the safe choice: a coloured
+  block is what a client's dark mode inverts worst.
+- Nothing is styled by a class or a `<style>` block, so a client that strips
+  the head still gets the whole design.
+
+The footer says what is true and nothing more: where it came from, that a reply
+reaches the sender, and that nothing is stored. It must not drift into stating
+policy — that is the Trust Framework's job, per § *The content-honesty rule*.
+
+**What cannot be verified here:** how it actually renders in Outlook, Gmail and
+Apple Mail. The constraints above are checked mechanically and the result is
+rendered and read in Chromium, but only opening a real received message in each
+client settles it.
 
 #### The dropdowns are not `<select>` once JavaScript has run
 

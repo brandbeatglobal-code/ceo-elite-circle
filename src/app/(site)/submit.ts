@@ -1,8 +1,11 @@
 "use server";
 
+import { renderFormSubmission } from "@/emails/FormSubmission";
 import { sendFormMail } from "@/lib/mail";
 import {
+  contextLabelFor,
   formFields,
+  labelFor,
   needsConsent,
   subjectFor,
   type FormKind,
@@ -144,20 +147,25 @@ export async function submitForm(
   const context = String(formData.get("context") ?? "").slice(0, 200).trim();
   const page = String(formData.get("page") ?? "").slice(0, 200).trim();
 
-  const lines = [
-    ...fields
+  // The email is composed from the same field list everything else here uses,
+  // in the order the form showed them, so it cannot carry a name the form does
+  // not have — see `src/emails/FormSubmission.tsx` for the one shared template.
+  const { html, text } = await renderFormSubmission({
+    formLabel: labelFor(kind),
+    // Whoever this is from: their name, or their address where the form does
+    // not ask for one.
+    headline: values.Name ?? values.Email ?? labelFor(kind),
+    fields: fields
       .filter((f) => values[f.label] !== undefined)
-      .map((f) => `${f.label}: ${values[f.label]}`),
-    "",
-    "—",
-    `Form: ${kind}`,
-    ...(context ? [`Context: ${context}`] : []),
-    ...(page ? [`Sent from: ${page}`] : []),
-  ];
+      .map((f) => ({ label: f.label, value: values[f.label] })),
+    ...(context ? { context: { label: contextLabelFor(kind), value: context } } : {}),
+    ...(page ? { page } : {}),
+  });
 
   const result = await sendFormMail({
     subject: subjectFor(kind, values, context || undefined),
-    text: lines.join("\n"),
+    html,
+    text,
     replyTo: values.Email,
   });
 
