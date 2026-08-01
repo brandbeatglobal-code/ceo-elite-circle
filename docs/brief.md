@@ -362,9 +362,40 @@ The last is not in the owner's list — the leadership profile pages that carry
 it are built but deliberately linked from nowhere, so no visitor can reach it
 today. It is named to the same pattern rather than left to fall through.
 
-The body is every submitted field, labelled, then the form's kind, the
-pre-filled context where there is one, and the page it was sent from.
-`reply_to` is the sender's own address, so a reply goes straight back.
+The body is every submitted field, labelled, then the pre-filled context where
+there is one, and the page it was sent from. `reply_to` is the sender's own
+address, so a reply goes straight back.
+
+### What the email looks like
+
+`src/emails/FormSubmission.tsx` — **one template for all nine forms**, built on
+React Email, whose primitives compile to tables with inline styles. Every
+message goes out as HTML *and* plain text (multipart/alternative); the text
+half is written from the same props rather than scraped from the markup, so the
+two cannot say different things.
+
+Reading down: a small wordmark, a sage hairline, then a sage `•` and the form's
+name in small uppercase — the site's own section-header convention. The
+sender's name follows as a serif line, the one place the contrast is worth
+spending. Where the form carries pre-filled context, it sits in a block with a
+sage left edge. Then one row per answer: label small, uppercase, olive; value
+larger in ink; a hairline between each. A quiet two-line footer closes it.
+
+It is the site's language, not its CSS, and three departures are on purpose:
+
+- **Cream, never the dark ramp.** A business notification defaults to a light
+  background in every client and under every reader's own dark-mode setting.
+  Forcing dark risks looking broken somewhere nobody can test.
+- **No web fonts.** Sora and Fraunces are not requested — most clients would not
+  load them. A safe sans stack approximates Sora, Georgia stands in for
+  Fraunces, and nothing depends on a class or a `<style>` block.
+- **Sage stays an accent.** A rule, a bullet, a left edge; never a background
+  fill, exactly as the palette above says. It is also the safest choice, since
+  a colour block is what a client's dark mode inverts worst.
+
+**Not verifiable from here:** how it renders in Outlook, Gmail and Apple Mail.
+The constraints are checked mechanically and the output is rendered and read,
+but only a real received message in each client settles it.
 
 Rules that came out of building it:
 
@@ -377,10 +408,24 @@ Rules that came out of building it:
   fields remount holding them. Without it the form empties the field it has
   just asked someone to correct.
 - **A select needs a real list behind it.** Options come from the content that
-  already defines them — membership categories, framework areas, councils.
+  already defines them — membership categories, framework areas, councils — or,
+  for a fixed taxonomy nothing on the site displays, from `formSpec.ts` itself.
   Every other `<select>` in the design had one `<option>` carrying the field's
   own label: an unusable control implying a taxonomy that does not exist. Those
   are text inputs now, so the visitor answers in their own words.
+- **A dropdown has to belong to the page when it is open, not only when it is
+  closed.** A native `<select>` hands its open state to the browser — white
+  panel, system font, blue highlight — so the one moment the control was in use
+  was the one moment it broke the design. The CSS answer,
+  `appearance: base-select` with `::picker(select)`, is the right fix and is not
+  usable yet: Chrome and Edge from 135, Safari only in the 27 beta, Firefox
+  behind a flag, and not Baseline — it would leave Firefox and current-Safari
+  visitors looking at exactly the bug. So `FormSelect.tsx` is the APG
+  select-only combobox, built as **progressive enhancement over a real
+  `<select>`**: with JavaScript off, or before hydration, the field is still the
+  native control, and the value always travels under the field's own name.
+  Revisit when Safari 27 ships and Firefox follows — the component becomes
+  about fifteen lines of CSS.
 - **`ctaHref` is gone.** It existed to distinguish a CTA that linked somewhere
   real from one that had to stay a dead button. Every button now submits its
   own form, which is what its label always said.
@@ -781,6 +826,16 @@ Two constraints, both enforced rather than assumed:
   fix. **`RESEND_API_KEY` must be set in Vercel before any of this can send.**
   Until it is, every form refuses with a message saying the site cannot send —
   it never claims a submission went through.
+- **The key is set, and a real submission has arrived.** The path is confirmed
+  end to end against production, not only against the stand-in.
+- **The notification email is designed**, through one shared React Email
+  template rather than nine copies, and sends as HTML and plain text together.
+  Cream rather than the site's dark ramp, no web fonts, sage as an accent only
+  — the reasons are in § *Closing forms* → *What the email looks like*, along
+  with the one thing that cannot be checked from here.
+- **A dropdown looks like the site when it is open.** `FormSelect.tsx` replaces
+  the native picker with the APG select-only combobox, as progressive
+  enhancement over a real `<select>` — see the same section.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

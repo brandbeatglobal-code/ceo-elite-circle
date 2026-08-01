@@ -588,7 +588,11 @@ Four files, and the split is the point:
   client import is a build error rather than a leaked key. Everything lands at
   one address because Resend has no verified sending domain for this project
   yet; splitting it per form later is a change to that constant and nothing
-  else, which is why the subject line carries the form's identity.
+  else, which is why the subject line carries the form's identity. It is
+  transport only — it takes an `html` and a `text` and posts both, so every
+  message goes out as multipart/alternative.
+- `src/emails/FormSubmission.tsx` — **one template for all nine forms**, built
+  on `@react-email/components`. See § *The notification email* below.
 - `src/lib/formSpec.ts` — **the one place saying how a named field behaves**:
   its input type, whether it is required, and the options if it is a select.
   The renderer and the server-side validator both read it, so a field can never
@@ -610,11 +614,95 @@ Two behaviours worth knowing before editing it. A refusal hands the visitor's
 answers back and remounts the fields carrying them (`attempt` as a `key`) —
 React clears an uncontrolled form once its action completes, which is right
 after a send and wrong after a refusal, and without this the form empties the
-field it has just asked someone to correct. And selects only exist where real
-content defines the options (`membership.json`, `trust.json`, `councils.json`);
-every other `<select>` in the design had exactly one `<option>` carrying the
-field's own label, which is an unusable control implying a taxonomy that does
-not exist, so those render as text fields.
+field it has just asked someone to correct. And a dropdown only exists where a
+real list of answers does; every other `<select>` in the design carried exactly
+one `<option>` holding the field's own label, which is an unusable control
+implying a taxonomy that does not exist, so those render as text fields. The
+lists themselves come from two places, and which one is a decision:
+`formSpec.ts` reads them from content where the site already publishes them
+(membership categories, framework areas, councils) and holds them literally
+where they are a fixed taxonomy nothing displays (region, referral type, and
+so on).
+
+#### The notification email
+
+`src/emails/FormSubmission.tsx`, one template, not nine — the same discipline
+as `formSpec.ts` and `admin/schema.ts`. Everything that differs between forms
+arrives as props; the template does not know which form it is rendering beyond
+the label it is handed. `submit.ts` builds those props from the same
+`formFields()` list it validates against, so the email cannot carry a field the
+form does not have.
+
+React Email rather than hand-written HTML, because the primitives compile to
+tables with inline styles and that is what survives Outlook's Word renderer.
+`renderFormSubmission()` returns **both halves** — the HTML and a plain-text
+version written from the same props rather than scraped out of the markup, so
+the two cannot drift. Both go to Resend, which sends them as
+multipart/alternative.
+
+**It is the site's language, not a copy of its CSS**, and the differences are
+deliberate:
+
+- **Cream, never the dark ramp.** A business notification defaults to light in
+  every client and under every reader's own dark-mode setting. Forcing dark is
+  a real risk of looking broken somewhere nobody can test.
+- **No web fonts.** Sora and Fraunces are not requested at all — most clients
+  would not load them and would fall back silently. A safe sans stack
+  approximates Sora; Georgia stands in for Fraunces, and only on the one
+  headline moment where the contrast earns itself.
+- **Sage is a rule, a bullet and a left edge — never a fill.** That is the
+  palette rule in `docs/brief.md`, and it is also the safe choice: a coloured
+  block is what a client's dark mode inverts worst.
+- Nothing is styled by a class or a `<style>` block, so a client that strips
+  the head still gets the whole design.
+
+The footer says what is true and nothing more: where it came from, that a reply
+reaches the sender, and that nothing is stored. It must not drift into stating
+policy — that is the Trust Framework's job, per § *The content-honesty rule*.
+
+**What cannot be verified here:** how it actually renders in Outlook, Gmail and
+Apple Mail. The constraints above are checked mechanically and the result is
+rendered and read in Chromium, but only opening a real received message in each
+client settles it.
+
+#### The dropdowns are not `<select>` once JavaScript has run
+
+`FormSelect.tsx`. A `<select>` styles correctly while closed and then renders
+its open state in the browser's own chrome — white panel, system font, blue
+highlight — which no CSS reaches. The one moment the control is in use is the
+one moment it does not belong to the page.
+
+`appearance: base-select` with `::picker(select)` is the right fix and is not
+usable yet: Chrome and Edge shipped it in 135, Safari has it in the 27 beta
+rather than a public release, Firefox is behind a flag, and it is explicitly
+not Baseline. Today it would leave every Firefox and current-Safari visitor
+looking at the native panel, which is the bug. **When Safari 27 ships and
+Firefox follows, `FormSelect.tsx` collapses into about fifteen lines of CSS** —
+that is the intended end state, not a permanent custom widget.
+
+Until then it is the APG select-only combobox, and three things about it are
+load-bearing:
+
+- **Progressive enhancement, so nothing a native select gives is lost.** The
+  server renders a real `<select>`, and it stays one until the component
+  mounts. With JavaScript off, or before hydration, the field *is* the native
+  control — operable, and submitting under the same name. Anything chosen in
+  that window is carried across on the swap.
+- **The value travels in a hidden input** under the field's own name, so
+  `formSpec`, the server action's validation and the email body see exactly
+  what they saw from a `<select>`. Nothing downstream knows the difference —
+  which is also why tampering with it is still caught: the injected-value test
+  now rewrites that input and is refused the same way.
+- **Focus never leaves the trigger**; `aria-activedescendant` moves through the
+  options. Arrow keys, Home/End, Enter, Escape, Tab-commits and letter
+  typeahead all behave as the native control does, including that rapid
+  letters build one search string rather than jumping per key.
+
+The panel opens upward when there is not room below, measuring the fixed nav
+and the fixed draft notice rather than assuming the viewport is free — a
+dropdown low on the page would otherwise put its last options under a bar.
+Sage is the accent on the highlighted row as a left rule, never a background
+fill, per the palette rule in `docs/brief.md`.
 
 ### Spacing
 
