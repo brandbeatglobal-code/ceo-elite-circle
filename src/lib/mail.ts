@@ -42,7 +42,7 @@ export type SendResult = { ok: true; id: string } | { ok: false; error: string }
 const NOT_CONFIGURED =
   "This form is not able to send yet: the site has no mail credentials set. Nothing has been sent, and nothing you typed has been stored.";
 const UNREACHABLE =
-  "The message could not be sent — the mail service could not be reached. Please try again in a moment, or email us directly.";
+  "The message could not be sent, because the mail service could not be reached. Please try again in a moment, or email us directly.";
 
 export function mailConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY);
@@ -93,13 +93,13 @@ export async function sendFormMail({
       return {
         ok: false,
         error:
-          "The message could not be sent — the site's mail credentials were refused. Nothing has been sent.",
+          "The message could not be sent: the site's mail credentials were refused. Nothing has been sent.",
       };
     }
     if (!res.ok) {
       return {
         ok: false,
-        error: `The message could not be sent (error ${res.status}). Nothing has been sent — please try again, or email us directly.`,
+        error: `The message could not be sent (error ${res.status}). Nothing has been sent. Please try again, or email us directly.`,
       };
     }
 

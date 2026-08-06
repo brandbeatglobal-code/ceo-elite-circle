@@ -1,5 +1,5 @@
 {
-  "metaTitle": "Trust Framework — CEO Elite Circle",
+  "metaTitle": "Trust Framework | CEO Elite Circle",
   "hero": {
     "eyebrow": "Governance",
     "title": "Trust Framework",
@@ -19,7 +19,7 @@
     "items": [
       {
         "name": "Our Commitment",
-        "body": "The Circle exists to give its members a room where candour costs nothing. Everything in this framework follows from that single undertaking: that what a member brings into the Circle — a problem, a doubt, a half-formed plan — will be met with judgment on the merits and nothing else."
+        "body": "The Circle exists to give its members a room where candour costs nothing. Everything in this framework follows from that single undertaking: that what a member brings into the Circle (a problem, a doubt, a half-formed plan) will be met with judgment on the merits and nothing else."
       },
       {
         "name": "CEO Charter",
@@ -31,7 +31,7 @@
       },
       {
         "name": "Confidentiality",
-        "body": "Nothing said within the Circle — in a forum, a council, a dinner, or a private conversation between members — is repeated outside it without the speaker's explicit agreement. This extends to the fact that a conversation took place at all. Confidentiality is the condition the Circle depends on, not a courtesy extended around its edges."
+        "body": "Nothing said within the Circle (in a forum, a council, a dinner, or a private conversation between members) is repeated outside it without the speaker's explicit agreement. This extends to the fact that a conversation took place at all. Confidentiality is the condition the Circle depends on, not a courtesy extended around its edges."
       },
       {
         "name": "Governance",
@@ -43,7 +43,7 @@
       },
       {
         "name": "Privacy",
-        "body": "Personal and business information shared with the Circle — in an application, a conversation, or a member profile — is used only to run the Circle's programme and is not shared with third parties without consent. Members control what is visible to other members and what is not."
+        "body": "Personal and business information shared with the Circle (in an application, a conversation, or a member profile) is used only to run the Circle's programme and is not shared with third parties without consent. Members control what is visible to other members and what is not."
       },
       {
         "name": "Conflict Resolution",
@@ -51,11 +51,11 @@
       },
       {
         "name": "Membership Review",
-        "body": "Membership is reviewed periodically to confirm it continues to reflect the standard the Circle was built around — seniority, disposition, and genuine engagement with the room. Review is not adversarial; it exists to keep the membership what it was meant to be."
+        "body": "Membership is reviewed periodically to confirm it continues to reflect the standard the Circle was built around: seniority, disposition, and genuine engagement with the room. Review is not adversarial; it exists to keep the membership what it was meant to be."
       },
       {
         "name": "Removal Policy",
-        "body": "Membership can be ended for a serious breach of confidentiality, conduct that damages trust in the room, or sustained disengagement from the Circle's programme. Removal follows a conversation, not a notice — a member is told plainly why, and given the chance to respond, before any decision is final."
+        "body": "Membership can be ended for a serious breach of confidentiality, conduct that damages trust in the room, or sustained disengagement from the Circle's programme. Removal follows a conversation, not a notice: a member is told plainly why, and given the chance to respond, before any decision is final."
       }
     ]
   }

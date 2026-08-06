@@ -1,6 +1,6 @@
 {
   "page": {
-    "metaTitle": "Insights — CEO Elite Circle",
+    "metaTitle": "Insights | CEO Elite Circle",
     "heroEyebrow": "Knowledge & Insights",
     "heroTitle": "Insights",
     "heroIntro": "Writing from the Circle. Short essays and notes, published when there is something worth a member’s attention.",
@@ -13,7 +13,7 @@
     "emptyNote": "The article template exists and is ready to receive a first post. It stays unlinked until one is written."
   },
   "detail": {
-    "fallbackMetaTitle": "Insights — CEO Elite Circle",
+    "fallbackMetaTitle": "Insights | CEO Elite Circle",
     "articleEyebrow": "Article",
     "metaLabels": {
       "readingTime": "Reading time",
@@ -25,7 +25,7 @@
     "noteLabel": "Note",
     "relatedEyebrow": "Related articles",
     "relatedTitle": "Further reading",
-    "relatedNote": "No other articles have been published yet, so none are linked — these cards are structure only.",
+    "relatedNote": "No other articles have been published yet, so none are linked. These cards are structure only.",
     "relatedCardLabel": "Article pending",
     "relatedCardPhotoNote": "the article's lead image."
   },
@@ -99,7 +99,7 @@
             "heading": "Why the best counsel rarely comes from a consultant",
             "paragraphs": [
               "There is a particular kind of advice a chief executive receives constantly and trusts least: the kind that arrives with a proposal attached. A consultant's recommendation, however sound, carries the shape of the engagement that produced it. A board member's counsel carries the weight of the seat they hold. Even a trusted deputy's advice is coloured, fairly or not, by what they stand to gain from the direction it points.",
-              "None of this makes the advice wrong. It makes it hard to fully trust — not because the person is untrustworthy, but because the incentive is impossible to fully separate from the recommendation."
+              "None of this makes the advice wrong. It makes it hard to fully trust, not because the person is untrustworthy, but because the incentive is impossible to fully separate from the recommendation."
             ],
             "listItems": null
           },
@@ -107,22 +107,22 @@
             "heading": "What peer counsel offers instead",
             "paragraphs": [
               "A peer with no stake in the outcome offers something structurally different. They are not selling a follow-on engagement. They do not report to the person receiving the advice, and the advice does not reflect back on their own performance review. What they offer costs them nothing to give honestly, which is precisely what makes it worth more than most of what a chief executive hears in a given week.",
-              "This is not a claim that peers are wiser than consultants or boards — often they are not, on the specific technical question at hand. It is a claim about incentive, not intelligence. The value of a peer's counsel lies less in expertise than in the fact that it has nothing riding on the answer."
+              "This is not a claim that peers are wiser than consultants or boards. Often they are not, on the specific technical question at hand. It is a claim about incentive, not intelligence. The value of a peer's counsel lies less in expertise than in the fact that it has nothing riding on the answer."
             ],
             "listItems": null
           },
           {
             "heading": "Why this is harder to find than it sounds",
             "paragraphs": [
-              "In principle, any chief executive could assemble a handful of peers and ask for candour. In practice, this rarely happens on its own. Peer relationships at this level tend to form around proximity — the same industry, the same city, the same conference circuit — which means they often carry exactly the competitive tension that candour requires the absence of. A genuine peer, in the sense that matters here, is someone with no reason to want a particular answer and no relationship to protect by giving one.",
-              "Building a room of people who meet that description, and who return to it regularly enough that the conversation deepens rather than starting over each time, takes more structure than most executives have the time to build on their own. It is, in a fairly literal sense, the reason standing peer groups exist at all — not because the individual conversations are hard to have once the room exists, but because the room itself is hard to assemble."
+              "In principle, any chief executive could assemble a handful of peers and ask for candour. In practice, this rarely happens on its own. Peer relationships at this level tend to form around proximity (the same industry, the same city, the same conference circuit), which means they often carry exactly the competitive tension that candour requires the absence of. A genuine peer, in the sense that matters here, is someone with no reason to want a particular answer and no relationship to protect by giving one.",
+              "Building a room of people who meet that description, and who return to it regularly enough that the conversation deepens rather than starting over each time, takes more structure than most executives have the time to build on their own. It is, in a fairly literal sense, the reason standing peer groups exist at all: not because the individual conversations are hard to have once the room exists, but because the room itself is hard to assemble."
             ],
             "listItems": null
           },
           {
             "heading": "What this means in practice",
             "paragraphs": [
-              "The test worth applying to any piece of advice, consultant or peer alike, is not \"is this person smart\" but \"what happens to them if I take this advice and it goes badly.\" Where the honest answer is \"nothing\" — where the person has no engagement to protect, no report to file, no reputation staked on the direction — that is where the counsel tends to be least filtered, whatever its source.",
+              "The test worth applying to any piece of advice, consultant or peer alike, is not \"is this person smart\" but \"what happens to them if I take this advice and it goes badly.\" Where the honest answer is \"nothing\", where the person has no engagement to protect, no report to file, no reputation staked on the direction, that is where the counsel tends to be least filtered, whatever its source.",
               "It is not the only kind of advice a chief executive needs. But it is the kind most consistently missing, and the kind worth deliberately building a room for rather than hoping to encounter by chance."
             ],
             "listItems": null

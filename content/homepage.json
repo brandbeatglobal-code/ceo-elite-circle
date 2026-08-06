@@ -21,7 +21,7 @@
     "headerLinkLabel": "More about the Circle",
     "title": "Why the Circle Exists",
     "lead": "Leadership at this level is unusually well supplied with advice, and unusually short of counsel.",
-    "body": "Boards want reassurance, executives want direction, advisers want a mandate. Very few rooms want nothing at all. The Circle exists to be one of them — somewhere a chief executive can think aloud among people who have carried the same weight, and where the conversation is not also a transaction.",
+    "body": "Boards want reassurance, executives want direction, advisers want a mandate. Very few rooms want nothing at all. The Circle exists to be one of them: somewhere a chief executive can think aloud among people who have carried the same weight, and where the conversation is not also a transaction.",
     "linkLabel": "Discover the Circle"
   },
   "pillars": {
@@ -66,7 +66,7 @@
     "eyebrow": "Experiences",
     "headerLinkLabel": "All experiences",
     "title": "Signature Experiences",
-    "lead": "Seven occasions across the year, each built for a different kind of conversation — from the whole membership in one room to a single table of twelve.",
+    "lead": "Seven occasions across the year, each built for a different kind of conversation, from the whole membership in one room to a single table of twelve.",
     "featuredSlug": "ceo-private-dinners",
     "featuredLinkLabel": "Discover the Circle",
     "listLinkLabel": "Discover"
@@ -74,10 +74,10 @@
   "testimonials": {
     "eyebrow": "Testimonials",
     "title": "What Members Say",
-    "note": "No member quotes have been given or approved yet, so none are shown — these cards are structure only.",
+    "note": "No member quotes have been given or approved yet, so none are shown. These cards are structure only.",
     "cardLabel": "Awaiting member approval",
     "memberLabel": "Member",
-    "attributionNote": "Attribution pending — a quote needs the name of the member who gave it, and their agreement to be named.",
+    "attributionNote": "Attribution pending. A quote needs the name of the member who gave it, and their agreement to be named.",
     "items": [
       {
         "quote": null,

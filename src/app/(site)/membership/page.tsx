@@ -73,20 +73,28 @@ export default function MembershipPage() {
               data-reveal
               style={{ transitionDelay: `${i * 70}ms` }}
             >
+              {/* The name leads the row. It sits in the left column at the
+                  same weight pillar and experience names carry elsewhere
+                  (`type-display type-h3`), so a visitor scanning down the page
+                  reads what each tier *is* before reading what it includes.
+                  The label stays above it: without one the column would open
+                  on a bare name with nothing saying what kind of thing it is. */}
               <div className="flex flex-col justify-between py-16 lg:py-14 lg:pr-8 gap-8">
-                <BulletLabel className="text-white/60">
-                  {categories.rowLabel}
-                </BulletLabel>
+                <div>
+                  <BulletLabel className="text-white/60">
+                    {categories.rowLabel}
+                  </BulletLabel>
+                  <h3 className="type-display type-h3 text-white mt-5">
+                    {tier.name}
+                  </h3>
+                </div>
                 <ArrowLink href="/contact" tone="black">
                   {categories.rowLinkLabel}
                 </ArrowLink>
               </div>
 
-              <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14 flex flex-col justify-between gap-8">
+              <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14">
                 <p className="type-lead text-white max-w-md">{tier.body}</p>
-                <h3 className="type-display text-2xl md:text-3xl text-white">
-                  {tier.name}
-                </h3>
               </div>
 
               <div className="lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14">

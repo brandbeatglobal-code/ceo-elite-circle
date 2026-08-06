@@ -7,7 +7,7 @@
     "photo": {
       "src": "/uploads/about-hero-2d27e8a877.jpg",
       "alt": "Above, circle and business people in meeting for teamwork, collaboration or talking in office and workplace. Group, conversation and together for professional planning, negotiation or b2b mockup",
-      "note": "Interior of a considered, quiet room — the setting the Circle meets in.",
+      "note": "Interior of a considered, quiet room, the setting the Circle meets in.",
       "brightness": 0.962,
       "textMode": "light"
     }
@@ -16,7 +16,7 @@
     "eyebrow": "Story",
     "title": "Our Story",
     "lead": "The Circle began as a standing invitation between a handful of chief executives who had run out of rooms in which they could speak plainly.",
-    "body": "What began as an occasional dinner became a structure — pillars, councils, a framework of trust — because the value turned out to sit in the regularity rather than the occasion. The form has changed a good deal since. The premise has not.",
+    "body": "What began as an occasional dinner became a structure: pillars, councils, a framework of trust. That happened because the value turned out to sit in the regularity rather than the occasion. The form has changed a good deal since. The premise has not.",
     "photo": {
       "src": "/uploads/about-story-12ce90441a.jpg",
       "alt": "Empty chairs arranged in circle in modern meeting room with notebooks and pens placed on seats, suggesting preparation for group discussion or workshop session",
@@ -72,7 +72,7 @@
     {
       "title": "Our Purpose",
       "lead": "To hold a room in which leadership can be discussed honestly.",
-      "body": "The Circle exists to make candour ordinary between people who rarely encounter it. Everything else — the forums, the councils, the briefings — is built to serve that, and is dropped when it stops serving it."
+      "body": "The Circle exists to make candour ordinary between people who rarely encounter it. Everything else (the forums, the councils, the briefings) is built to serve that, and is dropped when it stops serving it."
     },
     {
       "title": "Our Beliefs",
@@ -82,7 +82,7 @@
     {
       "title": "Our Mission",
       "lead": "To be the room a chief executive keeps returning to.",
-      "body": "Not the largest gathering in the calendar, nor the most visible — the one that proves useful enough to survive a tightening diary. The Circle would rather be indispensable to a few than familiar to many."
+      "body": "Not the largest gathering in the calendar, nor the most visible. The one that proves useful enough to survive a tightening diary. The Circle would rather be indispensable to a few than familiar to many."
     },
     {
       "title": "Our Vision",
@@ -92,7 +92,7 @@
     {
       "title": "Who We Serve",
       "lead": "Chief executives and chairs of established organisations.",
-      "body": "Members carry final responsibility for an organisation of substance — the accountability that cannot be delegated to anyone else in the building. Sector, geography and scale vary widely across the membership. The seniority and the disposition do not."
+      "body": "Members carry final responsibility for an organisation of substance, the accountability that cannot be delegated to anyone else in the building. Sector, geography and scale vary widely across the membership. The seniority and the disposition do not."
     }
   ],
   "philosophy": {
@@ -100,13 +100,13 @@
     "title": "Leadership Philosophy",
     "quote": "Capability, not just capital, will shape the future of Saudi Arabia.",
     "quoteAttribution": "Dr. Essa",
-    "quoteNote": "Pull-quote placeholder — this slot must carry real words from a real, named person. Nothing should be written on their behalf.",
-    "attributionNote": "Attribution pending — this quote needs the name of the person who said it before it is fully sourced.",
+    "quoteNote": "Pull-quote placeholder. This slot must carry real words from a real, named person. Nothing should be written on their behalf.",
+    "attributionNote": "Attribution pending. This quote needs the name of the person who said it before it is fully sourced.",
     "support": "Leadership at this level turns less on having answers than on the quality of the questions a person is willing to sit with. The Circle is built around that conviction, and everything in it follows from there.",
     "photo": {
       "src": "/uploads/about-philosophy-53aa452bb9.jpg",
       "alt": "Saudi flag with city",
-      "note": "A real working moment — people mid-discussion, not posed to camera.",
+      "note": "A real working moment: people mid-discussion, not posed to camera.",
       "brightness": 0.987,
       "textMode": "light"
     }

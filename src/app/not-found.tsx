@@ -2,7 +2,7 @@ import { PageHero } from "@/components/PageHero";
 import { SiteChrome } from "@/components/SiteChrome";
 import { ArrowLink } from "@/components/ui";
 
-export const metadata = { title: "Page not found — CEO Elite Circle" };
+export const metadata = { title: "Page not found | CEO Elite Circle" };
 
 /**
  * Carries the full site chrome itself: a URL that matches no route never

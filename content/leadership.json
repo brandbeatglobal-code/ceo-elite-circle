@@ -1,6 +1,6 @@
 {
   "detail": {
-    "fallbackMetaTitle": "Leadership — CEO Elite Circle",
+    "fallbackMetaTitle": "Leadership | CEO Elite Circle",
     "heroEyebrow": "Leadership",
     "expertiseEyebrow": "Expertise",
     "expertiseTitle": "Areas of expertise",
@@ -12,7 +12,7 @@
     "recognitionTitle": "Recognition",
     "recognitionPlaceholderPrefix": "Recognition",
     "philosophyEyebrow": "Philosophy",
-    "quoteNote": "Pull-quote placeholder — this slot must carry real words from a real, named person. Nothing should be written on their behalf."
+    "quoteNote": "Pull-quote placeholder. This slot must carry real words from a real, named person. Nothing should be written on their behalf."
   },
   "members": [
     {

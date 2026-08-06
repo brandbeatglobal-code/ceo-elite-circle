@@ -1,6 +1,6 @@
 {
   "page": {
-    "metaTitle": "The Five Pillars — CEO Elite Circle",
+    "metaTitle": "The Five Pillars | CEO Elite Circle",
     "heroEyebrow": "Structure",
     "heroTitle": "The Five Pillars",
     "heroIntro": "Five pillars carry the work of the Circle. Each stands on its own, and each is available to every member.",
@@ -26,7 +26,7 @@
       "photo": {
         "src": "/uploads/pillars-items-0-67635aac6a.jpg",
         "alt": "Business meeting in a sunlit room with diverse professionals in suits discussing around a wooden table, notebooks and glasses of water in view.",
-        "note": "a working advisory session — two or three people, close in.",
+        "note": "a working advisory session: two or three people, close in.",
         "brightness": 1,
         "textMode": "light"
       },
@@ -111,12 +111,12 @@
       "photo": {
         "src": "/uploads/pillars-items-2-da4cfb5e6a.jpg",
         "alt": "Senior Male Investor Sitting In Crowd And Using Microphone To Ask A Question At International Technology Conference. Caucasian Man Listening To Keynote Presentation About New Startup Company Service.",
-        "note": "a forum in session — seated circle or roundtable.",
+        "note": "a forum in session: seated circle or roundtable.",
         "brightness": 0.991,
         "textMode": "light"
       },
       "summary": "Closed sessions, held in confidence, on one question at a time.",
-      "intro": "A small group works through a single question in depth. There is no audience, no record and no performance — only the conversation that becomes possible once nobody is presenting.",
+      "intro": "A small group works through a single question in depth. There is no audience, no record and no performance, only the conversation that becomes possible once nobody is presenting.",
       "criteria": [
         {
           "icon": "signal",

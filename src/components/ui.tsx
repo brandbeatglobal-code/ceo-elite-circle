@@ -203,7 +203,7 @@ export function PhotoFrame({
         <p
           className={`type-label italic ${dark ? "text-white/55" : "text-olive"}`}
         >
-          Photography pending — {photo.note}
+          Photography pending. {photo.note}
         </p>
       </div>
     );
@@ -267,7 +267,7 @@ export function Placeholder({
       } ${ink}`}
     >
       {note ??
-        "Content placeholder — copy for this section is still to be drafted and reviewed."}
+        "Content placeholder. Copy for this section is still to be drafted and reviewed."}
     </p>
   );
 }

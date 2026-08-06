@@ -1,5 +1,5 @@
 {
-  "metaTitle": "Membership — CEO Elite Circle",
+  "metaTitle": "Membership | CEO Elite Circle",
   "hero": {
     "eyebrow": "Membership",
     "title": "Membership",
@@ -77,7 +77,7 @@
   "benefits": {
     "eyebrow": "Benefits",
     "title": "Membership Benefits",
-    "intro": "What membership provides, stated plainly. Nothing here depends on volume — the Circle is built to be small.",
+    "intro": "What membership provides, stated plainly. Nothing here depends on volume. The Circle is built to be small.",
     "features": [
       {
         "icon": "arcs",
@@ -139,7 +139,7 @@
       },
       {
         "title": "Is the membership list published?",
-        "body": "Confidentiality terms — including how members are identified — are set out in the Trust Framework. We would rather point you there than summarise it here."
+        "body": "Confidentiality terms, including how members are identified, are set out in the Trust Framework. We would rather point you there than summarise it here."
       },
       {
         "title": "How long does consideration take?",
