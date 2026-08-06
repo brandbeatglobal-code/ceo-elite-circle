@@ -192,6 +192,21 @@ h1, h2, h3, h4 {
   cursor: not-allowed;
 }
 
+/* The homepage experiences panel. All seven photographs are stacked in the
+   same box and cross-faded by opacity, so the swap is a property change rather
+   than a fetch and never flashes on first hover. Short, in keeping with the
+   rest of the site's motion; the `prefers-reduced-motion` block at the foot of
+   this file collapses every transition to 0.01ms, so a reader who has asked
+   for reduced motion gets an instant swap with no special-casing here. */
+.exp-photo {
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+}
+
+.exp-photo.is-active {
+  opacity: 1;
+}
+
 /* The form dropdowns — see `FormSelect.tsx` for why they are not `<select>`
    once JavaScript has run. The closed control is a `.field` like any other;
    everything below is the open state, which a native select renders itself in

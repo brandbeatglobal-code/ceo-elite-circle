@@ -85,6 +85,7 @@ export function ArrowLink({
   children,
   tone = "cream",
   inherit = false,
+  ariaLabel,
   className = "",
 }: {
   href: string;
@@ -97,6 +98,12 @@ export function ArrowLink({
    * for the life of the component.
    */
   inherit?: boolean;
+  /**
+   * For a link whose destination is not fixed. Must begin with the visible
+   * text, so the accessible name still contains the label a person reads and
+   * speech control still reaches it.
+   */
+  ariaLabel?: string;
   className?: string;
 }) {
   const base = inherit
@@ -107,6 +114,7 @@ export function ArrowLink({
   return (
     <Link
       href={href}
+      aria-label={ariaLabel}
       className={`type-link inline-flex items-center gap-1.5 transition-colors ${base} ${className}`}
     >
       {children}

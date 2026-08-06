@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Carousel } from "@/components/Carousel";
 import { CategoryRows } from "@/components/CategoryRows";
+import { ExperienceShowcase } from "@/components/ExperienceShowcase";
 import { MediaSection } from "@/components/MediaSection";
 import { PhotoCard } from "@/components/PhotoCard";
 import { RequestSection } from "@/components/RequestSection";
@@ -34,10 +35,14 @@ const {
    this teaser and the full page cannot drift apart. */
 const tiers = membership.categories.items;
 
+/* The occasion the panel falls back to whenever nothing is hovered or pinned.
+   Resolved here rather than inside the component, and still with the non-null
+   assertion, so a `featuredSlug` matching no experience fails the build rather
+   than rendering an empty panel — which is what `docs/content-inventory.md`
+   promises of that field. */
 const featured = experiences.find(
   (e) => e.slug === experiencesSection.featuredSlug,
 )!;
-const otherExperiences = experiences.filter((e) => e !== featured);
 
 /* Light or dark copy over the hero photograph, from the slot's own text mode.
    `Nav` reads the same field for this route, so the bar and the headline
@@ -285,50 +290,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4">
-            {/* Featured experience — text beside its photograph */}
-            <div className="py-14 lg:pr-8 flex flex-col justify-between gap-10">
-              <div>
-                <h3 className="type-display type-h3 text-white mb-5">
-                  {featured.name}
-                </h3>
-                <p className="type-body text-white/70">{featured.summary}</p>
-              </div>
-              <ArrowLink href={`/experiences/${featured.slug}`} tone="black">
-                {experiencesSection.featuredLinkLabel}
-              </ArrowLink>
-            </div>
-
-            <div className="lg:border-l border-hair-dark lg:pl-8 py-14">
-              <PhotoFrame
-                photo={featured.photo}
-                className="h-72 lg:h-full lg:min-h-[24rem]"
-                sizes="(max-width: 1024px) 100vw, 25vw"
-                tone="black"
-              />
-            </div>
-
-            {/* The remaining six, as a hairline list */}
-            <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-14">
-              {otherExperiences.map((experience) => (
-                <div
-                  key={experience.slug}
-                  className="flex items-baseline justify-between gap-6 border-b border-hair-dark py-5 first:pt-0"
-                >
-                  <h3 className="type-display text-xl md:text-2xl text-white">
-                    {experience.name}
-                  </h3>
-                  <ArrowLink
-                    href={`/experiences/${experience.slug}`}
-                    tone="black"
-                    className="shrink-0"
-                  >
-                    {experiencesSection.listLinkLabel}
-                  </ArrowLink>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Interactive: hovering or focusing a row previews it in the panel,
+              clicking or tapping pins it. See `ExperienceShowcase`. */}
+          <ExperienceShowcase
+            items={experiences}
+            defaultSlug={featured.slug}
+            featuredLinkLabel={experiencesSection.featuredLinkLabel}
+            listLinkLabel={experiencesSection.listLinkLabel}
+          />
         </div>
       </section>
 
