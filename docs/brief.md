@@ -863,12 +863,38 @@ Two constraints, both enforced rather than assumed:
   reaches it. Nothing visible changed — the prerendered HTML for all twenty-six
   routes is byte-identical apart from six added attributes.
 
-  Worth knowing before this is called finished: **eleven other links on the
-  homepage have the same defect and were left alone.** Eight destinations share
-  the accessible name "Discover the Circle", the five pillar cards among them —
-  five identical links to five different pillars, the same shape as the six
-  fixed here. Fixing those means touching `PhotoCard` and `CategoryRows` rather
-  than one component, so it was not folded into this.
+  Eleven other links on the homepage had the same defect and were left for the
+  change below, which finished the job.
+- **No link on the site now shares its accessible name with a link that goes
+  somewhere else.** Auditing the panel fix turned up twenty-three more links
+  reading "Discover the Circle", across three pages: eleven on the homepage
+  reaching eight destinations, five on `/pillars` reaching five, and seven on
+  `/experiences` reaching seven. One label, twenty distinct pages behind it.
+
+  The fix is the same as the panel's — the occasion, pillar or category
+  appended after the visible text — but placed differently, and that is the
+  part worth keeping. **Three shared components derive the name themselves**
+  rather than taking one as a prop: `PhotoCard` and `MediaSection` from the
+  `title` they already render as the heading directly above the link,
+  `CategoryRows` from the row's own `name`. So the accessible name cannot
+  disagree with the heading a sighted visitor reads, no call site has to
+  remember to pass one, and the two pages rendering `CategoryRows` cannot
+  drift — which is the whole reason that component exists. Only the two
+  standalone homepage links, which have no component to carry it, name
+  themselves at the call site, from their section's own title.
+
+  Because the components carry it, the count is twenty-six rather than eleven:
+  the run of `MediaSection`s on `/pillars` and `/experiences` and the three
+  category rows on `/membership` are the same defect, and fixing the homepage's
+  five pillar cards while leaving `/pillars` with five identical links would
+  have been a strange place to stop.
+
+  Nothing visible changed and nothing else did: of the twenty-six prerendered
+  routes, twenty-two are byte-identical, and across the four that differ every
+  single changed line is identical once one inserted `aria-label` is removed.
+  Verified from the accessibility tree rather than the markup — site-wide,
+  links carrying a name that resolves to more than one destination went from
+  twenty to nought.
 - **The homepage testimonials are real.** Three quotations from members who
   agreed to be quoted but not to be named, so each is attributed by role and
   industry rather than by a person: "CEO, Heavy Manufacturing", "Founder,

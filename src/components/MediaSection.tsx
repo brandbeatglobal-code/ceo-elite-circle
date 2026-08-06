@@ -51,8 +51,19 @@ export function MediaSection({
           <h2 className="type-h2 mb-10 max-w-xl">{title}</h2>
           <div className="flex flex-col items-start gap-8 max-w-md">
             {children}
+            {/* `/pillars` and `/experiences` are a run of these, every one
+                labelled "Discover the Circle" and every one going somewhere
+                different — five and seven identical entries in a screen
+                reader's link list. The section's own title is the h2 directly
+                above, so the name is built from that: it cannot disagree with
+                the heading, and every call site gets it without having to
+                remember to pass one. */}
             {link && (
-              <ArrowLink href={link.href} tone={tone}>
+              <ArrowLink
+                href={link.href}
+                tone={tone}
+                ariaLabel={`${link.label}: ${title}`}
+              >
                 {link.label}
               </ArrowLink>
             )}

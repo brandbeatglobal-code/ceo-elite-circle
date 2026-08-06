@@ -142,7 +142,14 @@ export default function Home() {
                 <p className="type-body text-white/75 max-w-sm">
                   {philosophy.body}
                 </p>
-                <ArrowLink href="/about" tone="ramp">
+                {/* One of eleven links on this page reading "Discover the
+                    Circle". The section it closes is what tells a visitor
+                    which one it is, so the accessible name says it. */}
+                <ArrowLink
+                  href="/about"
+                  tone="ramp"
+                  ariaLabel={`${philosophy.linkLabel}: ${philosophy.title}`}
+                >
                   {philosophy.linkLabel}
                 </ArrowLink>
               </div>
@@ -245,7 +252,12 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-y-10 pt-16 pb-16 lg:pt-44 lg:pb-36">
             <div className="flex flex-col items-start gap-8 lg:pr-8 order-2 lg:order-1 lg:justify-end">
               <p className="type-lead max-w-xs">{governance.lead}</p>
-              <ArrowLink href="/trust">
+              {/* Same again. The sibling link beside it already says
+                  "Membership Selection" and needs nothing. */}
+              <ArrowLink
+                href="/trust"
+                ariaLabel={`${governance.primaryLinkLabel}: ${governance.title}`}
+              >
                 {governance.primaryLinkLabel}
               </ArrowLink>
             </div>

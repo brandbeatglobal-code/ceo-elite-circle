@@ -68,7 +68,19 @@ export function CategoryRows({
                 {tier.name}
               </h3>
             </div>
-            <ArrowLink href={link.href} {...(dark ? { tone } : {})}>
+            {/* Three rows carrying one label between them. The category name
+                is in the same column, immediately above; the accessible name
+                repeats it, because a screen reader listing links has only the
+                label to go on and would otherwise get the same words three
+                times. Taken from the row's own name, so it follows the
+                heading rather than being a second copy of it — and derived
+                here rather than passed in, so both pages that render this
+                component get it and neither can drift from the other. */}
+            <ArrowLink
+              href={link.href}
+              {...(dark ? { tone } : {})}
+              ariaLabel={`${link.label}: ${tier.name}`}
+            >
               {link.label}
             </ArrowLink>
           </div>
