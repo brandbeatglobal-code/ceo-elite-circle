@@ -62,7 +62,9 @@ export function ExperienceShowcase({
     <div className="grid grid-cols-1 lg:grid-cols-4">
       <div className="py-14 lg:pr-8 flex flex-col justify-between gap-10">
         <div>
-          <h3 className="type-display type-h3 text-white mb-5">{active.name}</h3>
+          <h3 className="type-display type-h3 text-white mb-5">
+            {active.name}
+          </h3>
           <p className="type-body text-white/70">{active.summary}</p>
         </div>
         {/* The visible label is unchanged, so the accessible name still starts
@@ -94,29 +96,37 @@ export function ExperienceShowcase({
       </div>
 
       <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-14">
-        {listed.map((e) => (
-          <div
-            key={e.slug}
-            className="flex items-baseline justify-between gap-6 border-b border-hair-dark py-5 first:pt-0 cursor-pointer"
-            onMouseEnter={() => setPreviewed(e.slug)}
-            onMouseLeave={() => setPreviewed(null)}
-            onFocus={() => setPreviewed(e.slug)}
-            onBlur={() => setPreviewed(null)}
-            onClick={() => setPinned(e.slug)}
-            aria-current={e.slug === activeSlug ? true : undefined}
-          >
-            <h3 className="type-display text-xl md:text-2xl text-white">
-              {e.name}
-            </h3>
-            <ArrowLink
-              href={`/experiences/${e.slug}`}
-              tone="black"
-              className="shrink-0"
+        {listed.map((e) => {
+          // One comparison, read twice: `aria-current` is the state, and
+          // `.is-active` is only a visual layer over the same answer. They
+          // cannot disagree, and the rule is not a second source of truth.
+          const isActive = e.slug === activeSlug;
+          return (
+            <div
+              key={e.slug}
+              className={`exp-row flex items-baseline justify-between gap-6 border-b border-hair-dark py-5 first:pt-0 cursor-pointer${
+                isActive ? " is-active" : ""
+              }`}
+              onMouseEnter={() => setPreviewed(e.slug)}
+              onMouseLeave={() => setPreviewed(null)}
+              onFocus={() => setPreviewed(e.slug)}
+              onBlur={() => setPreviewed(null)}
+              onClick={() => setPinned(e.slug)}
+              aria-current={isActive ? true : undefined}
             >
-              {listLinkLabel}
-            </ArrowLink>
-          </div>
-        ))}
+              <h3 className="type-display text-xl md:text-2xl text-white">
+                {e.name}
+              </h3>
+              <ArrowLink
+                href={`/experiences/${e.slug}`}
+                tone="black"
+                className="shrink-0"
+              >
+                {listLinkLabel}
+              </ArrowLink>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

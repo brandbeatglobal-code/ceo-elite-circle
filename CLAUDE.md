@@ -604,6 +604,16 @@ Stacked, they load together when the section nears the viewport and the swap is
 then a property change. If a photograph is ever added here, it joins the stack;
 the cost is seven images on the homepage, which is the price of no flash.
 
+**The active row carries a sage left rule** (`.exp-row::before`), the same
+accent a highlighted dropdown option gets and never a fill, per the palette
+rule. It reads as a small flourish on desktop and is the entire confirmation on
+a phone, where the panel sits above the list and is scrolled out of view by the
+time a lower row is tapped. Two things about it: it is a pseudo-element rather
+than a `border-left`, so the rows keep their exact position as it appears and
+disappears; and the class comes from the same comparison that sets
+`aria-current`, so it is a layer over the state rather than a second copy of
+it.
+
 The links are untouched by the interaction — a row's link and the featured link
 are ordinary navigation. The featured one carries an `ariaLabel` naming the
 occasion, because its destination moves with the panel and "Discover the

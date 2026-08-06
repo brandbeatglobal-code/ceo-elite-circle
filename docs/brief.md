@@ -845,10 +845,13 @@ Two constraints, both enforced rather than assumed:
   hover and nothing flashes; the site-wide reduced-motion rule turns the fade
   into an instant swap without a branch in the component.
 
-  Not added, and worth knowing: a row gives no visual sign that it is the
-  pinned one. On desktop the panel sits beside the list and answers that; on a
-  phone the panel is above the list and can be scrolled out of view when a row
-  is tapped.
+  The active row carries a sage left rule, the same accent a highlighted
+  dropdown option gets. It is quiet on desktop, where the panel sits beside the
+  list and already answers "which one"; it is the whole confirmation on a
+  phone, where the panel is above the list and is genuinely scrolled out of
+  view by the time a lower row is tapped. Drawn as a pseudo-element so the rows
+  do not shift as it comes and goes, and derived from the same comparison that
+  sets `aria-current`, so the two can never disagree.
 - **The homepage testimonials are real.** Three quotations from members who
   agreed to be quoted but not to be named, so each is attributed by role and
   industry rather than by a person: "CEO, Heavy Manufacturing", "Founder,
