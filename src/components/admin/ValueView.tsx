@@ -2,6 +2,7 @@ import { keyLabel } from "@/lib/admin/registry";
 import {
   fieldRule,
   isEditableLeaf,
+  isEmptyStateField,
   photoPreviews,
   textOverPhoto,
 } from "@/lib/admin/schema";
@@ -20,6 +21,14 @@ import { PhotoEditor } from "@/components/admin/PhotoEditor";
  * A whole photo slot renders as one editor — image, alt text and note
  * together. A photo leaf reached on its own is display-only, because alt text
  * must describe the image that is actually there.
+ *
+ * **Placeholder text is lifted out of the field list and shown after it**, in
+ * its own block, read-only. Interleaved among the content fields it reads as
+ * more places to put content, which is exactly what happened: a member's
+ * testimonial went into three of them before the fields that take it were
+ * found. Separating them is the half of the fix a label could not do — the
+ * first occurrence was answered with a label, and the second one happened
+ * anyway.
  */
 export function ValueView({
   file,
@@ -44,6 +53,29 @@ export function ValueView({
         previews={photoPreviews(file, path)}
         textOver={textOverPhoto(file, path)}
       />
+    );
+  }
+
+  // Placeholder text, shown the way it actually appears on the page — dashed
+  // and muted — so what it is is legible before the note explains it.
+  if (rule.kind === "empty-state") {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-baseline justify-between gap-4">
+          <p className="type-label text-olive">
+            {label ?? keyLabel(path[path.length - 1] ?? "")}
+          </p>
+          <span className="type-label text-sage shrink-0">• Read-only</span>
+        </div>
+        <p className="type-body italic text-olive border border-dashed border-hair px-4 py-3 max-w-xl">
+          {value === null || value === "" ? "—" : String(value)}
+        </p>
+        {rule.structural && (
+          <p className="type-label text-olive italic border-l-2 border-sage pl-3 max-w-xl">
+            {rule.structural}
+          </p>
+        )}
+      </div>
     );
   }
 
@@ -139,6 +171,17 @@ export function ValueView({
     );
   }
 
+  // The content fields first, in file order, then the placeholders in their
+  // own block. Both halves keep their real paths, so nothing about saving or
+  // validating changes — this is only where each one is on the page.
+  const entries = Object.entries((value ?? {}) as Record<string, unknown>);
+  const content = entries.filter(
+    ([key]) => !isEmptyStateField(file, [...path, key]),
+  );
+  const placeholders = entries.filter(([key]) =>
+    isEmptyStateField(file, [...path, key]),
+  );
+
   return (
     <div className="flex flex-col gap-6">
       {label && <p className="type-label text-olive">{label}</p>}
@@ -147,16 +190,38 @@ export function ValueView({
           {rule.structural}
         </p>
       )}
-      {Object.entries((value ?? {}) as Record<string, unknown>).map(
-        ([key, child]) => (
-          <ValueView
-            key={key}
-            file={file}
-            path={[...path, key]}
-            label={keyLabel(key)}
-            value={child}
-          />
-        ),
+      {content.map(([key, child]) => (
+        <ValueView
+          key={key}
+          file={file}
+          path={[...path, key]}
+          label={keyLabel(key)}
+          value={child}
+        />
+      ))}
+
+      {placeholders.length > 0 && (
+        <div className="border-t border-hair pt-6 flex flex-col gap-6">
+          <div>
+            <p className="type-label text-sage">• Placeholder text</p>
+            <p className="type-label text-olive italic mt-2 max-w-xl">
+              Not content. Each of these is what the page shows in place of
+              something it has not been given yet, and each disappears on its
+              own once the real thing is filled in above. They are read-only
+              here — words put in one of them would render inside the dashed
+              pending frame, looking unfinished.
+            </p>
+          </div>
+          {placeholders.map(([key, child]) => (
+            <ValueView
+              key={key}
+              file={file}
+              path={[...path, key]}
+              label={keyLabel(key)}
+              value={child}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

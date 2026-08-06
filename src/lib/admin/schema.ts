@@ -35,6 +35,22 @@ export type FieldKind =
    */
   | "icon"
   /**
+   * Text the site shows *in place of* something it has not been given — the
+   * sentence inside a dashed pending frame, the label on a waiting card, the
+   * word standing in for a date nobody has set. It is a brief to whoever
+   * fills the slot, and it disappears on its own the moment they do.
+   *
+   * Shown but never typeable, for the same reason `icon` is. This is the one
+   * category the panel has actively taught wrong: real content has been typed
+   * into these fields twice — the About pull-quote, then a member's
+   * testimonial across three of them — and both times it rendered as a
+   * placeholder, dashed and muted, reading as unfinished while being
+   * finished. Labelling them was the fix the first time and it did not hold,
+   * so they are read-only now and grouped away from the content fields rather
+   * than sitting among them.
+   */
+  | "empty-state"
+  /**
    * A whole list or record rather than a value — including when it is
    * currently null. Never gets a text input: typing into one of these would
    * replace a structure with a sentence.
@@ -63,10 +79,123 @@ const NULLABLE_NOTE =
   "Leaving this empty keeps the labelled placeholder on the page — which is the honest state until there is real material for it.";
 
 /**
+ * Every field that only renders while something else is still empty, and the
+ * sentence saying which slot it is standing in for.
+ *
+ * **Enumerated one by one, deliberately, rather than matched on a name.** A
+ * `*Note` suffix rule is what let this through the second time: the three
+ * fields that took a member's testimonial were `note`, `cardLabel` and
+ * `attributionNote`, and only the last of them ends in "Note". `memberLabel`
+ * and `careerPeriodLabel` are the same category and look like ordinary labels;
+ * `noteLabel` and every `linkLabel` are *not* this category and look exactly
+ * like they are. The name is not a signal. This list is the signal, so a new
+ * placeholder field has to be added here on purpose — which is the point,
+ * because the cost of missing one is a field that invites the mistake back.
+ *
+ * Each sentence names the field that does take the real thing, so the panel
+ * can point somewhere rather than only refuse.
+ *
+ * Photo `note`s are the same idea and are absent from this list on purpose:
+ * they are already inseparable from their own image in the photo editor, which
+ * is the arrangement this list is trying to reproduce for text.
+ */
+const EMPTY_STATE: [RegExp, string][] = [
+  [
+    /^about:philosophy\.quoteNote$/,
+    "The sentence inside the dashed frame where the Leadership Philosophy pull-quote goes. The words themselves belong in \"quote\", just below.",
+  ],
+  [
+    /^about:philosophy\.attributionNote$/,
+    "The sentence inside the dashed frame beneath that pull-quote, shown while nobody has been named as having said it. A name belongs in \"quote attribution\".",
+  ],
+  [
+    /^councils:advisors\.placeholderNote$/,
+    "The sentence standing in for the whole Expert Advisors section, which stays deliberately empty until there are real, named people to list.",
+  ],
+  [
+    /^homepage:testimonials\.note$/,
+    "The paragraph beside the Testimonials heading, shown only while every card is still empty. A member's words belong in \"items\", on the card itself.",
+  ],
+  [
+    /^homepage:testimonials\.cardLabel$/,
+    "The label on a testimonial card that has no quote yet. A member's words belong in that card's own \"quote\".",
+  ],
+  [
+    /^homepage:testimonials\.memberLabel$/,
+    "What sits above a quote whose attribution has not been agreed yet. An agreed one belongs in that card's own \"attribution\".",
+  ],
+  [
+    /^homepage:testimonials\.attributionNote$/,
+    "The sentence inside the dashed frame under a quote nobody has been credited for. The credit belongs in that card's own \"attribution\".",
+  ],
+  [
+    /^insights:page\.emptyNote$/,
+    "The paragraph the Insights index shows while no article is published at all.",
+  ],
+  [
+    /^insights:page\.pendingCardLabel$/,
+    "The label on the \"article pending\" cards the Insights index shows in place of posts it does not have.",
+  ],
+  [
+    /^insights:page\.pendingCardPhotoNote$/,
+    "The label inside the empty photograph frame on one of those pending cards.",
+  ],
+  [
+    /^insights:detail\.pendingValue$/,
+    "The word shown in place of an article's author, publisher, date or reading time while that field is empty. Fill the article's own fields instead.",
+  ],
+  [
+    /^insights:detail\.relatedNote$/,
+    "The paragraph in the related row at the foot of an article, shown while there is no second article to link to.",
+  ],
+  [
+    /^insights:detail\.relatedCardLabel$/,
+    "The label on one of those pending related cards.",
+  ],
+  [
+    /^insights:detail\.relatedCardPhotoNote$/,
+    "The label inside the empty photograph frame on one of those cards.",
+  ],
+  [
+    /^leadership:detail\.quoteNote$/,
+    "The sentence inside the dashed frame where a profile's pull-quote goes. The words belong in that member's own \"quote\".",
+  ],
+  [
+    /^leadership:detail\.expertisePlaceholderPrefix$/,
+    "The word before a number on each stand-in \"areas of expertise\" entry, shown while a profile has none of its own.",
+  ],
+  [
+    /^leadership:detail\.recognitionPlaceholderPrefix$/,
+    "The word before a number on each stand-in recognition entry, shown while a profile has none of its own.",
+  ],
+  [
+    /^leadership:detail\.careerPeriodLabel$/,
+    "The label on each stand-in row of a profile's career timeline, shown while that profile has no timeline of its own.",
+  ],
+];
+
+const EMPTY_STATE_RULES: [RegExp, FieldRule][] = EMPTY_STATE.map(
+  ([re, standsIn]) => [
+    re,
+    {
+      kind: "empty-state",
+      nullable: false,
+      structural: `${standsIn} It is not the content — it is what shows until the content arrives, and it goes away by itself once it does. Real words typed here render as a placeholder: dashed border, muted italic, reading as unfinished while being finished. That is why this one cannot be typed into.`,
+      multiline: true,
+    },
+  ],
+);
+
+/**
  * Rules by `file:path`. The first match wins, so specific patterns come before
  * the wildcards at the end.
  */
 const RULES: [RegExp, FieldRule][] = [
+  // ---- Placeholder text, first, so nothing below can claim one of these by
+  // accident. Every entry is an exact path, so none of them reaches a field
+  // the rules underneath are meant to own.
+  ...EMPTY_STATE_RULES,
+
   // ---- The mark above a label. Structure, not copy: the set of valid keys
   // lives in `Icons.tsx`, and a key outside it would leave a section with no
   // mark to resolve.
@@ -189,21 +318,8 @@ const RULES: [RegExp, FieldRule][] = [
       multiline: true,
     },
   ],
-  // ---- The text shown *inside* a labelled empty frame — a brief for whoever
-  // fills the slot, not the slot itself. Named before the content fields
-  // below, because this is the confusion that has actually happened: a real
-  // pull-quote was typed into the philosophy slot's note and rendered with the
-  // placeholder's dashed border, looking unfinished while being finished.
-  [
-    /^[a-z]+:.*(quoteNote|attributionNote|placeholderNote|emptyNote|relatedNote)$/,
-    {
-      kind: "text",
-      nullable: false,
-      structural:
-        "This is not the content — it is the sentence shown inside the dashed \"pending\" frame while the slot is still empty, and it disappears the moment real content is added. Putting real content here renders it as a placeholder: dashed border, muted italic, reading as unfinished. The field that takes the real thing is the one named for it.",
-      multiline: true,
-    },
-  ],
+  // ---- Placeholder text used to be matched here, by name, and that is what
+  // failed. It is enumerated in `EMPTY_STATE` above and read-only now.
 
   // ---- Real quoted material. Words attributed to a person are the strictest
   // case in the copy rule: nothing is written on anyone's behalf.
@@ -346,10 +462,21 @@ export function fieldRule(
 
 /** A leaf the form may render an input for. */
 export function isEditableLeaf(value: unknown, rule: FieldRule): boolean {
-  if (rule.kind === "image" || rule.kind === "group" || rule.kind === "icon") {
+  if (
+    rule.kind === "image" ||
+    rule.kind === "group" ||
+    rule.kind === "icon" ||
+    rule.kind === "empty-state"
+  ) {
     return false;
   }
   return typeof value === "string" || value === null;
+}
+
+/** Placeholder text, shown apart from the content fields and never typeable. */
+export function isEmptyStateField(file: string, path: string[]): boolean {
+  const key = `${file}:${genericPath(path)}`;
+  return EMPTY_STATE.some(([re]) => re.test(key));
 }
 
 /**

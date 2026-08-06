@@ -767,8 +767,9 @@ Two constraints, both enforced rather than assumed:
   `Section`, `DetailHero`) and the leadership profile template were already
   gated correctly. Homepage testimonials were not fillable at all — three
   hardcoded placeholders with no content behind them — so they gained the same
-  shape and now switch when filled. `schema.ts` labels every `*Note` field in
-  the admin as the empty-state text, which is the confusion that caused this.
+  shape and now switch when filled. `schema.ts` labelled every `*Note` field in
+  the admin as the empty-state text, which was the confusion that caused this —
+  and was not enough on its own; see the entry below.
 
 - **The Trust Framework is published.** Its ten areas were the most protected
   thing in the repo — `trust.json` had no field for policy text at all, so
@@ -852,6 +853,22 @@ Two constraints, both enforced rather than assumed:
   view by the time a lower row is tapped. Drawn as a pseudo-element so the rows
   do not shift as it comes and goes, and derived from the same comparison that
   sets `aria-current`, so the two can never disagree.
+- **Every link in that panel now says where it goes.** All seven read
+  "Discover" or "Discover the Circle" on screen, which is right — the occasion
+  is on the same row, an inch away, and the repeated label is the client's own
+  microcopy. In a screen reader's list of links, though, that row is gone: six
+  entries reading "Discover", pointing at six different pages. Each carries an
+  `aria-label` naming its occasion, appended after the visible text so the
+  accessible name still contains the words on screen and speech control still
+  reaches it. Nothing visible changed — the prerendered HTML for all twenty-six
+  routes is byte-identical apart from six added attributes.
+
+  Worth knowing before this is called finished: **eleven other links on the
+  homepage have the same defect and were left alone.** Eight destinations share
+  the accessible name "Discover the Circle", the five pillar cards among them —
+  five identical links to five different pillars, the same shape as the six
+  fixed here. Fixing those means touching `PhotoCard` and `CategoryRows` rather
+  than one component, so it was not folded into this.
 - **The homepage testimonials are real.** Three quotations from members who
   agreed to be quoted but not to be named, so each is attributed by role and
   industry rather than by a person: "CEO, Heavy Manufacturing", "Founder,
@@ -872,6 +889,39 @@ Two constraints, both enforced rather than assumed:
   vulnerability" — because commas around an independent clause inside a
   not/but pair read as a splice. Same call as the appositives in § *Closing
   forms*, and no word changed.
+- **Placeholder text cannot be typed into any more.** Getting the testimonials
+  onto the site took five saves, and three of them went into the wrong field:
+  the paragraph beside the heading, the label on an empty card, and the
+  sentence under an uncredited quote. All three are text the page shows *in
+  place of* a testimonial, so all three published as placeholders — dashed,
+  muted, italic — while the cards they were meant for stayed empty. That is the
+  second time this has happened, after the About pull-quote, and the first fix
+  was a label on the field saying it was not the content.
+
+  A label was the wrong instrument. Someone scanning a long form for somewhere
+  to put a paragraph takes the first plausible box, and these boxes came first:
+  in `homepage.json` the four placeholder fields sit above `items`, where the
+  quotes actually go. So the eighteen fields of this kind across five content
+  files are now `kind: "empty-state"` — no input rendered, the save refused
+  server-side with its own message, and each one lifted out of the field list
+  into a block of its own beneath it, headed "Placeholder text" and explaining
+  what it is. Being read-only is half of it; not being in the way is the other
+  half, and only the second one addresses what actually went wrong.
+
+  **The list is written out path by path rather than matched on a name**, which
+  is the part worth keeping. The rule it replaced matched a `*Note` suffix —
+  and of the three fields that took the testimonial, only `attributionNote`
+  ends in "Note". `memberLabel` and `careerPeriodLabel` belong to the category
+  and do not look like it; `noteLabel`, `rowLabel` and every `linkLabel` look
+  exactly like it and do not belong. The suffix rule was not an incomplete fix,
+  it was a fix aimed at the wrong property.
+
+  Verified by driving the panel rather than by reading it: no input is offered
+  for any of the eighteen on any of the twelve files, and a save aimed at each
+  of the four testimonials fields — submitted by rewriting a live form's hidden
+  path, which is what a stale page would send — was refused before anything
+  reached the commit path, with a control edit through the same mechanism
+  committing normally.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

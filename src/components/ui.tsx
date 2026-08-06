@@ -99,9 +99,10 @@ export function ArrowLink({
    */
   inherit?: boolean;
   /**
-   * For a link whose destination is not fixed. Must begin with the visible
-   * text, so the accessible name still contains the label a person reads and
-   * speech control still reaches it.
+   * For a link the visible text alone does not place: one whose destination
+   * moves, or one of several siblings carrying the same words. Must begin with
+   * the visible text, so the accessible name still contains the label a person
+   * reads and speech control still reaches it.
    */
   ariaLabel?: string;
   className?: string;
