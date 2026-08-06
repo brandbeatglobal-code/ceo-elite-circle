@@ -361,32 +361,41 @@ export default function Home() {
                     className="snap-start shrink-0 w-[78vw] sm:w-[22rem] flex flex-col gap-5"
                   >
                     {/* A card follows its content: real words get quoted, an
-                        empty slot keeps the labelled waiting frame. */}
-                    <BulletLabel className="text-white/55">
-                      {item.quote
-                        ? testimonials.memberLabel
-                        : testimonials.cardLabel}
-                    </BulletLabel>
+                        empty slot keeps the labelled waiting frame.
+
+                        On a filled card the attribution takes the label's own
+                        position at the top, in the same sage-bulleted
+                        treatment. These attributions are a role and an
+                        industry rather than a name, at the members' request,
+                        so the attribution *is* what the label would otherwise
+                        have said — "Member" above "CEO, Heavy Manufacturing"
+                        would say the same thing twice. `memberLabel` still
+                        covers the half-finished case: a quote whose
+                        attribution has not been agreed yet. */}
                     {item.quote ? (
-                      <figure className="flex flex-col items-start gap-4">
+                      <figure className="flex flex-col items-start gap-5">
+                        <figcaption>
+                          <BulletLabel className="text-white/75">
+                            {item.attribution ?? testimonials.memberLabel}
+                          </BulletLabel>
+                        </figcaption>
                         <blockquote className="type-lead text-white">
                           &ldquo;{item.quote}&rdquo;
                         </blockquote>
-                        <figcaption>
-                          {item.attribution ? (
-                            <BulletLabel className="text-white/75">
-                              {item.attribution}
-                            </BulletLabel>
-                          ) : (
-                            <Placeholder
-                              tone="black"
-                              note={testimonials.attributionNote}
-                            />
-                          )}
-                        </figcaption>
+                        {!item.attribution && (
+                          <Placeholder
+                            tone="black"
+                            note={testimonials.attributionNote}
+                          />
+                        )}
                       </figure>
                     ) : (
-                      <Placeholder tone="black" />
+                      <>
+                        <BulletLabel className="text-white/55">
+                          {testimonials.cardLabel}
+                        </BulletLabel>
+                        <Placeholder tone="black" />
+                      </>
                     )}
                   </article>
                 ))}

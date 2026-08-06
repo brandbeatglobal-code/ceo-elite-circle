@@ -530,10 +530,9 @@ artefact that does not exist:
 1. **The leadership profile template** (`/about/leadership/template`) — a
    full profile for a real person needs a career timeline, areas of expertise
    and a quote, none of which we have. It is unlinked.
-2. **Testimonials** (homepage, 3 cards) — an invented quote is manufactured
-   social proof. The cards are content-driven now, so filling one through the
-   admin renders it as a real quotation; they stay empty until a member has
-   given words and agreed to be named.
+2. ~~**Testimonials** (homepage, 3 cards)~~ — **filled.** All three carry real
+   member quotations, attributed by role and industry because the members
+   agreed to be quoted and not to be named. See the status log below.
 3. **The Leadership Philosophy attribution** (`/about`) — the quote itself is
    real and published. Who said it is not recorded, so the name keeps its
    pending frame beneath the quote rather than the quote going unsourced.
@@ -659,9 +658,10 @@ Two constraints, both enforced rather than assumed:
   cannot be mistaken for a statistic; a real figure about a real person is the
   case it was never aimed at. `schema.ts` gives all three fields a note in the
   admin saying so.
-- Testimonials render as an empty carousel shell. No photo and no quote is
-  shown, because pairing a stock portrait with invented words would read as
-  a real member.
+- Testimonials carry three real member quotations. They rendered as an empty
+  carousel shell for most of this project, because pairing a stock portrait
+  with invented words would read as a real member. No photograph is shown even
+  now: the members agreed to be quoted, not identified.
 - Live on Vercel already via direct deploy (project `ceo-elite-circle`).
   This repo is being connected as the permanent source so future changes
   go through git instead.
@@ -836,6 +836,26 @@ Two constraints, both enforced rather than assumed:
 - **A dropdown looks like the site when it is open.** `FormSelect.tsx` replaces
   the native picker with the APG select-only combobox, as progressive
   enhancement over a real `<select>` — see the same section.
+- **The homepage testimonials are real.** Three quotations from members who
+  agreed to be quoted but not to be named, so each is attributed by role and
+  industry rather than by a person: "CEO, Heavy Manufacturing", "Founder,
+  Global Fintech", "Chairwoman, International Healthcare". The cards were built
+  to switch on content, so this was a data edit and the "no quotes have been
+  given yet" note disappeared on its own.
+
+  One markup change went with it. On a filled card the attribution now takes
+  the position the "Awaiting member approval" label held, in the same
+  sage-bulleted treatment, because with an anonymised attribution the label and
+  the attribution would otherwise say the same thing twice. `memberLabel` still
+  covers the half-finished case: a quote whose attribution has not been agreed.
+
+  Two things about the transcription. The words are the members' own, so US
+  spellings ("armor", "caliber") are left as given rather than matched to the
+  site's British copy. And one aside was bracketed rather than comma-set —
+  "wasn't the caliber of the leaders (that was expected) but the absolute
+  vulnerability" — because commas around an independent clause inside a
+  not/but pair read as a splice. Same call as the appositives in § *Closing
+  forms*, and no word changed.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

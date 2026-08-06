@@ -91,10 +91,17 @@ Consequences that are easy to trip over:
   entitlements are still in the no-sample-copy state.
 - Anything stating what the Circle will or won't do with member information
   must point at the Trust Framework rather than state the policy.
-- Several things are **deliberately empty and must stay so**: the homepage
-  testimonials and Expert Advisors on `/councils`. Both need a real named
-  person, which is what the other outreach is for. `docs/brief.md` § *What is
-  still empty, and why* lists them with reasons.
+- **Expert Advisors on `/councils` is deliberately empty and must stay so.** It
+  needs a real named person, which is what the outreach is for. `docs/brief.md`
+  § *What is still empty, and why* lists it with the reason.
+- **The homepage testimonials are real now**, and were empty for most of this
+  project for the same reason. Three quotations supplied by the Circle from
+  members who agreed to be quoted but **not to be named**, so each is
+  attributed by role and industry only ("CEO, Heavy Manufacturing"). That is a
+  narrower thing than the rule originally anticipated, and the distinction
+  matters: an anonymised attribution is still a real member's real words, and
+  it is still not something to invent, edit for rhythm, or extend. Adding a
+  fourth would need a fourth member.
 - **A slot's styling follows its content, never the other way round.** Real
   words get real treatment — serif, full strength, no dashed border; only a
   genuinely empty slot gets the labelled placeholder. Every slot that can hold

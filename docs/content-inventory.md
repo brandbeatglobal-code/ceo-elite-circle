@@ -138,8 +138,8 @@ Rules that are load-bearing here:
 | `experiences.featuredSlug` | page.tsx — was `experiences.find(e => e.slug === "ceo-private-dinners")` |
 | `experiences.featuredLinkLabel`, `.listLinkLabel` | page.tsx |
 | `testimonials.eyebrow` / `.title` / `.note` / `.cardLabel` | page.tsx |
-| `testimonials.memberLabel` / `.attributionNote` | new — the filled card's label, and its pending-name note |
-| `testimonials.items[]` — 3 × (`quote`, `attribution`) | new — all null; filling one switches that card to a real quotation |
+| `testimonials.memberLabel` / `.attributionNote` | the label a filled card shows while its attribution is still pending, and the note beneath it |
+| `testimonials.items[]` — 3 × (`quote`, `attribution`) | real member quotations, attributed by role and industry because the members agreed to be quoted and not named |
 | `request.variant` | page.tsx |
 
 Pillar and experience names, summaries and photos come from
@@ -407,7 +407,7 @@ all:
 | `about.philosophy.quote` | the pull-quote itself |
 | `about.philosophy.quoteNote` | the sentence shown *inside* the dashed frame while there is no quote |
 | `homepage.testimonials.items[].quote` | a member's words |
-| `homepage.testimonials.note` / `.cardLabel` | what the section says while none have been given |
+| `homepage.testimonials.note` / `.cardLabel` | what the section says while none have been given. Both are unused now that all three are filled, and are kept for the state they describe |
 | `councils.advisors.placeholderNote` | what the empty Expert Advisors section says |
 | `insights.page.emptyNote` | what the index says while nothing is published |
 | `leadership.detail.quoteNote` | the profile template's empty pull-quote frame |
