@@ -3,7 +3,7 @@
   "metadata": {
     "title": "CEO Elite Circle",
     "description": "A private circle for distinguished business leaders. Built on trust, guided by integrity, and united by a shared commitment to excellence.",
-    "titleSuffix": " — CEO Elite Circle"
+    "titleSuffix": " | CEO Elite Circle"
   },
   "nav": {
     "groups": [
@@ -125,7 +125,7 @@
     }
   },
   "draftBanner": {
-    "text": "Work-in-progress preview — copy and imagery on this site are placeholders and not final.",
+    "text": "Work-in-progress preview. Copy and imagery on this site are placeholders and not final.",
     "dismissLabel": "Dismiss"
   }
 }

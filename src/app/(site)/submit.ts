@@ -127,7 +127,7 @@ export async function submitForm(
       return fail(`“${field.label}” contains characters that are not allowed.`);
     }
     if (field.required && value === "") {
-      return fail(`“${field.label}” is required — please fill it in and send again.`);
+      return fail(`“${field.label}” is required. Please fill it in and send again.`);
     }
     if (field.kind === "email" && value !== "" && !plausibleEmail(value)) {
       return fail(`“${field.label}” does not look like an email address. Please check it and try again.`);
@@ -174,4 +174,4 @@ export async function submitForm(
 }
 
 const SENT_MESSAGE =
-  "Thank you — your message has been sent. Someone from the Circle will be in touch.";
+  "Thank you. Your message has been sent, and someone from the Circle will be in touch.";

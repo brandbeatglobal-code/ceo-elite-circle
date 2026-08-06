@@ -24,7 +24,7 @@
         ]
       }
     ],
-    "note": "Your details go straight to the Circle. Membership is by consideration — a request is the start of a conversation, not an application, and nothing is committed on either side by sending it.",
+    "note": "Your details go straight to the Circle. Membership is by consideration, so a request is the start of a conversation rather than an application, and nothing is committed on either side by sending it.",
     "cta": "Request Membership Consideration"
   },
   "application": {
@@ -103,7 +103,7 @@
         ]
       }
     ],
-    "note": "Your details go straight to the Circle. Registering interest is not a booking — places are confirmed separately, and someone will be in touch.",
+    "note": "Your details go straight to the Circle. Registering interest is not a booking. Places are confirmed separately, and someone will be in touch.",
     "cta": "Register Interest"
   },
   "governance": {
@@ -153,7 +153,7 @@
         ]
       }
     ],
-    "note": "Your details go straight to the Circle. Expressing interest is not a place on a council — councils form around what members have in common, and someone will be in touch.",
+    "note": "Your details go straight to the Circle. Expressing interest is not a place on a council. Councils form around what members have in common, and someone will be in touch.",
     "cta": "Express Interest"
   },
   "briefings": {

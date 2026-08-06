@@ -1,6 +1,6 @@
 {
   "page": {
-    "metaTitle": "Signature Experiences — CEO Elite Circle",
+    "metaTitle": "Signature Experiences | CEO Elite Circle",
     "heroEyebrow": "Signature Experiences",
     "heroTitle": "Signature Experiences",
     "heroIntro": "The occasions on which the Circle convenes. Each is built for a different kind of conversation.",
@@ -79,7 +79,7 @@
       "photo": {
         "src": "/uploads/experiences-items-1-e9bbf1dc5a.jpg",
         "alt": "An outdoor Arabic majlis in Al Ula, Saudi Arabia. Traditional carpets and cushions in the desert, creating an inviting space that blends cultural heritage with the stunning natural beauty.",
-        "note": "a majlis setting — low seating, warm light.",
+        "note": "a majlis setting: low seating, warm light.",
         "brightness": 0.606,
         "textMode": "light"
       },
@@ -132,7 +132,7 @@
       "photo": {
         "src": "/uploads/experiences-items-2-e7505765b0.jpg",
         "alt": "After-work rooftop networking event, where professionals connect, share ideas, and enjoy cocktails with skyline views.",
-        "note": "a retreat setting away from the city — landscape or lodge.",
+        "note": "a retreat setting away from the city: landscape or lodge.",
         "brightness": 1,
         "textMode": "light"
       },
@@ -238,7 +238,7 @@
       "photo": {
         "src": "/uploads/experiences-items-4-767603bd12.jpg",
         "alt": "Applause crowd manager conference applaud product close up active clap hand congratulate colleague. Many men clap applauding award businessmen excellent job. Vivid emotion audience conference applause",
-        "note": "an awards evening — a room set formally, before or during.",
+        "note": "an awards evening: a room set formally, before or during.",
         "brightness": 0.639,
         "textMode": "light"
       },
@@ -291,7 +291,7 @@
       "photo": {
         "src": "/uploads/experiences-items-5-99b3678b4a.jpg",
         "alt": "Audience Full of Tech People in Dark Conference Hall Watching an Innovative Inspiring Keynote Presentation. Business Technology Summit Auditorium Room Crowded with Delegates. Static Shot from Behind.",
-        "note": "travel or arrival — an airport, a skyline on approach.",
+        "note": "travel or arrival: an airport, a skyline on approach.",
         "brightness": 0.131,
         "textMode": "light"
       },
@@ -349,7 +349,7 @@
         "textMode": "light"
       },
       "summary": "A small table, a single subject, no agenda beyond the conversation.",
-      "intro": "A private table convened around one subject, kept small enough that a single conversation can hold. There is no programme and no speaker — only the people at the table.",
+      "intro": "A private table convened around one subject, kept small enough that a single conversation can hold. There is no programme and no speaker, only the people at the table.",
       "criteria": [
         {
           "icon": "rings",
