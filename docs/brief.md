@@ -949,6 +949,54 @@ Two constraints, both enforced rather than assumed:
   reached the commit path, with a control edit through the same mechanism
   committing normally.
 
+- **A staggered headline stopped breaking in the middle of itself.** "Why the
+  Circle Exists" sat on one line up to 1440px and wrapped from 1536px, dropping
+  "Exists" to the left margin — `text-indent` only ever indents a *first* line,
+  so the remainder of a headline that outgrows it starts at the margin. For a
+  long headline that is the intended shape; for a three-word one it reads as a
+  fault, because it is one.
+
+  The cause is that the two halves scale differently: the container caps at
+  `max-w-6xl` (1152px) while `type-h2` keeps growing to 4.25rem at about
+  1545px. The first line stayed 645px, the text grew to 686px. Worth noting
+  that it also cleared 1440px by **six pixels** — which is why it appeared on
+  some screens and not others, and why the fix is sized for headroom rather
+  than to the millimetre. At 34% the first line is 760px: 74px spare at the
+  largest type, 120px at 1440.
+
+  The other four `text-indent` blocks were swept over the same range. Two are
+  headings and neither wraps — though `/about`'s "Leadership Philosophy" has
+  only 48px of headroom at 22% and is the next one likely to go. The other two
+  are pull-quotes, where multiple lines and an indented first line are the
+  design rather than a fault. Measure with `document.fonts.ready` awaited: the
+  fallback face is about 11% wider than Sora, so an un-waited measurement
+  reports wraps that do not happen.
+- **The pillar photographs were being upscaled three and a half times.** Not a
+  low-resolution source — all five are 2000px wide and the one that looked
+  worst has the *most* measured detail of the five. The `sizes` attribute said
+  `20vw`, which described the card's width correctly and was still wrong: the
+  card is portrait (269×544) and the photographs are landscape, so
+  `object-cover` scales them to cover the height and paints about 1004px wide.
+  The browser fetched 288px. Declaring `1000px`/`650px` removes it — measured
+  upscale 3.49× → 1.0×.
+
+  The card that prompted this looks softer than its neighbours for a different
+  reason, and it is worth separating: it is a high-key, low-contrast picture of
+  white robes in a bright glass atrium. Once the upscaling is gone it is
+  visibly sharp; it simply has less tonal separation than the others. Nothing
+  to fix in the file.
+
+  **The same fault is on every full-bleed photograph on the site and is not
+  fixed here** — the audit measured the homepage hero at 4.49× on a phone,
+  `/about` at 4.11×, the pillar and experience detail heroes at 3.92×, the
+  experiences panel at 1.97× and `MediaSection` at 1.55–1.70×. Every one is the
+  same cause. It is left alone because the fix is not free: sharpness bought
+  through `sizes` costs bandwidth in proportion, since most of the fetched
+  width is cropped away — the pillar row alone goes from 57KB to 299KB at 1×
+  and 825KB at 2×. Doing that to every hero would be a real mobile-payload
+  decision, and the cheaper answer for a tall slot is a portrait crop of the
+  source, which is a re-upload rather than a code change.
+
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —
 UX/UI" by Margarita Kvasova). Grid, colour, type, background rhythm and

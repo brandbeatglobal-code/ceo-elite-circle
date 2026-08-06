@@ -126,8 +126,18 @@ export default function Home() {
           />
 
           <div className="pt-24 pb-16 lg:pt-52 lg:pb-40">
-            {/* Staggered headline — begins mid-grid, then runs full width */}
-            <h2 className="type-h2 lg:[text-indent:44%] max-w-6xl">
+            {/* Staggered headline — begins mid-grid, then runs full width.
+                `text-indent` only ever indents the *first* line, so a headline
+                that outgrows that line drops its remainder to the left margin.
+                For a long headline that is the intended shape; for a short one
+                it reads as a break in the middle of a phrase, which is what
+                44% produced. The container caps at max-w-6xl while `type-h2`
+                keeps growing to 4.25rem at about 1545px, so the first line
+                stayed 645px while the text needed 686px — it wrapped from
+                1536px up, and cleared 1440px by only six pixels, which is why
+                it also went depending on the browser. 34% leaves 760px: about
+                75px spare at the largest type and 120px at 1440. */}
+            <h2 className="type-h2 lg:[text-indent:34%] max-w-6xl">
               {philosophy.title}
             </h2>
 
