@@ -31,6 +31,13 @@ export type ShowcaseItem = {
  * ordinary navigation to that occasion's own page; hovering and clicking the
  * row only change what is being previewed.
  *
+ * **Every link here carries its occasion in its accessible name.** All seven
+ * read "Discover" or "Discover the Circle" on screen, which is right beside
+ * the name that says where each goes — and completely detached from it in a
+ * screen reader's list of links. The featured one needs it because its
+ * destination moves with the panel; the six rows need it because they are
+ * otherwise indistinguishable from each other.
+ *
  * **All seven photographs are rendered, stacked, and cross-faded by opacity.**
  * Swapping one `src` would fetch on demand and flash on first hover. Stacked,
  * they all load together when the section comes near, and the fade is then a
@@ -117,10 +124,17 @@ export function ExperienceShowcase({
               <h3 className="type-display text-xl md:text-2xl text-white">
                 {e.name}
               </h3>
+              {/* Six links reading "Discover" and nothing else are six
+                  identical entries in a screen reader's link list, each going
+                  somewhere different. The occasion is right beside it visually
+                  — a sighted visitor reads the row — but nothing joins the two
+                  in the accessible name, so it is appended here. The visible
+                  label does not change. */}
               <ArrowLink
                 href={`/experiences/${e.slug}`}
                 tone="black"
                 className="shrink-0"
+                ariaLabel={`${listLinkLabel}: ${e.name}`}
               >
                 {listLinkLabel}
               </ArrowLink>
