@@ -302,6 +302,18 @@ export function validateEdit(
         "The mark above a label is part of the design, not the copy, and is changed in the code rather than here.",
     };
   }
+  // The panel does not offer an input for one of these, so reaching this is
+  // either a stale page or a hand-made request. It is refused rather than
+  // trusted, on the same reasoning as everything else in this file: the value
+  // that would land here is real content, and it would render dashed and muted
+  // as though the slot were still waiting for it.
+  if (rule.kind === "empty-state") {
+    return {
+      ok: false,
+      error:
+        "That is the placeholder shown while this slot is empty, not the slot itself — real words put there render inside the dashed pending frame, looking unfinished. Use the field named for the content instead.",
+    };
+  }
   if (!isEditableLeaf(current, rule)) {
     return {
       ok: false,

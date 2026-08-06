@@ -112,8 +112,10 @@ Consequences that are easy to trip over:
   philosophy slot's `quoteNote` — the sentence shown *inside* the empty frame,
   a brief for whoever fills it — and rendered as a placeholder: dashed border,
   muted italic, reading as unfinished while being finished. The slot now has
-  its own `quote` and `quoteAttribution` fields, and `schema.ts` marks every
-  `*Note` field in the admin as the empty-state text rather than the content.
+  its own `quote` and `quoteAttribution` fields.
+
+  **It then broke a second time**, which is why those fields are now read-only:
+  see § *Placeholder text is not content* below.
 
   Where a quote is real but its attribution is not, the quote renders properly
   and the *name* keeps its pending frame. Half-finished is shown as
@@ -210,6 +212,45 @@ Ordering in the save action matters: **commit first, write locally second.**
 GitHub is the source of truth and local state must never run ahead of it. On
 Vercel the local write simply fails (read-only filesystem) and that is fine —
 the deploy is what brings the new content.
+
+#### Placeholder text is not content, and the admin now enforces that
+
+Eighteen fields across five content files carry the text the site shows *in
+place of* something it has not been given — the sentence inside a dashed
+pending frame, the label on a waiting testimonial card, the word standing in
+for an unset date. `kind: "empty-state"` in `schema.ts`. They are **read-only**:
+`isEditableLeaf` refuses to render an input, and `validateEdit` refuses the
+save with its own message, so a stale page or a hand-made request is caught
+too. And they are **rendered apart** from the content fields — `ValueView`
+partitions each object's children and puts them in their own block, after
+everything else, under a heading saying what they are.
+
+Both halves are the fix, and the reason is that neither alone held:
+
+- Real content was typed into one of these once (the About pull-quote), and
+  the answer was a label saying "this is not the content". That is the
+  `structural` note those fields still carry.
+- It happened again anyway. A member's testimonial went into
+  `testimonials.note`, then `testimonials.cardLabel`, then
+  `testimonials.attributionNote` — three fields, in the order they appeared in
+  the form, before the fields that actually take a quote were found further
+  down. All three published to the live site as placeholders. Reading a label
+  is not what someone scanning a long form for somewhere to put a paragraph
+  does; the fields have to stop being in the way.
+
+**The list in `EMPTY_STATE` is enumerated by hand, one exact path at a time,
+and that is deliberate.** The rule it replaced matched a `*Note` suffix, and
+the suffix is precisely what let the second occurrence through: of the three
+fields that took the testimonial, only `attributionNote` ends in "Note".
+`memberLabel` and `careerPeriodLabel` are the same category and read as
+ordinary labels; `noteLabel`, `rowLabel`, `cardLinkLabel` and every nav label
+are *not* this category and read exactly as though they were. A name is not a
+signal here. Adding a placeholder field means adding it to that list — which
+is the cost, and it is smaller than the cost of missing one.
+
+Photo `note`s are the same idea and are deliberately not in the list: they are
+already inseparable from their own image in `PhotoEditor`, which is the
+arrangement this reproduces for text.
 
 #### What an edit is applied to
 
