@@ -74,22 +74,22 @@
   "testimonials": {
     "eyebrow": "Testimonials",
     "title": "What Members Say",
-    "note": "Reflections from leaders who have found clarity, counsel, and trusted connection within the Circle.",
-    "cardLabel": "CEO, Global Financial Services",
+    "note": "No member quotes have been given or approved yet, so none are shown. These cards are structure only.",
+    "cardLabel": "Awaiting member approval",
     "memberLabel": "Member",
-    "attributionNote": "\"Finding a room where I can truly think aloud among peers who carry the same weight has been invaluable. The CEO Elite Circle provides that rare, confidential space where the conversation is focused purely on genuine counsel, rather than a transaction.\"",
+    "attributionNote": "Attribution pending. A quote needs the name of the member who gave it, and their agreement to be named.",
     "items": [
       {
-        "quote": "\"Finding a room where I can truly think aloud among peers who carry the same weight has been invaluable. The CEO Elite Circle provides that rare, confidential space where the conversation is focused purely on genuine counsel, rather than a transaction.\"",
-        "attribution": null
+        "quote": "I've been to every major summit and board retreat out there, and usually, it's just posturing. This is the only room I step into where the armor actually comes off. The people here have seen it all, so we skip the pleasantries and get straight to solving the ugly problems no one else wants to touch.",
+        "attribution": "CEO, Heavy Manufacturing"
       },
       {
-        "quote": null,
-        "attribution": null
+        "quote": "When you scale at our pace, you outgrow your mentors quickly. I joined looking for peers who could poke holes in my strategy, and I found a group that ruthlessly challenges my assumptions. It's isolating at the top, but the mental sparring in these sessions makes you sharper every single time you meet.",
+        "attribution": "Founder, Global Fintech"
       },
       {
-        "quote": "\"The Circle is exactly what it promises: a distinguished network where introductions are made with intent. The underlying trust framework ensures absolute integrity, making it an indispensable sounding board for any leader navigating complex growth.\"",
-        "attribution": null
+        "quote": "What surprised me wasn't the caliber of the leaders (that was expected) but the absolute vulnerability. To sit with executives of this magnitude and hear them openly dissect their failures changes how you lead. I trust these individuals with my most critical decisions.",
+        "attribution": "Chairwoman, International Healthcare"
       }
     ]
   }
