@@ -74,9 +74,15 @@ export function PhotoCard({
         <p className="type-body card-ink-soft">{body}</p>
       </div>
 
+      {/* Five cards in a row all read "Discover the Circle" and go to five
+          different pillars. The title is directly above the link, so a sighted
+          visitor never has to ask which is which; in a screen reader's list of
+          links that context is gone. The name is taken from the card's own
+          title rather than passed in, so it cannot disagree with the heading
+          it sits under. */}
       <div className="relative mt-14 card-ink">
         <h3 className="type-display type-h3 mb-5">{title}</h3>
-        <ArrowLink href={href} inherit>
+        <ArrowLink href={href} inherit ariaLabel={`${linkLabel}: ${title}`}>
           {linkLabel}
         </ArrowLink>
       </div>
