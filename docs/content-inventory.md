@@ -45,8 +45,14 @@ is exactly the drift the shared-copy rule exists to prevent.
 Membership categories live **only** in `content/membership.json`. The homepage
 teaser reads them from there. This is the existing `src/lib/copy.ts` invariant
 carried over: a homepage teaser and its full page must not be able to drift.
-An admin editing the homepage will not find category copy under `homepage.json`
-— that is correct, not an omission.
+An admin editing the homepage will not find category copy under `homepage.json`,
+which is correct rather than an omission.
+
+Sharing the content turned out not to be enough. Each page also had its own copy
+of the *markup*, so moving the category name into the left column on
+`/membership` left the homepage teaser on the old shape. Both now render through
+`src/components/CategoryRows.tsx`; only the tone and the link each page's rows
+carry are passed in.
 
 ---
 

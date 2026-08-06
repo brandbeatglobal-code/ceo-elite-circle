@@ -1,16 +1,12 @@
 import { Accordion } from "@/components/Accordion";
 import { CandidacyChecklist } from "@/components/CandidacyChecklist";
+import { CategoryRows } from "@/components/CategoryRows";
 import { FeatureGrid } from "@/components/FeatureGrid";
 import { Icon } from "@/components/Icons";
 import { NumberedSteps } from "@/components/NumberedSteps";
 import { PageHero } from "@/components/PageHero";
 import { RequestSection } from "@/components/RequestSection";
-import {
-  ArrowLink,
-  BulletLabel,
-  PhotoFrame,
-  SectionHeader,
-} from "@/components/ui";
+import { SectionHeader } from "@/components/ui";
 import { membership } from "@/lib/membership";
 import { ordinal } from "@/lib/ordinal";
 
@@ -66,49 +62,13 @@ export default function MembershipPage() {
             </div>
           </div>
 
-          {categories.items.map((tier, i) => (
-            <div
-              key={tier.name}
-              className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair-dark"
-              data-reveal
-              style={{ transitionDelay: `${i * 70}ms` }}
-            >
-              {/* The name leads the row. It sits in the left column at the
-                  same weight pillar and experience names carry elsewhere
-                  (`type-display type-h3`), so a visitor scanning down the page
-                  reads what each tier *is* before reading what it includes.
-                  The label stays above it: without one the column would open
-                  on a bare name with nothing saying what kind of thing it is. */}
-              <div className="flex flex-col justify-between py-16 lg:py-14 lg:pr-8 gap-8">
-                <div>
-                  <BulletLabel className="text-white/60">
-                    {categories.rowLabel}
-                  </BulletLabel>
-                  <h3 className="type-display type-h3 text-white mt-5">
-                    {tier.name}
-                  </h3>
-                </div>
-                <ArrowLink href="/contact" tone="black">
-                  {categories.rowLinkLabel}
-                </ArrowLink>
-              </div>
-
-              <div className="lg:col-span-2 lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14">
-                <p className="type-lead text-white max-w-md">{tier.body}</p>
-              </div>
-
-              <div className="lg:border-l border-hair-dark lg:pl-8 py-16 lg:py-14">
-                <PhotoFrame
-                  photo={tier.photo}
-                  tone="black"
-                  greyscale
-                  hover
-                  className="h-40 lg:h-44"
-                  sizes="(max-width: 1024px) 100vw, 25vw"
-                />
-              </div>
-            </div>
-          ))}
+          <CategoryRows
+            items={categories.items}
+            rowLabel={categories.rowLabel}
+            link={{ href: "/contact", label: categories.rowLinkLabel }}
+            tone="black"
+            reveal
+          />
         </div>
       </section>
 

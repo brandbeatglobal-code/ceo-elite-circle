@@ -1,6 +1,7 @@
 import { Fragment } from "react";
-import { MediaSection } from "@/components/MediaSection";
 import { Carousel } from "@/components/Carousel";
+import { CategoryRows } from "@/components/CategoryRows";
+import { MediaSection } from "@/components/MediaSection";
 import { PhotoCard } from "@/components/PhotoCard";
 import { RequestSection } from "@/components/RequestSection";
 import {
@@ -217,35 +218,13 @@ export default function Home() {
             </div>
           </div>
 
-          {tiers.map((tier) => (
-            <div
-              key={tier.name}
-              className="grid grid-cols-1 lg:grid-cols-4 border-b border-hair"
-            >
-              <div className="flex flex-col justify-between py-16 lg:py-14 lg:pr-8 gap-8">
-                <BulletLabel className="text-olive">
-                  {categories.rowLabel}
-                </BulletLabel>
-                <ArrowLink href="/membership">
-                  {categories.rowLinkLabel}
-                </ArrowLink>
-              </div>
-
-              <div className="lg:col-span-2 lg:border-l border-hair lg:pl-8 py-16 lg:py-14 flex flex-col justify-between gap-8">
-                <p className="type-lead text-ink max-w-md">{tier.body}</p>
-                <h3 className="type-body text-ink">{tier.name}</h3>
-              </div>
-
-              <div className="lg:border-l border-hair lg:pl-8 py-16 lg:py-14">
-                <PhotoFrame
-                  photo={tier.photo}
-                  greyscale
-                  className="h-40 lg:h-44"
-                  sizes="(max-width: 1024px) 100vw, 25vw"
-                />
-              </div>
-            </div>
-          ))}
+          {/* Same component `/membership` renders, so the two cannot drift
+              again. Only the tone and this page's own link differ. */}
+          <CategoryRows
+            items={tiers}
+            rowLabel={categories.rowLabel}
+            link={{ href: "/membership", label: categories.rowLinkLabel }}
+          />
         </div>
       </section>
 

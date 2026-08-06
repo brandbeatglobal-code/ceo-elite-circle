@@ -419,6 +419,15 @@ teaser reads them from there, so a teaser and its full page cannot drift. An
 admin editing the homepage will not find category copy under `homepage.json` —
 that is correct, not an omission.
 
+**And they render through one component, `CategoryRows`, for the same reason.**
+Sharing the content was never enough: `/membership` and the homepage teaser
+each had their own copy of the markup, so when the category name was moved into
+the left column on one, the other kept the old shape and the two drifted
+visibly. What legitimately differs is passed in — the `tone`, and the link each
+page's rows carry (`/membership` points at the application form, the homepage
+points at `/membership`) — and colours are never passed, only derived from the
+tone through `isDark()` and `hair()`, like every other primitive here.
+
 `leadership.json` types every text field as `string | null` and holds nulls —
 the profile template renders a placeholder per empty slot, so adding a real
 person there is a data edit rather than a template rewrite.
