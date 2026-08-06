@@ -836,6 +836,22 @@ Two constraints, both enforced rather than assumed:
 - **A dropdown looks like the site when it is open.** `FormSelect.tsx` replaces
   the native picker with the APG select-only combobox, as progressive
   enhancement over a real `<select>` — see the same section.
+- **The homepage experiences panel responds.** Hovering or focusing any of the
+  six listed occasions previews it in the featured panel; clicking or tapping
+  pins it until something else takes over, which is what makes it work on a
+  phone. The six rows' own "Discover" links carry the focus handling, so the
+  keyboard drives it exactly as a pointer does. All seven photographs are
+  stacked and cross-faded rather than swapped by `src`, so nothing fetches on
+  hover and nothing flashes; the site-wide reduced-motion rule turns the fade
+  into an instant swap without a branch in the component.
+
+  The active row carries a sage left rule, the same accent a highlighted
+  dropdown option gets. It is quiet on desktop, where the panel sits beside the
+  list and already answers "which one"; it is the whole confirmation on a
+  phone, where the panel is above the list and is genuinely scrolled out of
+  view by the time a lower row is tapped. Drawn as a pseudo-element so the rows
+  do not shift as it comes and goes, and derived from the same comparison that
+  sets `aria-current`, so the two can never disagree.
 - **The homepage testimonials are real.** Three quotations from members who
   agreed to be quoted but not to be named, so each is attributed by role and
   industry rather than by a person: "CEO, Heavy Manufacturing", "Founder,

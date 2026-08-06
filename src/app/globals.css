@@ -192,6 +192,51 @@ h1, h2, h3, h4 {
   cursor: not-allowed;
 }
 
+/* The homepage experiences panel. All seven photographs are stacked in the
+   same box and cross-faded by opacity, so the swap is a property change rather
+   than a fetch and never flashes on first hover. Short, in keeping with the
+   rest of the site's motion; the `prefers-reduced-motion` block at the foot of
+   this file collapses every transition to 0.01ms, so a reader who has asked
+   for reduced motion gets an instant swap with no special-casing here. */
+.exp-photo {
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+}
+
+.exp-photo.is-active {
+  opacity: 1;
+}
+
+/* The row currently being previewed or pinned, marked the same way a
+   highlighted dropdown option is: a sage left rule, never a fill. It earns its
+   place on a phone, where the panel it drives sits above the list and is
+   usually scrolled out of view when a row is tapped — without this, a tap
+   looks like it did nothing.
+
+   Drawn as a pseudo-element rather than a `border-left`, so the rows keep
+   exactly the position they had and nothing shifts sideways as the rule comes
+   and goes. It sits in the space to the left of the copy, clear of the
+   column's own hairline. */
+.exp-row {
+  position: relative;
+}
+
+.exp-row::before {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 2px;
+  background: var(--color-sage);
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.exp-row.is-active::before {
+  opacity: 1;
+}
+
 /* The form dropdowns — see `FormSelect.tsx` for why they are not `<select>`
    once JavaScript has run. The closed control is a `.field` like any other;
    everything below is the open state, which a native select renders itself in

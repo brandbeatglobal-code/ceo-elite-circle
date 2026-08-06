@@ -577,9 +577,48 @@ reduced motion both mean nothing is ever hidden.
 - Page transitions: `src/app/template.tsx` re-mounts per navigation, fades
   opacity only for 200ms, and **does not run on first load** (a module-level
   flag), so above-fold content does not animate twice.
+- The experiences panel's photo cross-fade (`.exp-photo`, 260ms) needs no
+  reduced-motion branch of its own: the `prefers-reduced-motion` block at the
+  foot of `globals.css` already collapses every transition to 0.01ms. Prefer a
+  plain CSS transition for this reason — a JS-driven animation would have to
+  re-implement that check.
 
 When adding motion, keep the same contract: nothing may be hidden by default,
 and reduced motion must skip it entirely.
+
+### The homepage experiences panel
+
+`ExperienceShowcase` is a client component because the panel has state; the
+section around it stays server-rendered.
+
+**Two layers, so it works with a pointer, a finger and a keyboard.** Hover
+previews and releases on leave; click or tap pins until something else takes
+over. Touch has no hover, so the pin is what makes it usable there.
+`onFocus`/`onBlur` bubble from each row's own "Discover" link, so tabbing the
+list drives the panel exactly as hovering does — a hover-only version would be
+invisible to a keyboard.
+
+**All seven photographs render, stacked, and cross-fade on opacity.** Swapping
+a single `src` would fetch on demand and flash the first time each is shown.
+Stacked, they load together when the section nears the viewport and the swap is
+then a property change. If a photograph is ever added here, it joins the stack;
+the cost is seven images on the homepage, which is the price of no flash.
+
+**The active row carries a sage left rule** (`.exp-row::before`), the same
+accent a highlighted dropdown option gets and never a fill, per the palette
+rule. It reads as a small flourish on desktop and is the entire confirmation on
+a phone, where the panel sits above the list and is scrolled out of view by the
+time a lower row is tapped. Two things about it: it is a pseudo-element rather
+than a `border-left`, so the rows keep their exact position as it appears and
+disappears; and the class comes from the same comparison that sets
+`aria-current`, so it is a layer over the state rather than a second copy of
+it.
+
+The links are untouched by the interaction — a row's link and the featured link
+are ordinary navigation. The featured one carries an `ariaLabel` naming the
+occasion, because its destination moves with the panel and "Discover the
+Circle" alone would not say where it goes. That label begins with the visible
+text, so the accessible name still contains it.
 
 ### Closing forms
 
