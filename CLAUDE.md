@@ -595,6 +595,38 @@ the CSS — `docs/brief.md` § *Verification* describes the method and the traps
 in it, including that a Tailwind colour and a hand-written `rgba()` cannot be
 string-compared.
 
+### `sizes` describes the crop, not the box
+
+Every photograph on the site renders through `object-cover`, and most of the
+slots are **portrait boxes holding landscape photographs**. `object-cover`
+does not scale a picture to the box's width — it scales until the box is
+covered, which on a tall box means covering the *height*. So the width the
+browser actually has to paint is
+
+    box height × the photograph's aspect ratio
+
+which can be several times the box's own width. A `sizes` that honestly
+describes the element's width is therefore still wrong, and the failure is
+silent: the browser fetches a small file, `object-cover` blows it up, and the
+image just looks soft.
+
+That is what `20vw` on the homepage pillar cards did — a 288px file drawn at
+1004px, every card in the row upscaled three and a half times. The cards now
+declare `1000px`/`650px`: pixels rather than `vw`, because the card's height
+is a fixed `rem` value rather than a share of the viewport. **Keep a slot's
+`sizes` and its `min-h-*` in step.**
+
+Two consequences worth knowing before adding a slot:
+
+- Check `naturalWidth` against the painted size in a browser rather than
+  reasoning about the class list. `docs/brief.md` § *Verification* has the
+  measurement.
+- Sharpness bought this way is expensive, because most of the fetched width is
+  cropped away — the pillar row goes from 57KB to 299KB at 1× and 825KB at 2×.
+  The cheap fix for a tall slot is a **portrait source**, which needs a
+  re-upload rather than a code change. The remaining upscaled slots are listed
+  in `docs/brief.md`.
+
 ### `PhotoFrame` owns its `position`
 
 Pass `cover` for a background photograph; never pass `relative`/`absolute` in

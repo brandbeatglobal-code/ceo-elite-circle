@@ -59,9 +59,24 @@ export function PhotoCard({
             src={photo.src}
             alt=""
             fill
-            // A card is a fifth of the container at desktop — never ask the
-            // browser for a full-width file.
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+            // Declared in pixels, and larger than the card, on purpose.
+            //
+            // `sizes` tells the browser how wide the *element* is, and the old
+            // value described that correctly: a fifth of the container at
+            // desktop. It was still wrong, because `object-cover` does not
+            // scale a photograph to the box's width — it scales it until the
+            // box is covered, and this box is portrait (269x544 at desktop)
+            // while every photograph in it is landscape. Covering the height
+            // means drawing the image about 1000px wide and cropping away most
+            // of it, so a 288px file was being blown up three and a half times
+            // and every card in the row looked soft.
+            //
+            // The number that matters is therefore the card's *height* times
+            // the photograph's aspect ratio, and the height is a fixed rem
+            // value rather than a share of the viewport — hence px here rather
+            // than vw. Keep these in step with `min-h-*` below: 20rem/34rem at
+            // roughly 16:9 is 650px/1000px.
+            sizes="(min-width: 1024px) 1000px, 650px"
             className="object-cover"
           />
           <div className="photo-card-scrim" />
