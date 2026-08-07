@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/auth";
 import { displayContent } from "@/lib/admin/content";
 import { keyLabel } from "@/lib/admin/registry";
+import { pendingFor } from "@/lib/admin/structure";
+import { SectionOrder } from "@/components/admin/SectionOrder";
 import { ValueView } from "@/components/admin/ValueView";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +29,21 @@ export default async function ContentFilePage({
   const live = await displayContent(file);
   if (!live) notFound();
   const { cf, note } = live;
+
+  // Only a page whose body is a section array gets the order controls. Every
+  // other file walks its fields exactly as before.
+  const sections = (cf.data as { sections?: unknown }).sections;
+  const order = Array.isArray(sections)
+    ? sections.map((s) => {
+        const o = (s ?? {}) as Record<string, unknown>;
+        return {
+          id: String(o.id ?? ""),
+          title: String(o.title ?? "Untitled section"),
+          type: String(o.type ?? ""),
+        };
+      })
+    : null;
+  const pending = order ? await pendingFor(cf.name) : null;
 
   return (
     <div className="wrap py-10 lg:py-14">
@@ -57,6 +74,23 @@ export default async function ContentFilePage({
         </div>
 
         <div className="flex flex-col">
+          {order && (
+            <SectionOrder
+              file={cf.name}
+              rows={order}
+              pending={
+                pending?.ok && pending.pending
+                  ? {
+                      summary: pending.pending.summary,
+                      previewUrl: pending.pending.previewUrl,
+                      compareUrl: pending.pending.compareUrl,
+                      sha: pending.pending.sha,
+                    }
+                  : null
+              }
+            />
+          )}
+
           {Object.entries(cf.data).map(([key, value]) => (
             <section
               key={key}

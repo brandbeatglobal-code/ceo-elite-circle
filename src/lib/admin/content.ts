@@ -1,5 +1,31 @@
-import { readBranchHead, readFile } from "@/lib/admin/github";
+import {
+  previewUrl,
+  readBranch,
+  readBranchHead,
+  readFile,
+  structureBranchName,
+} from "@/lib/admin/github";
 import { contentFile, type ContentFile } from "@/lib/admin/registry";
+
+/**
+ * The refusal message for a page whose structure is pending, or null if it is
+ * free to edit. Only this page — every other file is untouched by it.
+ *
+ * A branch that cannot be read at all is treated as *not* blocking: refusing
+ * every edit on the site because GitHub was briefly unreachable would be a
+ * worse failure than the one this guards against, and the save itself fails a
+ * moment later anyway when it cannot read the file it is editing.
+ */
+async function structuralHold(name: string): Promise<string | null> {
+  const branch = structureBranchName(name);
+  const state = await readBranch(branch);
+  if (!state.ok || !state.exists) return null;
+  return (
+    "This page has a structural change waiting to be published, so its text and photographs are locked until that is settled. " +
+    `Review it at ${previewUrl(branch)} and either publish it or discard it — then this field can be edited again. ` +
+    "Nothing has been changed. Other pages are unaffected."
+  );
+}
 
 /**
  * What "the current content" means to the admin.
@@ -55,6 +81,25 @@ function parseContent(
 export async function editBase(name: string): Promise<EditBase> {
   const cf = contentFile(name);
   if (!cf) return { ok: false, error: "That content file was not found." };
+
+  // A page with a structural change pending is closed to ordinary edits, and
+  // this is a refusal rather than a warning.
+  //
+  // The pending change lives on a branch holding its own copy of this file.
+  // An edit committed to `main` while that branch is open is not merged into
+  // it — it is a second version of the same file, and publishing later would
+  // have to pick one. This project has twice had to reconcile exactly that by
+  // hand (the About pull-quote, then the testimonials), and both times the
+  // thing that made it recoverable was that the divergence was small and
+  // recent. A structural branch can sit open for as long as someone takes to
+  // review it.
+  //
+  // A warning would not hold. The failures this admin has actually had were
+  // people not reading labels while looking for somewhere to type — see the
+  // empty-state fields. So the save stops here, and the message says where the
+  // pending change is and what the two ways out are.
+  const blocked = await structuralHold(name);
+  if (blocked) return { ok: false, error: blocked };
 
   const head = await readBranchHead();
   if (!head.ok) return { ok: false, error: head.error };

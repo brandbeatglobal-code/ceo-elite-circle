@@ -6,14 +6,28 @@ import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { adminEnabled, hasSession } from "@/lib/admin/auth";
 import { editBase } from "@/lib/admin/content";
-import { commitFile, commitFiles, type CommitEntry } from "@/lib/admin/github";
+import {
+  commitFile,
+  commitFiles,
+  readBranch,
+  readFile,
+  structureBranchName,
+  type CommitEntry,
+} from "@/lib/admin/github";
+import {
+  discardStructure,
+  pendingFor,
+  proposeStructure,
+  publishStructure,
+} from "@/lib/admin/structure";
+import { validateReorder } from "@/lib/admin/reorder";
 import {
   MAX_UPLOAD_BYTES,
   isOwnUpload,
   processUpload,
   uploadPath,
 } from "@/lib/admin/images";
-import { keyLabel } from "@/lib/admin/registry";
+import { contentFile, keyLabel } from "@/lib/admin/registry";
 import { getAtPath, isPhotoObject, parsePath, validatePhotoEdit, validateEdit } from "@/lib/admin/validate";
 
 export type SaveState =
@@ -239,5 +253,118 @@ export async function savePhoto(
   return {
     status: "saved",
     message: `Saved as commit ${commit.sha}.${uploadedNote} This will appear on the live site in about a minute, once the deploy finishes.`,
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ * Structural changes: propose, publish, discard.
+ *
+ * These do not write to `main`. A move goes onto the page's own structural
+ * branch, Vercel previews that branch, and publishing is the merge. See
+ * `src/lib/admin/structure.ts` for why the branch itself is the record of
+ * "this page has something pending".
+ * ------------------------------------------------------------------ */
+
+export type StructureState =
+  | { status: "idle" }
+  | { status: "error"; message: string }
+  | { status: "done"; message: string };
+
+/** Move one section up or down, on the page's structural branch. */
+export async function moveSection(
+  _prev: StructureState,
+  formData: FormData,
+): Promise<StructureState> {
+  if (!adminEnabled()) notFound();
+  if (!(await hasSession())) redirect("/admin/login");
+
+  const fileName = String(formData.get("file") ?? "");
+  const id = String(formData.get("id") ?? "");
+  const dir = String(formData.get("direction") ?? "");
+  if (dir !== "up" && dir !== "down") {
+    return { status: "error", message: "That is not a direction." };
+  }
+
+  const cf = contentFile(fileName);
+  if (!cf) return { status: "error", message: "That page was not found." };
+
+  // The move is applied to whatever the *branch* holds if there is one, and to
+  // `main` otherwise — so a second move builds on the first instead of
+  // silently discarding it.
+  const branch = structureBranchName(cf.name);
+  const branchState = await readBranch(branch);
+  if (!branchState.ok) return { status: "error", message: branchState.error };
+  const source = await readFile(
+    `content/${cf.fileName}`,
+    branchState.exists ? branch : undefined,
+  );
+  if (!source.ok) return { status: "error", message: source.error };
+
+  const result = validateReorder(source.content, id, dir);
+  if (!result.ok) return { status: "error", message: result.error };
+
+  const proposed = await proposeStructure(
+    cf.name,
+    result.json,
+    `Structure: ${cf.fileName} — move a section ${dir}`,
+    result.summary,
+  );
+  if (!proposed.ok) return { status: "error", message: proposed.error };
+
+  revalidatePath(`/admin/content/${cf.name}`);
+  return {
+    status: "done",
+    message: `${result.summary} Review the preview before publishing — the build takes about a minute.`,
+  };
+}
+
+export async function publishSections(
+  _prev: StructureState,
+  formData: FormData,
+): Promise<StructureState> {
+  if (!adminEnabled()) notFound();
+  if (!(await hasSession())) redirect("/admin/login");
+
+  const cf = contentFile(String(formData.get("file") ?? ""));
+  if (!cf) return { status: "error", message: "That page was not found." };
+
+  const state = await pendingFor(cf.name);
+  if (!state.ok) return { status: "error", message: state.error };
+  if (!state.pending) {
+    return { status: "error", message: "There is nothing pending on this page." };
+  }
+
+  const published = await publishStructure(cf.name, state.pending.summary ?? "");
+  if (!published.ok) return { status: "error", message: published.error };
+
+  revalidatePath(`/admin/content/${cf.name}`);
+  revalidatePath("/admin");
+  return {
+    status: "done",
+    message: published.sha
+      ? `Published as commit ${published.sha}. It will be on the live site in about a minute.`
+      : "Published — the live site already had this change.",
+  };
+}
+
+export async function discardSections(
+  _prev: StructureState,
+  formData: FormData,
+): Promise<StructureState> {
+  if (!adminEnabled()) notFound();
+  if (!(await hasSession())) redirect("/admin/login");
+
+  const cf = contentFile(String(formData.get("file") ?? ""));
+  if (!cf) return { status: "error", message: "That page was not found." };
+
+  const discarded = await discardStructure(cf.name);
+  if (!discarded.ok) return { status: "error", message: discarded.error };
+
+  revalidatePath(`/admin/content/${cf.name}`);
+  revalidatePath("/admin");
+  return {
+    status: "done",
+    message:
+      "Discarded. The live page is unchanged and this page can be edited again.",
   };
 }

@@ -35,7 +35,22 @@ import { ordinal } from "@/lib/ordinal";
  *    sitting fourth, or two cream sections adjacent because both remembered
  *    being first. Derivation is what makes a reorder safe.
  */
-export type PageSection =
+type WithId = {
+  /**
+   * Short, permanent, and never regenerated.
+   *
+   * Minted once when a section is created and untouched by anything after —
+   * reordering, editing its copy, even changing its type. It is not content
+   * and is never shown as a field to fill in; it exists so a structural change
+   * can be *described* rather than merely diffed. Without it, swapping two
+   * sections reads as six positions changing; with it, it reads as two
+   * sections swapping, which is what actually happened.
+   */
+  id: string;
+};
+
+export type PageSection = WithId &
+  (
   /** Two-column prose: sans headline, a serif lead and a body paragraph. */
   | { type: "prose"; eyebrow: string; title: string; lead: string; body: string }
   /** Two-column prose whose right column is a labelled pending frame. */
@@ -71,7 +86,7 @@ export type PageSection =
       title: string;
       intro: string;
       criteria: Criterion[];
-    };
+    });
 
 /**
  * The background a section gets, from where it sits and nothing else.
@@ -193,12 +208,12 @@ export function SectionList({ sections }: { sections: PageSection[] }) {
   return (
     <>
       {sections.map((section, i) => (
+        // Keyed by the section's own id rather than its position, so React
+        // moves a reordered section rather than rebuilding two of them.
         // A keyed Fragment, never a wrapper element: every section component
         // renders its own full-bleed <section>, and an extra div around it
         // would sit between that and <main>.
-        <Fragment key={`${section.type}-${i}`}>
-          {renderSection(section, i)}
-        </Fragment>
+        <Fragment key={section.id}>{renderSection(section, i)}</Fragment>
       ))}
     </>
   );

@@ -965,3 +965,52 @@ document element, re-applied before paint by the inline script.
 Removing it at launch: delete `DraftBanner`, `DismissDraftBanner`, their mount
 in `SiteChrome.tsx`, and the `.draft-banner` / `.hero-foot` rules plus the two
 `body` padding rules in `globals.css`. That is the whole removal.
+
+## Structural changes: propose, preview, publish
+
+Every text and photo save in this admin goes straight to `main` and is live in
+about a minute. **A structural change does not.** Moving a section renumbers
+everything below it and repaints half the page's backgrounds; the only honest
+review of that is looking at the page, which means it has to exist somewhere
+reviewable before it is live.
+
+`src/lib/admin/structure.ts` is that mechanism, and B3's add/remove/reorder UI
+is meant to sit on it unchanged.
+
+- **A change is committed to `admin/structure/{page}`**, one branch per page at
+  a deterministic name. A second proposal for the same page is another commit
+  on the branch already there, never a rival branch.
+- **The branch's existence is the pending-state record.** There is no second
+  flag anywhere — no file, no field, no cache. Two records of one fact can
+  disagree, and this one gates every content save on that page, so a stale
+  flag would either block edits it should not or allow edits it should not.
+  Publish and discard cannot drift from git because they *are* the git
+  operation.
+- **Vercel previews the branch by itself.** Nothing was built for that. The
+  admin links to the deployment list filtered to the branch rather than to the
+  preview host directly: the alias is `{project}-git-{branch}-{team}`, which
+  for any readable branch name exceeds the 63-character DNS label limit, so
+  Vercel truncates and appends a hash of its own. Computing it would need
+  Vercel's API and a second token this project does not have.
+- **Publish is `POST /merges`, then delete the branch.** A 409 is reported as a
+  real conflict rather than resolved automatically — a line-based merge of a
+  content file is precisely what this project has had to undo by hand twice.
+- Section ids make the summary possible. Compared by position, moving one
+  section reads as every position below it changing; compared by id it reads
+  as the two that actually moved. `describeReorder` names the swap case
+  explicitly because it is the common one.
+
+### The hard block
+
+`editBase` refuses every content save on a page whose structural branch exists,
+with a message and the preview link. Not a warning — the failures this admin
+has actually had came from people not reading labels while looking for
+somewhere to type. Other pages are entirely unaffected.
+
+A branch that cannot be *read* does not block: refusing every edit on the site
+because GitHub blinked is a worse failure than the one this guards, and the
+save fails a moment later anyway when it cannot read the file.
+
+`proposeStructure` deletes a branch it has just created if the commit onto it
+fails. An empty branch is worse than no branch — it would lock the page for a
+change that does not exist.
