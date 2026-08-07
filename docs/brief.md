@@ -1036,6 +1036,42 @@ Two constraints, both enforced rather than assumed:
   what it looks like; the sentence says what it is for, and the whole
   discipline of this set is that those are different questions.
 
+- **`/councils` renders its body from an array** (structural admin, Phase B1).
+  The page's six sections moved out of `page.tsx` and into
+  `content/councils.json` as `sections: [{ type, … }]`, rendered by
+  `SectionList`. No admin interface yet — this step is only the architecture.
+
+  Both guardrails are in the type rather than in a convention. `PageSection`
+  has no `requestSection` member, so the closing form cannot be expressed as an
+  entry at all; the page appends it after the array at
+  `ordinal(sections.length)`. And it has no `number` or `tone` field, because
+  `SectionList` derives both from position. Proved rather than asserted: the
+  array was reversed with the pending section moved to the front, rebuilt, and
+  every section took its new number and its new background automatically —
+  including `featureGrid`, which rendered cream at an even index having been
+  hardcoded black until this change. Then reverted.
+
+  **One section changes colour, and it is the one thing here that needs a
+  decision.** Deriving tone from position gives cream, black, cream, black,
+  cream, black; `/councils` currently ends cream, black, cream, black, cream,
+  **cream**, because Expert Advisors is a default-cream `Section` following a
+  cream `NumberedSteps`. So Expert Advisors becomes black. Twenty-five of the
+  twenty-six routes are byte-identical and `/councils` differs in nothing else.
+
+  Worth recording why this is not avoidable by choosing a different pilot:
+  **no page on the site currently alternates tone by position except the two
+  that generate their sections from a `.map()`.** `/membership` runs
+  black-black, `/about` runs six creams, the homepage runs cream-cream and
+  black-black. The tones were never positional — they are whatever each
+  component defaulted to. Adopting the rule will change something on almost
+  every page it reaches.
+
+  Two smaller consequences, both recorded in `CLAUDE.md`. A component in the
+  array has to honour the tone it is given, so `FeatureGrid` gained a `tone`
+  prop defaulting to its old black. And named content becomes positional: the
+  council names the form's dropdown reads used to be `councils.councils.items`
+  and now have to be found in the array, which `councilNames()` does.
+
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —
 UX/UI" by Margarita Kvasova). Grid, colour, type, background rhythm and
