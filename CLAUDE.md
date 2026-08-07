@@ -443,12 +443,16 @@ therefore one edit in two places; both fields carry a note saying so.
 
 ### Icons
 
-`src/components/Icons.tsx` holds sixteen marks, and **each one carries a
+`src/components/Icons.tsx` holds twenty-four marks, and **each one carries a
 written meaning above its definition**. That is what makes an assignment
 checkable: a mark is chosen because it says what its label says. Reuse across
 sections is fine where the concepts really are the same; what is not fine is
 the same sequence appearing under unrelated words, which is what four marks
 spread over sixteen sections produced.
+
+`ICON_MEANINGS` carries the same sentences in a record, because the picker
+needs them at runtime. Both are kept: the comment is for whoever edits the
+file, the record is for whoever chooses a mark and will never open it.
 
 **Every icon is named by content, resolved by the component** — `"icon": "…"`
 in the JSON, `Icon` in `Icons.tsx` looks it up. `CandidacyChecklist` used to
@@ -456,11 +460,24 @@ hardcode a positional array instead, so all thirteen candidacy sections showed
 the same four shapes in the same order whatever their criteria said. There is
 now one pattern, not two.
 
-The key is design rather than copy, so the admin shows it read-only
-(`kind: "icon"` in `schema.ts`) and `validateEdit` refuses it: a key outside
-the set is a page with no mark to resolve. `Icon` also falls back to `rings`
-for an unknown key rather than throwing, because a wrong mark is a far better
-failure than a page that will not render.
+**The admin picks a mark from a grid of the drawings** (`IconPicker`), not from
+a text field. It was read-only for most of this project, and the reason was
+sound: as free text a key outside the set leaves a section with no mark to
+resolve. But the field being *design* was never the argument for locking it —
+which mark belongs over which words is a judgement about the words. A picker
+reopens it without reopening the bug, because the only values it can emit are
+the ones it drew. `validateEdit` still checks the key against `isIconKey`,
+since a form is not the only thing that can post to a server action, and a
+wrong-but-valid key is a quietly wrong section rather than a visible break.
+
+Adding a mark means adding the component, the `IconKey` union entry, the
+`marks` record entry and an `ICON_MEANINGS` sentence — the picker and the
+validator both derive from `marks`, so neither needs touching. Proof a new one
+at 20px on the dark ramp before shipping it; `docs/brief.md` records which of
+the current set are thinnest there.
+
+`Icon` falls back to `rings` for an unknown key rather than throwing, because a
+wrong mark is a far better failure than a page that will not render.
 
 Membership categories live only in `content/membership.json`; the homepage
 teaser reads them from there, so a teaser and its full page cannot drift. An

@@ -29,9 +29,13 @@ export type FieldKind =
    */
   | "image"
   /**
-   * The key naming which mark sits above a label. The mark is design, not
-   * copy — and a key that does not exist in `Icons.tsx` is a page that will
-   * not render, so this is shown but never made typeable.
+   * The key naming which mark sits above a label.
+   *
+   * Chosen from a grid of the actual drawings, never typed. It was read-only
+   * for exactly one reason — as free text, a key outside `Icons.tsx` left a
+   * section with no mark to resolve — and a picker closes that by
+   * construction rather than by closing the field: the only values it can
+   * produce are the ones it drew.
    */
   | "icon"
   /**
@@ -205,7 +209,7 @@ const RULES: [RegExp, FieldRule][] = [
       kind: "icon",
       nullable: false,
       structural:
-        "Which mark sits above this label. The marks are part of the design and are chosen to agree with the words beneath them, so they are changed in the code rather than typed here.",
+        "Which mark sits above this label. The marks are part of the design, and the one rule they follow is that a mark has to say what its label says — so choose the one whose meaning matches the words beneath it, rather than the one that looks best on its own. Reusing a mark elsewhere on the site is fine where the idea really is the same; what to avoid is the same run of marks appearing under unrelated words.",
     },
   ],
 
@@ -462,10 +466,11 @@ export function fieldRule(
 
 /** A leaf the form may render an input for. */
 export function isEditableLeaf(value: unknown, rule: FieldRule): boolean {
+  // `icon` is absent from this list on purpose: it is editable, just not
+  // typeable. `ValueView` sends it to the picker before it ever reaches here.
   if (
     rule.kind === "image" ||
     rule.kind === "group" ||
-    rule.kind === "icon" ||
     rule.kind === "empty-state"
   ) {
     return false;

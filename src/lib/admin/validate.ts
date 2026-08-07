@@ -1,3 +1,4 @@
+import { isIconKey } from "@/components/Icons";
 import { fieldRule, isEditableLeaf } from "@/lib/admin/schema";
 
 /**
@@ -295,13 +296,6 @@ export function validateEdit(
         "A photograph and its text are edited together, as one unit — use the photo editor for this slot.",
     };
   }
-  if (rule.kind === "icon") {
-    return {
-      ok: false,
-      error:
-        "The mark above a label is part of the design, not the copy, and is changed in the code rather than here.",
-    };
-  }
   // The panel does not offer an input for one of these, so reaching this is
   // either a stale page or a hand-made request. It is refused rather than
   // trusted, on the same reasoning as everything else in this file: the value
@@ -351,6 +345,21 @@ export function validateEdit(
     next = null;
   } else {
     next = trimmed;
+  }
+
+  // The picker cannot produce a key outside the set, but the picker is not the
+  // only thing that can reach a server action. A key with no mark behind it
+  // renders the Circle's own mark instead of throwing, so this is not a broken
+  // page — it is a section quietly showing the wrong thing, which is worse to
+  // find later than a refused save is now.
+  if (rule.kind === "icon") {
+    if (!isIconKey(next)) {
+      return {
+        ok: false,
+        error:
+          "That is not one of the marks. Choose one from the grid — the site has no drawing for any other name.",
+      };
+    }
   }
 
   if (rule.kind === "slug" && next !== null) {

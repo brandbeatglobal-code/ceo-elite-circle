@@ -229,6 +229,131 @@ export function IconCycle({ className = "" }: IconProps) {
   );
 }
 
+/** A line resting on a shallow open arc — a foundation; what the rest stands on. */
+export function IconAnchor({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path {...hairline} d="M24 6V30" />
+      <path {...hairline} d="M8 30A26 26 0 0 0 40 30" />
+    </svg>
+  );
+}
+
+/**
+ * Short arcs closing in on a small open centre — precision; sharp focus.
+ *
+ * Three arcs, each at its own radius and its own angle. A first pass used four
+ * and put two of them on the same radius: at 20px the arcs crowded into a
+ * smudge, and the matched pair read as a broken ring, which is `cycle`.
+ */
+export function IconAperture({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <circle {...hairline} cx="24" cy="24" r="4.5" />
+      <path {...hairline} d="M13.4 21.2A11 11 0 0 1 31.8 16.2" />
+      <path {...hairline} d="M40 29.8A17 17 0 0 1 11 34.9" />
+      <path {...hairline} d="M13 4.9A22 22 0 0 1 46 24" />
+    </svg>
+  );
+}
+
+/** Ruled lines of differing length — a record kept; what is tracked. */
+export function IconLedger({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path {...hairline} d="M8 11h32" />
+      <path {...hairline} d="M8 20h22" />
+      <path {...hairline} d="M8 29h32" />
+      <path {...hairline} d="M8 38h14" />
+    </svg>
+  );
+}
+
+/**
+ * A ring with a line rising from it — a point reached; progress marked.
+ *
+ * The line rises rather than trailing off at a diagonal: a ring with a
+ * diagonal handle is the magnifier glyph, and a borrowed meaning is not
+ * abstract, it is just wrong. Same reasoning as `threshold` and `compass`.
+ */
+export function IconWaypoint({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <circle {...hairline} cx="24" cy="35" r="9" />
+      <path {...hairline} d="M24 26V4" />
+    </svg>
+  );
+}
+
+/** A wide shallow arc between two marks — reach; distant points connected. */
+export function IconSpan({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <circle {...hairline} cx="6" cy="30" r="3" />
+      <circle {...hairline} cx="42" cy="30" r="3" />
+      <path {...hairline} d="M9 28A30 30 0 0 1 39 28" />
+    </svg>
+  );
+}
+
+/**
+ * A closed circle inside a frame left open — the essential part; what is
+ * irreducible.
+ *
+ * The frame is broken at its corners rather than mid-edge: four L-shaped
+ * corner pieces are the crop-mark glyph, which is the borrowed meaning to
+ * avoid here.
+ */
+export function IconKernel({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path {...hairline} d="M14 4h20" />
+      <path {...hairline} d="M14 44h20" />
+      <path {...hairline} d="M4 14v20" />
+      <path {...hairline} d="M44 14v20" />
+      <circle {...hairline} cx="24" cy="24" r="6" />
+    </svg>
+  );
+}
+
+/**
+ * Marks stepping down in sequence — succession; something passed forward.
+ *
+ * Plain strokes descending, where `ascent` is rings rising: the two are
+ * deliberately opposite in both direction and mark, since a transition and a
+ * handover are near neighbours in meaning and must not be in appearance.
+ */
+export function IconRelay({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path {...hairline} d="M4 14h12" />
+      <path {...hairline} d="M18 23h12" />
+      <path {...hairline} d="M32 32h12" />
+    </svg>
+  );
+}
+
+/**
+ * Sightlines opening from one point onto a wider edge — perspective; the
+ * wider picture.
+ *
+ * The lines stop short of the bar, and the bar overhangs them by nine units
+ * either side. A first pass ran the lines all the way into a bar that barely
+ * cleared them, which closed into a plain down-pointing triangle — a play or
+ * collapse glyph, and no longer a mark about seeing more than you stand in
+ * front of. The gap is what keeps it open.
+ */
+export function IconVantage({ className = "" }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <circle {...hairline} cx="24" cy="41" r="2.5" />
+      <path {...hairline} d="M24 37 12 18" />
+      <path {...hairline} d="M24 37 36 18" />
+      <path {...hairline} d="M3 14h42" />
+    </svg>
+  );
+}
+
 /**
  * Content files name an icon by key rather than importing a component: the
  * label and body of a feature are content, the mark above them is design.
@@ -250,7 +375,15 @@ export type IconKey =
   | "signal"
   | "weave"
   | "chamber"
-  | "cycle";
+  | "cycle"
+  | "anchor"
+  | "aperture"
+  | "ledger"
+  | "waypoint"
+  | "span"
+  | "kernel"
+  | "relay"
+  | "vantage";
 
 const marks: Record<IconKey, (props: IconProps) => React.ReactElement> = {
   rings: IconRings,
@@ -269,6 +402,50 @@ const marks: Record<IconKey, (props: IconProps) => React.ReactElement> = {
   weave: IconWeave,
   chamber: IconChamber,
   cycle: IconCycle,
+  anchor: IconAnchor,
+  aperture: IconAperture,
+  ledger: IconLedger,
+  waypoint: IconWaypoint,
+  span: IconSpan,
+  kernel: IconKernel,
+  relay: IconRelay,
+  vantage: IconVantage,
+};
+
+/**
+ * What each mark means, in the admin's own words.
+ *
+ * The picker shows the drawing, which says what it looks like but not what it
+ * is *for* — and the whole discipline of this set is that a mark is chosen
+ * because it agrees with the words beneath it. So the sentence travels with
+ * the mark rather than living only in a comment above its definition, where
+ * nobody choosing an icon would ever read it.
+ */
+export const ICON_MEANINGS: Record<IconKey, string> = {
+  rings: "The Circle itself — a bounded set, and being inside it",
+  arcs: "A meeting point — counsel given and taken",
+  stack: "Accumulation — something built up over time",
+  orbit: "Reach across regions — travel, other markets",
+  threshold: "Admission — crossing in",
+  compass: "Direction — judgement, a decision to steer by",
+  converge: "The final call — everything narrowing to one point",
+  lattice: "Structure — a framework, a shared discipline",
+  horizon: "The long view — distance, beyond the quarter",
+  pair: "One to one — an introduction, counsel between two",
+  crest: "Distinction — standing, recognition",
+  ascent: "Progression — a transition, stepping up",
+  signal: "Something carried between people — said, or heard",
+  weave: "A network — introductions in both directions",
+  chamber: "A closed room — what is said stays",
+  cycle: "A recurring year — a round returned to",
+  anchor: "A foundation — what the rest stands on",
+  aperture: "Precision — sharp focus",
+  ledger: "A record kept — what is tracked",
+  waypoint: "A point reached — progress marked",
+  span: "Reach — distant points connected",
+  kernel: "The essential part — what is irreducible",
+  relay: "Succession — something passed forward",
+  vantage: "Perspective — the wider picture",
 };
 
 export const ICON_KEYS = Object.keys(marks) as IconKey[];
