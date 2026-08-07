@@ -7,6 +7,7 @@
   },
   "sections": [
     {
+      "id": "daa90f5f",
       "type": "prose",
       "eyebrow": "Purpose",
       "title": "Purpose",
@@ -14,6 +15,7 @@
       "body": "Where a forum convenes around a single question and closes, a council holds its membership across the year. Each session begins where the last ended. The result is less immediate than a forum and considerably more durable."
     },
     {
+      "id": "cd662a8c",
       "type": "variantCards",
       "eyebrow": "Councils",
       "title": "The Councils",
@@ -34,6 +36,7 @@
       ]
     },
     {
+      "id": "fe90cd4e",
       "type": "numberedSteps",
       "eyebrow": "Meeting format",
       "title": "Meeting Format",
@@ -58,6 +61,7 @@
       ]
     },
     {
+      "id": "03cc697f",
       "type": "featureGrid",
       "eyebrow": "Benefits",
       "title": "Benefits",
@@ -86,6 +90,7 @@
       ]
     },
     {
+      "id": "8f13022e",
       "type": "numberedSteps",
       "eyebrow": "Annual calendar",
       "title": "Annual Calendar",
@@ -110,6 +115,7 @@
       ]
     },
     {
+      "id": "241664a9",
       "type": "pending",
       "eyebrow": "Expert advisors",
       "title": "Expert Advisors",

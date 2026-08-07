@@ -219,6 +219,19 @@ const RULES: [RegExp, FieldRule][] = [
   // the rules underneath are meant to own.
   ...EMPTY_STATE_RULES,
 
+  // ---- A section's permanent id. Not content, and never edited: it is what
+  // lets a structural change be described ("these two swapped") rather than
+  // diffed line by line, and regenerating one would break exactly that.
+  [
+    /^[a-z]+:sections\.\*\.id$/,
+    {
+      kind: "section-type",
+      nullable: false,
+      structural:
+        "This section's permanent internal reference. It is not content and never appears on the site — it exists so that when sections are moved, the change can be described as \"these two swapped\" rather than as every position on the page having changed. It is set once when a section is created and never altered.",
+    },
+  ],
+
   // ---- Which component a section renders as. Read-only: see `section-type`.
   [
     /^[a-z]+:sections\.\*\.type$/,

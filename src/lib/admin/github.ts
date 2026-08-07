@@ -173,6 +173,9 @@ export async function commitFiles(
   deletions: string[],
   message: string,
   baseCommitSha?: string,
+  /** Which branch to commit on. Defaults to `main`; a structural change
+   *  passes its own branch so the change lands there and nowhere else. */
+  targetBranch: string = BRANCH,
 ): Promise<CommitResult> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) return { ok: false, error: NO_TOKEN };
@@ -202,7 +205,7 @@ export async function commitFiles(
   try {
     let headSha = baseCommitSha;
     if (!headSha) {
-      const ref = await call("GET", `${base}/ref/${encodeURIComponent(`heads/${BRANCH}`)}`);
+      const ref = await call("GET", `${base}/ref/${encodeURIComponent(`heads/${targetBranch}`)}`);
       if (ref.status === 401 || ref.status === 403) return { ok: false, error: REFUSED };
       if (ref.status !== 200) {
         return { ok: false, error: `GitHub could not be read (HTTP ${ref.status}). Nothing has been changed.` };
@@ -252,7 +255,7 @@ export async function commitFiles(
       return { ok: false, error: "GitHub rejected the change. Nothing has been committed." };
     }
 
-    const updated = await call("PATCH", `${base}/refs/${encodeURIComponent(`heads/${BRANCH}`)}`, {
+    const updated = await call("PATCH", `${base}/refs/${encodeURIComponent(`heads/${targetBranch}`)}`, {
       sha: commitSha,
     });
     if (updated.status === 409 || updated.status === 422) {
@@ -374,4 +377,188 @@ export async function commitFile(
       error: "GitHub could not be reached. Nothing has been committed.",
     };
   }
+}
+
+/* ------------------------------------------------------------------ *
+ * Branch operations, for structural changes.
+ *
+ * Everything above this line writes straight to `main`, because a text or
+ * photo edit is small, reviewable in the field itself, and wrong in a way
+ * that is obvious the moment the deploy lands. A structural change is not:
+ * moving a section changes several numbers and several backgrounds at once,
+ * and the only honest review of it is seeing the page.
+ *
+ * So a structural change goes to a branch of its own, Vercel builds that
+ * branch as a preview on its own, and publishing is a merge. There is no
+ * separate record of "this page has a change pending" — **the branch's
+ * existence is that record.** Nothing to keep in step, nothing to go stale,
+ * and no way for the flag and the git state to disagree, because there is
+ * only one of them.
+ * ------------------------------------------------------------------ */
+
+/** One pending structural branch per page, at a name derived from the page. */
+export function structureBranchName(page: string): string {
+  return `admin/structure/${page}`;
+}
+
+export type BranchState =
+  | { ok: true; exists: false }
+  | { ok: true; exists: true; sha: string }
+  | { ok: false; error: string };
+
+/** Does this page have a structural change pending, and at what commit? */
+export async function readBranch(branch: string): Promise<BranchState> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { ok: false, error: NO_TOKEN };
+  try {
+    const res = await fetch(
+      `${API_BASE}/repos/${REPO}/git/ref/${encodeURIComponent(`heads/${branch}`)}`,
+      { headers: headers(token), cache: "no-store" },
+    );
+    if (res.status === 404) return { ok: true, exists: false };
+    if (res.status === 401 || res.status === 403) return { ok: false, error: REFUSED };
+    if (res.status !== 200) {
+      return { ok: false, error: `GitHub could not be read (HTTP ${res.status}).` };
+    }
+    const body = (await res.json()) as { object?: { sha?: string } };
+    const sha = body.object?.sha;
+    if (typeof sha !== "string") {
+      return { ok: false, error: "GitHub returned the branch in an unexpected form." };
+    }
+    return { ok: true, exists: true, sha };
+  } catch {
+    return { ok: false, error: "GitHub could not be reached." };
+  }
+}
+
+/** Point a new branch at a commit. */
+export async function createBranch(
+  branch: string,
+  sha: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { ok: false, error: NO_TOKEN };
+  try {
+    const res = await fetch(`${API_BASE}/repos/${REPO}/git/refs`, {
+      method: "POST",
+      headers: headers(token),
+      cache: "no-store",
+      body: JSON.stringify({ ref: `refs/heads/${branch}`, sha }),
+    });
+    if (res.status === 201) return { ok: true };
+    if (res.status === 401 || res.status === 403) return { ok: false, error: REFUSED };
+    if (res.status === 422) {
+      return { ok: false, error: "That branch already exists. Reload and try again." };
+    }
+    return { ok: false, error: `GitHub refused to create the branch (HTTP ${res.status}).` };
+  } catch {
+    return { ok: false, error: "GitHub could not be reached." };
+  }
+}
+
+export async function deleteBranch(
+  branch: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { ok: false, error: NO_TOKEN };
+  try {
+    const res = await fetch(
+      `${API_BASE}/repos/${REPO}/git/refs/${encodeURIComponent(`heads/${branch}`)}`,
+      { method: "DELETE", headers: headers(token), cache: "no-store" },
+    );
+    // 204 deleted; 404 already gone, which is the same end state and is what a
+    // double-click on Discard produces.
+    if (res.status === 204 || res.status === 404) return { ok: true };
+    if (res.status === 401 || res.status === 403) return { ok: false, error: REFUSED };
+    return { ok: false, error: `GitHub refused to delete the branch (HTTP ${res.status}).` };
+  } catch {
+    return { ok: false, error: "GitHub could not be reached." };
+  }
+}
+
+export type MergeResult =
+  | { ok: true; sha: string | null }
+  | { ok: false; conflict: boolean; error: string };
+
+/**
+ * Merge a branch into `main`.
+ *
+ * The same merge that has published every change in this project, asked for
+ * over the API instead of by hand. A 409 is a real conflict — something else
+ * changed the same file while the branch was open — and is reported as one
+ * rather than resolved automatically, because a line-based merge of a content
+ * file is exactly the thing this project has had to undo twice.
+ */
+export async function mergeBranch(
+  branch: string,
+  message: string,
+): Promise<MergeResult> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return { ok: false, conflict: false, error: NO_TOKEN };
+  try {
+    const res = await fetch(`${API_BASE}/repos/${REPO}/merges`, {
+      method: "POST",
+      headers: headers(token),
+      cache: "no-store",
+      body: JSON.stringify({ base: BRANCH, head: branch, commit_message: message }),
+    });
+    if (res.status === 201) {
+      const body = (await res.json()) as { sha?: string };
+      return { ok: true, sha: body.sha ?? null };
+    }
+    // Nothing to merge — the branch is already contained in main. That is a
+    // success for our purposes: the intended state is live.
+    if (res.status === 204) return { ok: true, sha: null };
+    if (res.status === 409) {
+      return {
+        ok: false,
+        conflict: true,
+        error:
+          "This change cannot be published automatically: the page was altered elsewhere while it was pending, and merging the two would have to guess. Discard this change and make it again on the current version.",
+      };
+    }
+    if (res.status === 401 || res.status === 403) {
+      return { ok: false, conflict: false, error: REFUSED };
+    }
+    return {
+      ok: false,
+      conflict: false,
+      error: `GitHub refused the merge (HTTP ${res.status}). Nothing has been published.`,
+    };
+  } catch {
+    return { ok: false, conflict: false, error: "GitHub could not be reached." };
+  }
+}
+
+/** Read a file from any branch, not just `main`. */
+export async function readFileOnBranch(
+  repoPath: string,
+  branch: string,
+): Promise<FetchedFile> {
+  return readFile(repoPath, branch);
+}
+
+/**
+ * Where a reviewer goes to see the change.
+ *
+ * Vercel builds a preview for every branch automatically, but its hostname is
+ * not something this code can compute: the alias is
+ * `{project}-git-{branch}-{team}`, which for any branch name worth reading
+ * exceeds the 63-character DNS label limit, and Vercel then truncates and
+ * appends a hash of its own. Deriving it would need Vercel's API and a second
+ * token this project does not have.
+ *
+ * So the link goes to the deployment list filtered to this branch, which *is*
+ * computable and always correct — one click from the preview itself, and it
+ * also shows the build still running, which a direct URL would not.
+ */
+export function previewUrl(branch: string): string {
+  const team = "brandbeatglobal-codes-projects";
+  const project = "ceo-elite-circle";
+  return `https://vercel.com/${team}/${project}/deployments?branch=${encodeURIComponent(branch)}`;
+}
+
+/** The branch's own diff against `main`, for anyone who wants the raw change. */
+export function compareUrl(branch: string): string {
+  return `https://github.com/${REPO}/compare/${BRANCH}...${encodeURIComponent(branch)}`;
 }
