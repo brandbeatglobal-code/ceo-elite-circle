@@ -7,14 +7,6 @@
   },
   "sections": [
     {
-      "id": "daa90f5f",
-      "type": "prose",
-      "eyebrow": "Purpose",
-      "title": "Purpose",
-      "lead": "A council exists to think properly about one field, over a long enough period that the thinking gets somewhere.",
-      "body": "Where a forum convenes around a single question and closes, a council holds its membership across the year. Each session begins where the last ended. The result is less immediate than a forum and considerably more durable."
-    },
-    {
       "id": "cd662a8c",
       "type": "variantCards",
       "eyebrow": "Councils",
@@ -34,6 +26,14 @@
           "body": "Organised by function, drawing members who hold a comparable remit across different industries."
         }
       ]
+    },
+    {
+      "id": "daa90f5f",
+      "type": "prose",
+      "eyebrow": "Purpose",
+      "title": "Purpose",
+      "lead": "A council exists to think properly about one field, over a long enough period that the thinking gets somewhere.",
+      "body": "Where a forum convenes around a single question and closes, a council holds its membership across the year. Each session begins where the last ended. The result is less immediate than a forum and considerably more durable."
     },
     {
       "id": "fe90cd4e",
