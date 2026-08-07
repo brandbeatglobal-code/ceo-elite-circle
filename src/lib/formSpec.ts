@@ -1,4 +1,4 @@
-import { councils } from "@/lib/councils";
+import { councilNames } from "@/lib/councils";
 import { forms, type RequestVariant } from "@/lib/forms";
 import { membership } from "@/lib/membership";
 import { trust } from "@/lib/trust";
@@ -48,7 +48,7 @@ const SELECT_OPTIONS: Record<string, string[]> = {
   // From content — published elsewhere on the site, so a second copy would drift.
   "Membership category": membership.categories.items.map((c) => c.name),
   "Area of the framework": trust.areas.items.map((a) => a.name),
-  Council: councils.councils.items.map((c) => c.name),
+  Council: councilNames(),
 
   // Fixed taxonomies. Nothing on the site displays these, so there is nothing
   // to drift from and no reason to put them in front of an admin editor.

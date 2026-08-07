@@ -377,6 +377,48 @@ Most section components accept optional content and fall back to
 `<Placeholder>` when it is absent — that is how a page stays complete and
 honest before its copy exists.
 
+### Sections as content — the `/councils` pilot
+
+`/councils` is the one page whose body is **an ordered array in its JSON**
+rather than JSX written out by hand: `sections: [{ type, … }, …]`, rendered by
+`SectionList`. Reordering the array reorders the page. Every other page still
+lists its sections in its own `page.tsx`, and rolling this out further is a
+decision rather than an assumption.
+
+Two things are guarded by the *shape* of the types, not by a rule anyone has
+to remember:
+
+- **`PageSection` has no `requestSection` member.** The closing form is
+  appended by the page component after `SectionList`, taking
+  `ordinal(sections.length)`. It cannot be represented as an array entry, so it
+  cannot be moved or deleted — and it stays the last number on the page however
+  the array changes.
+- **`PageSection` has no `number` and no `tone` field.** `SectionList` computes
+  both from array position: `ordinal(i)`, and `sectionTone(i)` giving cream on
+  even, black on odd. Storing either is what would let a section say "Three"
+  while sitting fourth. **Do not add them.**
+
+Consequences worth knowing before extending this:
+
+- **A component in the array must honour the tone it is handed.** `FeatureGrid`
+  was hardcoded `bg-black` and gained a `tone` prop for exactly this — it still
+  defaults to black, so every existing call site is unchanged, but a derivation
+  half the components ignore is not a derivation. Check any component before
+  adding it to `PageSection`.
+- **Named content becomes positional.** `councils.councils.items` used to be a
+  stable path; the council names now have to be *found* in the array, which is
+  what `councilNames()` in `src/lib/councils.ts` does for the form's dropdown.
+  It finds the single `variantCards` section — correct while there is one, and
+  ambiguous the moment there are two. A second one means sections need stable
+  ids.
+- **`sections.*.type` is read-only in the admin** (`kind: "section-type"`).
+  Retyping it in place leaves the old fields attached to a component that does
+  not read them, and the section renders *empty* rather than erroring — which
+  builds, deploys, and quietly loses a section.
+- The admin's empty-state rule for this file is `councils:sections.*.note`,
+  which is precise only because `pending` is the one section type with a
+  `note`. A second one makes it over-match, and it would have to key on `type`.
+
 ### Section numbering must stay contiguous
 
 Every section opens with a running index — "One", "Two", … from

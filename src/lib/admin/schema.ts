@@ -55,6 +55,19 @@ export type FieldKind =
    */
   | "empty-state"
   /**
+   * Which component a section in a `sections` array renders as.
+   *
+   * Read-only here, and deliberately so until there is an interface that
+   * changes it properly. The value decides which component the section becomes
+   * *and* which other fields that component then needs — so retyping it in
+   * place leaves the old fields attached to a component that does not read
+   * them, and the section renders empty rather than failing. That is the worst
+   * shape of failure: it builds, it deploys, and the page is quietly missing a
+   * section. Changing a section's type is an add-and-remove, which is the
+   * structural work this is a pilot for.
+   */
+  | "section-type"
+  /**
    * A whole list or record rather than a value — including when it is
    * currently null. Never gets a text input: typing into one of these would
    * replace a structure with a sentence.
@@ -113,8 +126,14 @@ const EMPTY_STATE: [RegExp, string][] = [
     "The sentence inside the dashed frame beneath that pull-quote, shown while nobody has been named as having said it. A name belongs in \"quote attribution\".",
   ],
   [
-    /^councils:advisors\.placeholderNote$/,
-    "The sentence standing in for the whole Expert Advisors section, which stays deliberately empty until there are real, named people to list.",
+    // `/councils` is the pilot for sections-as-content, so its sections sit in
+    // an ordered array and this path carries a `*` rather than a name. That is
+    // safe *because* only the `pending` section type has a `note` at all — if a
+    // second type ever gains one, this stops being precise and the rule has to
+    // match on the section's `type` instead of trusting the field name, which
+    // is the same failure the `*Note` suffix rule had.
+    /^councils:sections\.\*\.note$/,
+    "The sentence standing in for a section that is deliberately empty — on this page, Expert Advisors, which stays empty until there are real, named people to list.",
   ],
   [
     /^homepage:testimonials\.note$/,
@@ -199,6 +218,17 @@ const RULES: [RegExp, FieldRule][] = [
   // accident. Every entry is an exact path, so none of them reaches a field
   // the rules underneath are meant to own.
   ...EMPTY_STATE_RULES,
+
+  // ---- Which component a section renders as. Read-only: see `section-type`.
+  [
+    /^[a-z]+:sections\.\*\.type$/,
+    {
+      kind: "section-type",
+      nullable: false,
+      structural:
+        "Which of the page's section layouts this one uses. It is shown for orientation and cannot be changed here: the layout decides which other fields the section needs, so switching it in place would leave this section's existing fields attached to a layout that does not read them, and the section would render empty rather than show an error. Adding and removing sections is coming as its own step.",
+    },
+  ],
 
   // ---- The mark above a label. Structure, not copy: the set of valid keys
   // lives in `Icons.tsx`, and a key outside it would leave a section with no
@@ -471,7 +501,8 @@ export function isEditableLeaf(value: unknown, rule: FieldRule): boolean {
   if (
     rule.kind === "image" ||
     rule.kind === "group" ||
-    rule.kind === "empty-state"
+    rule.kind === "empty-state" ||
+    rule.kind === "section-type"
   ) {
     return false;
   }

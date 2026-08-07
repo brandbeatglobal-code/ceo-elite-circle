@@ -301,6 +301,13 @@ export function validateEdit(
   // trusted, on the same reasoning as everything else in this file: the value
   // that would land here is real content, and it would render dashed and muted
   // as though the slot were still waiting for it.
+  if (rule.kind === "section-type") {
+    return {
+      ok: false,
+      error:
+        "A section's layout cannot be retyped in place — its other fields belong to the layout it has, and the section would render empty. Adding and removing sections is coming as its own step.",
+    };
+  }
   if (rule.kind === "empty-state") {
     return {
       ok: false,

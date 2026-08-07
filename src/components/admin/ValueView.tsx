@@ -94,6 +94,28 @@ export function ValueView({
     );
   }
 
+  // Which layout a section uses — shown, never typeable. See `section-type`.
+  if (rule.kind === "section-type") {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-baseline justify-between gap-4">
+          <p className="type-label text-olive">
+            {label ?? keyLabel(path[path.length - 1] ?? "")}
+          </p>
+          <span className="type-label text-sage shrink-0">• Read-only</span>
+        </div>
+        <p className="type-body text-ink border border-hair bg-white/70 px-3 py-2.5 max-w-xl">
+          {String(value)}
+        </p>
+        {rule.structural && (
+          <p className="type-label text-olive italic border-l-2 border-sage pl-3 max-w-xl">
+            {rule.structural}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   if (rule.kind === "image") {
     // A stray photo leaf outside a full slot — display only. Photographs are
     // edited as a unit above, because alt text describes the image that is
