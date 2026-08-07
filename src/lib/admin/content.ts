@@ -1,4 +1,5 @@
 import {
+  commitsAhead,
   previewUrl,
   readBranch,
   readBranchHead,
@@ -20,6 +21,10 @@ async function structuralHold(name: string): Promise<string | null> {
   const branch = structureBranchName(name);
   const state = await readBranch(branch);
   if (!state.ok || !state.exists) return null;
+  // Exists is not the same as pending. A branch already contained in `main`
+  // has nothing to publish and nothing to conflict with — see `commitsAhead`.
+  const ahead = await commitsAhead(branch);
+  if (ahead === null || ahead === 0) return null;
   return (
     "This page has a structural change waiting to be published, so its text and photographs are locked until that is settled. " +
     `Review it at ${previewUrl(branch)} and either publish it or discard it — then this field can be edited again. ` +
