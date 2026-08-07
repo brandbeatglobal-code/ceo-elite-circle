@@ -144,8 +144,9 @@ arcs, rings, diamonds, ellipses. Abstract, never illustrative or literal, and
 never decorative for its own sake. Anything added later goes in that file and
 matches that style.
 
-**A mark has to say what its label says.** The set is sixteen, each with its
-meaning written above its definition:
+**A mark has to say what its label says.** The set is twenty-four, each with
+its meaning written above its definition and repeated in `ICON_MEANINGS`,
+which is what the admin's picker shows:
 
 | | | | |
 |---|---|---|---|
@@ -153,6 +154,13 @@ meaning written above its definition:
 | `threshold` admission; crossing in | `compass` direction; judgement | `converge` the final call | `lattice` structure; a discipline |
 | `horizon` the long view | `pair` one to one; an introduction | `crest` distinction; recognition | `ascent` progression; transition |
 | `signal` said, or heard | `weave` a network | `chamber` a closed room; discretion | `cycle` a recurring year |
+| `anchor` a foundation | `aperture` precision; sharp focus | `ledger` a record kept | `waypoint` a point reached |
+| `span` reach; distant points joined | `kernel` what is irreducible | `relay` something passed forward | `vantage` perspective |
+
+The meanings live in two places on purpose — a comment above each drawing, for
+whoever is editing the file, and `ICON_MEANINGS` for the picker, since the
+person choosing a mark is the one who most needs to know what it is for and is
+the one who will never read the source.
 
 Two sections landing on the same mark is fine when the concepts really are the
 same. What is not fine is the same *sequence* under unrelated words: four
@@ -996,6 +1004,37 @@ Two constraints, both enforced rather than assumed:
   and 825KB at 2×. Doing that to every hero would be a real mobile-payload
   decision, and the cheaper answer for a tall slot is a portrait crop of the
   source, which is a re-upload rather than a code change.
+
+- **The icon set is twenty-four, and the admin picks from it** (structural
+  admin, Phase A). Eight new marks — `anchor`, `aperture`, `ledger`,
+  `waypoint`, `span`, `kernel`, `relay`, `vantage` — drawn to the same rules as
+  the original sixteen and proofed at 20px, 56px and 80px on the dark ramp
+  before shipping. Three were redrawn after that proof rather than shipped as
+  first drawn: `vantage` closed into a plain down-pointing triangle, which is a
+  play glyph and says nothing about perspective, so its sightlines now stop
+  short of a bar that overhangs them; `aperture` had four arcs with two on the
+  same radius, which smudged at 20px and read as a broken ring, so it is three
+  arcs at three radii; `relay` was four short dashes too fine to hold, so it is
+  three longer ones. Two are still the lightest marks in the set at 20px —
+  `relay` and `vantage` — though both are unambiguous at 56px and 80px, which
+  are the sizes the site actually uses. 20px is the stress test, not a
+  placement.
+
+  The picker replaces a read-only field. Locking it was right for what it was
+  protecting against — as free text, a key outside the set leaves a section
+  with no mark — but wrong about what the field is: which mark belongs over
+  which words is a judgement about the words, and that is the editor's.
+  Choosing from a grid of the drawings closes the typo by construction, since
+  the only values it can emit are the ones it drew. `validateEdit` checks the
+  key anyway, because a form is not the only thing that can reach a server
+  action; five hand-made keys were posted straight at it and all five were
+  handled — `sparkle`, `RINGS` and `ringz` refused by name, empty refused as
+  empty, and `"rings "` accepted as `rings` after the trim that every field
+  gets.
+
+  Each cell carries the mark's meaning, from `ICON_MEANINGS`. The drawing says
+  what it looks like; the sentence says what it is for, and the whole
+  discipline of this set is that those are different questions.
 
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —

@@ -8,6 +8,7 @@ import {
 } from "@/lib/admin/schema";
 import { isPhotoObject } from "@/lib/admin/validate";
 import { FieldEditor } from "@/components/admin/FieldEditor";
+import { IconPicker } from "@/components/admin/IconPicker";
 import { PhotoEditor } from "@/components/admin/PhotoEditor";
 
 /**
@@ -79,9 +80,24 @@ export function ValueView({
     );
   }
 
-  if (rule.kind === "image" || rule.kind === "icon") {
-    // A stray photo leaf outside a full slot, or the key naming a mark —
-    // display only. Photographs are edited as a unit above; a mark is design.
+  // The mark above a label — chosen from the grid of real drawings, never
+  // typed. Reached before `isEditableLeaf`, which does treat it as editable.
+  if (rule.kind === "icon" && typeof value === "string") {
+    return (
+      <IconPicker
+        file={file}
+        path={path.join(".")}
+        label={label ?? keyLabel(path[path.length - 1] ?? "")}
+        value={value}
+        rule={rule}
+      />
+    );
+  }
+
+  if (rule.kind === "image") {
+    // A stray photo leaf outside a full slot — display only. Photographs are
+    // edited as a unit above, because alt text describes the image that is
+    // actually there.
     return (
       <div className="flex flex-col gap-1.5">
         {label && <p className="type-label text-olive">{label}</p>}
@@ -90,11 +106,6 @@ export function ValueView({
             {value === null || value === "" ? "—" : String(value)}
           </span>
         </p>
-        {rule.kind === "icon" && rule.structural && (
-          <p className="type-label text-olive italic border-l-2 border-sage pl-3 max-w-xl">
-            {rule.structural}
-          </p>
-        )}
       </div>
     );
   }
