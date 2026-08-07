@@ -1,6 +1,7 @@
 import { contentFile } from "@/lib/admin/registry";
 import {
   commitFiles,
+  commitsAhead,
   compareUrl,
   createBranch,
   deleteBranch,
@@ -132,6 +133,11 @@ export async function pendingFor(page: string): Promise<PendingState> {
   const state = await readBranch(branch);
   if (!state.ok) return { ok: false, error: state.error };
   if (!state.exists) return { ok: true, pending: null };
+  // A branch with nothing `main` has not got is not a pending change — it is
+  // usually a publish whose tidy-up failed. Nothing to review, nothing to
+  // block, nothing to show.
+  const ahead = await commitsAhead(branch);
+  if (ahead === 0) return { ok: true, pending: null };
 
   // Both sides of the comparison read from the repository, never from this
   // deployment's own copy — the same rule every save here follows.

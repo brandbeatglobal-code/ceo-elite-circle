@@ -530,6 +530,41 @@ export async function mergeBranch(
   }
 }
 
+/**
+ * How far a branch is ahead of `main`.
+ *
+ * "The branch exists" is not the same question as "something is pending".
+ * A branch that has already been merged still exists until it is deleted, and
+ * deleting is the one step of publishing that can fail on its own — the merge
+ * lands, the delete does not, and the branch is left behind with nothing in it
+ * that `main` does not already have. Treating that as pending would lock the
+ * page's text for a change that is already live, which is the opposite of what
+ * the lock is for.
+ *
+ * So the question this asks is the honest one: are there commits here that
+ * `main` has not got? Nought means nothing is pending, whatever the ref table
+ * says.
+ *
+ * Unreachable is reported as `null` and read by callers as "do not block" —
+ * refusing every edit on the site because GitHub blinked is a worse failure
+ * than the one being guarded against.
+ */
+export async function commitsAhead(branch: string): Promise<number | null> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return null;
+  try {
+    const res = await fetch(
+      `${API_BASE}/repos/${REPO}/compare/${encodeURIComponent(BRANCH)}...${encodeURIComponent(branch)}`,
+      { headers: headers(token), cache: "no-store" },
+    );
+    if (res.status !== 200) return null;
+    const body = (await res.json()) as { ahead_by?: number };
+    return typeof body.ahead_by === "number" ? body.ahead_by : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Read a file from any branch, not just `main`. */
 export async function readFileOnBranch(
   repoPath: string,
