@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { BulletLabel, Placeholder, SectionHeader, type Tone } from "@/components/ui";
 
 export type Variant = { name: string; body: string };
@@ -20,9 +21,9 @@ export function VariantCards({
 }: {
   index: string;
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   intro?: string;
-  variants?: Variant[];
+  variants?: (Variant | null)[];
   tone?: Tone;
 }) {
   const dark = tone !== "cream";

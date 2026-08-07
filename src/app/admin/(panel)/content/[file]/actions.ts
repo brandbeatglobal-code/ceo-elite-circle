@@ -22,7 +22,7 @@ import {
   proposeStructure,
   publishStructure,
 } from "@/lib/admin/structure";
-import { validateReorder } from "@/lib/admin/reorder";
+import { validateAdd, validateRemove, validateReorder } from "@/lib/admin/reorder";
 import {
   MAX_UPLOAD_BYTES,
   isOwnUpload,
@@ -371,4 +371,79 @@ export async function discardSections(
     message:
       "Discarded. The live page is unchanged and this page can be edited again.",
   };
+}
+
+
+/**
+ * One structural mutation, proposed onto the page's branch.
+ *
+ * Add, remove and move all come through here. They differ only in the function
+ * that produces the next version of the file — everything after that is
+ * identical, because the review step is the point and none of the three gets to
+ * skip it. Adding a section looks harmless (it starts empty) but it renumbers
+ * and re-tones everything after it, which is exactly the kind of change nobody
+ * can check without looking at the page.
+ */
+async function proposeMutation(
+  fileName: string,
+  apply: (raw: string) => { ok: true; json: string; summary: string } | { ok: false; error: string },
+  label: string,
+): Promise<StructureState> {
+  if (!adminEnabled()) notFound();
+  if (!(await hasSession())) redirect("/admin/login");
+
+  const cf = contentFile(fileName);
+  if (!cf) return { status: "error", message: "That page was not found." };
+
+  // Applied to the branch if there is one, so a second change builds on the
+  // first rather than silently discarding it.
+  const branch = structureBranchName(cf.name);
+  const state = await readBranch(branch);
+  if (!state.ok) return { status: "error", message: state.error };
+  const source = await readFile(
+    `content/${cf.fileName}`,
+    state.exists ? branch : undefined,
+  );
+  if (!source.ok) return { status: "error", message: source.error };
+
+  const result = apply(source.content);
+  if (!result.ok) return { status: "error", message: result.error };
+
+  const proposed = await proposeStructure(
+    cf.name,
+    result.json,
+    `Structure: ${cf.fileName} — ${label}`,
+    result.summary,
+  );
+  if (!proposed.ok) return { status: "error", message: proposed.error };
+
+  revalidatePath(`/admin/content/${cf.name}`);
+  return {
+    status: "done",
+    message: `${result.summary} Review the preview before publishing — the build takes about a minute.`,
+  };
+}
+
+export async function addSection(
+  _prev: StructureState,
+  formData: FormData,
+): Promise<StructureState> {
+  const type = String(formData.get("sectionType") ?? "");
+  return proposeMutation(
+    String(formData.get("file") ?? ""),
+    (raw) => validateAdd(raw, type),
+    "add a section",
+  );
+}
+
+export async function removeSection(
+  _prev: StructureState,
+  formData: FormData,
+): Promise<StructureState> {
+  const id = String(formData.get("id") ?? "");
+  return proposeMutation(
+    String(formData.get("file") ?? ""),
+    (raw) => validateRemove(raw, id),
+    "remove a section",
+  );
 }

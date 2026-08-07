@@ -439,6 +439,21 @@ Consequences worth knowing before extending this:
   Retyping it in place leaves the old fields attached to a component that does
   not read them, and the section renders *empty* rather than erroring — which
   builds, deploys, and quietly loses a section.
+- **Adding, removing and moving all go through propose → publish.** Adding
+  looks harmless because a new section starts empty, but it renumbers and
+  re-tones everything after it, so it gets the same review as the other two.
+  A new section is always appended at the end, above the closing form, and
+  moved into place with the arrows — there is deliberately no "insert at
+  position N", because a proven control one click away beats a second
+  mechanism to get wrong.
+- **A new section is genuinely empty, and that is a content-honesty rule
+  rather than a styling one.** `blankSection()` in `sectionTypes.ts` fills
+  every string with `""`; `SectionList` renders every blank field as the
+  site's own pending frame. No "Feature One / Feature Two" starter template:
+  a plausible-looking draft is exactly what this project has twice published
+  by accident, and an empty slot is the honest state. Item counts are fixed at
+  creation (three or four, matching the rest of the site) and resizing them is
+  a separate job.
 - The admin's empty-state rule for this file is `councils:sections.*.note`,
   which is precise only because `pending` is the one section type with a
   `note`. A second one makes it over-match, and it would have to key on `type`.

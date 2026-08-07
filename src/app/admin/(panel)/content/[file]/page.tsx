@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/auth";
 import { displayContent } from "@/lib/admin/content";
 import { keyLabel } from "@/lib/admin/registry";
+import { SECTION_TYPES } from "@/lib/admin/sectionTypes";
 import { pendingFor } from "@/lib/admin/structure";
 import { SectionOrder } from "@/components/admin/SectionOrder";
 import { ValueView } from "@/components/admin/ValueView";
@@ -78,6 +79,7 @@ export default async function ContentFilePage({
             <SectionOrder
               file={cf.name}
               rows={order}
+              types={SECTION_TYPES}
               pending={
                 pending?.ok && pending.pending
                   ? {

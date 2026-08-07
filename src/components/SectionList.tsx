@@ -94,30 +94,75 @@ export type PageSection = WithId &
  * Cream, black, cream, black — starting cream, because every page opens on a
  * cream hero and the first body section reads as a continuation of it.
  */
+/**
+ * The eyebrow a section shows before it has been given one.
+ *
+ * A structural label rather than copy — the same category as the "Article
+ * pending" cards on `/insights`. It is in code and not in `content/` on
+ * purpose: it belongs to a section that has no content yet, so there is
+ * nothing in the content file for it to be a field of.
+ */
+export const SECTION_PENDING_EYEBROW = "Section pending";
+
 export function sectionTone(index: number): Tone {
   return index % 2 === 1 ? "black" : "cream";
+}
+
+/**
+ * Is this field empty?
+ *
+ * A section added through the admin starts with every string empty, and an
+ * empty string must render as the page's own pending frame rather than as
+ * nothing at all — an empty `<h2>` is a hole, a labelled frame is a marked-out
+ * space. So blankness is decided here, once, and the components below are
+ * handed either real content or the placeholder that stands for its absence.
+ */
+const blank = (s: string | undefined | null): boolean => !s || !s.trim();
+
+/** An item whose every text field is blank is an item nobody has written yet. */
+function liveItems<T extends Record<string, unknown>>(
+  items: T[],
+  fields: (keyof T)[],
+): (T | null)[] {
+  return items.map((item) =>
+    fields.every((f) => blank(item[f] as string)) ? null : item,
+  );
 }
 
 /** One section, told only where it is. */
 function renderSection(section: PageSection, index: number) {
   const tone = sectionTone(index);
   const idx = ordinal(index);
+  // A section with no headline yet keeps its number and its eyebrow slot and
+  // shows a frame where the headline will go.
+  const heading = (title: string) =>
+    blank(title) ? <Placeholder tone={tone} lead /> : title;
+  const eyebrowOf = (e: string) => (blank(e) ? SECTION_PENDING_EYEBROW : e);
+  const introOf = (i: string) => (blank(i) ? undefined : i);
 
   switch (section.type) {
     case "prose":
       return (
         <Section
           index={idx}
-          eyebrow={section.eyebrow}
-          title={section.title}
+          eyebrow={eyebrowOf(section.eyebrow)}
+          title={heading(section.title)}
           tone={tone}
         >
-          <p className={`type-lead ${tone === "cream" ? "text-ink" : "text-white"}`}>
-            {section.lead}
-          </p>
-          <p className={`type-body ${tone === "cream" ? "text-olive" : "text-white/70"}`}>
-            {section.body}
-          </p>
+          {blank(section.lead) ? (
+            <Placeholder tone={tone} lead />
+          ) : (
+            <p className={`type-lead ${tone === "cream" ? "text-ink" : "text-white"}`}>
+              {section.lead}
+            </p>
+          )}
+          {blank(section.body) ? (
+            <Placeholder tone={tone} />
+          ) : (
+            <p className={`type-body ${tone === "cream" ? "text-olive" : "text-white/70"}`}>
+              {section.body}
+            </p>
+          )}
         </Section>
       );
 
@@ -125,11 +170,14 @@ function renderSection(section: PageSection, index: number) {
       return (
         <Section
           index={idx}
-          eyebrow={section.eyebrow}
-          title={section.title}
+          eyebrow={eyebrowOf(section.eyebrow)}
+          title={heading(section.title)}
           tone={tone}
         >
-          <Placeholder tone={tone} note={section.note} />
+          <Placeholder
+            tone={tone}
+            note={blank(section.note) ? undefined : section.note}
+          />
         </Section>
       );
 
@@ -137,10 +185,10 @@ function renderSection(section: PageSection, index: number) {
       return (
         <VariantCards
           index={idx}
-          eyebrow={section.eyebrow}
-          title={section.title}
-          intro={section.intro}
-          variants={section.items}
+          eyebrow={eyebrowOf(section.eyebrow)}
+          title={heading(section.title)}
+          intro={introOf(section.intro)}
+          variants={liveItems(section.items, ["name", "body"])}
           tone={tone}
         />
       );
@@ -149,10 +197,10 @@ function renderSection(section: PageSection, index: number) {
       return (
         <NumberedSteps
           index={idx}
-          eyebrow={section.eyebrow}
-          title={section.title}
-          intro={section.intro}
-          steps={section.steps}
+          eyebrow={eyebrowOf(section.eyebrow)}
+          title={heading(section.title)}
+          intro={introOf(section.intro)}
+          steps={liveItems(section.steps, ["title", "body"])}
           tone={tone}
         />
       );
@@ -161,23 +209,31 @@ function renderSection(section: PageSection, index: number) {
       return (
         <FeatureGrid
           index={idx}
-          eyebrow={section.eyebrow}
-          title={section.title}
+          eyebrow={eyebrowOf(section.eyebrow)}
+          title={heading(section.title)}
           tone={tone}
           intro={
-            <p
-              className={`type-lead ${
-                tone === "cream" ? "text-ink" : "text-white"
-              } max-w-lg`}
-            >
-              {section.intro}
-            </p>
+            blank(section.intro) ? (
+              <Placeholder tone={tone} lead />
+            ) : (
+              <p
+                className={`type-lead ${
+                  tone === "cream" ? "text-ink" : "text-white"
+                } max-w-lg`}
+              >
+                {section.intro}
+              </p>
+            )
           }
-          features={section.features.map((f) => ({
-            icon: <Icon name={f.icon} className="w-full h-full" />,
-            label: f.label,
-            body: f.body,
-          }))}
+          features={liveItems(section.features, ["label", "body"]).map((f) =>
+            f
+              ? {
+                  icon: <Icon name={f.icon} className="w-full h-full" />,
+                  label: f.label,
+                  body: f.body,
+                }
+              : null,
+          )}
         />
       );
 
@@ -185,10 +241,10 @@ function renderSection(section: PageSection, index: number) {
       return (
         <CandidacyChecklist
           index={idx}
-          eyebrow={section.eyebrow}
-          title={section.title}
-          intro={section.intro}
-          criteria={section.criteria}
+          eyebrow={eyebrowOf(section.eyebrow)}
+          title={heading(section.title)}
+          intro={introOf(section.intro)}
+          criteria={liveItems(section.criteria, ["title", "body"])}
           tone={tone}
         />
       );

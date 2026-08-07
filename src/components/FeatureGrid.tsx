@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { BulletLabel, SectionHeader, hair, isDark, type Tone } from "@/components/ui";
+import { Icon } from "@/components/Icons";
+import { BulletLabel, Placeholder, SectionHeader, hair, isDark, type Tone } from "@/components/ui";
 
 export type Feature = {
   icon: ReactNode;
@@ -29,9 +30,9 @@ export function FeatureGrid({
 }: {
   index: string;
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   intro?: ReactNode;
-  features: Feature[];
+  features: (Feature | null)[];
   link?: { href: string; label: string };
   tone?: Tone;
 }) {
@@ -60,9 +61,13 @@ export function FeatureGrid({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          {/* A null cell is a feature that has not been written yet — the same
+              shape the other grids on this site use for an unfilled slot. It
+              keeps its mark and its position and says plainly that it is
+              waiting, rather than rendering an empty box. */}
           {features.map((f, i) => (
             <article
-              key={f.label}
+              key={i}
               className={`flex flex-col gap-6 py-10 lg:py-14 sm:px-6 lg:px-5 first:sm:pl-0 first:lg:pl-0 border-t sm:border-t-0 ${rule} ${
                 i > 0 ? `sm:border-l ${rule}` : ""
               }`}
@@ -70,12 +75,18 @@ export function FeatureGrid({
               style={{ transitionDelay: `${i * 70}ms` }}
             >
               <div className={`${dark ? "text-white" : "text-ink"} w-16 h-16 lg:w-20 lg:h-20`}>
-                {f.icon}
+                {f?.icon ?? <Icon name="rings" className="w-full h-full" />}
               </div>
-              <BulletLabel className={dark ? "text-white/60" : "text-olive"}>
-                {f.label}
-              </BulletLabel>
-              {f.body}
+              {f ? (
+                <>
+                  <BulletLabel className={dark ? "text-white/60" : "text-olive"}>
+                    {f.label}
+                  </BulletLabel>
+                  {f.body}
+                </>
+              ) : (
+                <Placeholder tone={tone} />
+              )}
             </article>
           ))}
         </div>

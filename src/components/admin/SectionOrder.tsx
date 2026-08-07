@@ -1,12 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
+  addSection,
   discardSections,
   moveSection,
   publishSections,
+  removeSection,
   type StructureState,
 } from "@/app/admin/(panel)/content/[file]/actions";
+import type { SectionTypeSpec } from "@/lib/admin/sectionTypes";
 
 const initial: StructureState = { status: "idle" };
 
@@ -28,9 +31,13 @@ export function SectionOrder({
   file,
   rows,
   pending,
+  types,
 }: {
   file: string;
   rows: OrderRow[];
+  /** The layouts this page can be given. Shown as a grid, never as a list of
+   *  internal names — the same choice-by-looking the icon picker makes. */
+  types: SectionTypeSpec[];
   pending: {
     summary: string | null;
     previewUrl: string;
@@ -39,15 +46,23 @@ export function SectionOrder({
   } | null;
 }) {
   const [moveState, moveAction, moving] = useActionState(moveSection, initial);
+  const [addState, addAction, adding] = useActionState(addSection, initial);
+  const [remState, remAction, removing] = useActionState(removeSection, initial);
+  const [confirming, setConfirming] = useState<string | null>(null);
+  const [picking, setPicking] = useState(false);
   const [pubState, pubAction, publishing] = useActionState(publishSections, initial);
   const [discState, discAction, discarding] = useActionState(discardSections, initial);
-  const busy = moving || publishing || discarding;
+  const busy = moving || publishing || discarding || adding || removing;
   const state =
     pubState.status !== "idle"
       ? pubState
       : discState.status !== "idle"
         ? discState
-        : moveState;
+        : addState.status !== "idle"
+          ? addState
+          : remState.status !== "idle"
+            ? remState
+            : moveState;
 
   return (
     <section className="border-b border-hair py-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -77,6 +92,40 @@ export function SectionOrder({
               </span>
 
               <span className="flex items-center gap-1.5 shrink-0">
+                {/* Removing is the one action here that destroys something, so
+                    it asks twice. The second press still only *proposes* it —
+                    nothing is gone until the change is published. */}
+                {confirming === row.id ? (
+                  <form action={remAction} className="flex items-center gap-1.5">
+                    <input type="hidden" name="file" value={file} />
+                    <input type="hidden" name="id" value={row.id} />
+                    <button
+                      type="submit"
+                      disabled={busy || rows.length === 1}
+                      className="type-label border border-ink px-2.5 py-1.5 text-ink hover:bg-ink hover:text-white transition-colors disabled:opacity-30"
+                    >
+                      Remove “{row.title || "untitled"}”?
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirming(null)}
+                      className="type-label text-olive hover:text-ink underline underline-offset-4"
+                    >
+                      Keep
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={busy || rows.length === 1}
+                    onClick={() => setConfirming(row.id)}
+                    aria-label={`Remove “${row.title}”`}
+                    title={rows.length === 1 ? "A page cannot have no sections" : undefined}
+                    className="type-label border border-hair px-2.5 py-1.5 text-olive hover:border-ink hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                )}
                 {(["up", "down"] as const).map((dir) => {
                   const edge = dir === "up" ? i === 0 : i === rows.length - 1;
                   return (
@@ -107,8 +156,60 @@ export function SectionOrder({
             •
           </span>{" "}
           {ORDINALS[rows.length] ?? String(rows.length + 1)} is the closing form.
-          It is always last and cannot be moved.
+          It is always last, and it cannot be moved, removed or added — it is
+          not one of the entries on this list.
         </p>
+
+        {!picking ? (
+          <p>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => setPicking(true)}
+              className="type-link text-sage hover:text-ink transition-colors disabled:opacity-40"
+            >
+              + Add a section
+            </button>
+          </p>
+        ) : (
+          <div className="border border-hair p-4 flex flex-col gap-4 max-w-3xl">
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="type-label text-sage">• Choose a layout</p>
+              <button
+                type="button"
+                onClick={() => setPicking(false)}
+                className="type-label text-olive hover:text-ink underline underline-offset-4"
+              >
+                Cancel
+              </button>
+            </div>
+            <p className="type-label text-olive italic max-w-xl">
+              A new section is added at the end of the page, above the closing
+              form, and starts completely empty — every field shows the site&rsquo;s
+              “not written yet” frame until you fill it. Move it into place with
+              the arrows once it is there.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {types.map((t) => (
+                <form action={addAction} key={t.key}>
+                  <input type="hidden" name="file" value={file} />
+                  <input type="hidden" name="sectionType" value={t.key} />
+                  <button
+                    type="submit"
+                    disabled={busy}
+                    className="w-full text-left border border-hair p-3 hover:border-sage transition-colors disabled:opacity-40 flex flex-col gap-1.5"
+                  >
+                    <span className="type-body text-ink">{t.label}</span>
+                    <span className="type-label text-olive">{t.shape}</span>
+                    <span className="type-label text-olive/80 italic">
+                      {t.description}
+                    </span>
+                  </button>
+                </form>
+              ))}
+            </div>
+          </div>
+        )}
 
         {pending && (
           <div className="border border-hair bg-mint/20 p-4 flex flex-col gap-3 max-w-2xl">
@@ -181,6 +282,7 @@ export function SectionOrder({
 }
 
 const ORDINALS = [
-  "One", "Two", "Three", "Four", "Five", "Six",
-  "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve",
+  "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+  "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+  "Seventeen", "Eighteen", "Nineteen", "Twenty",
 ];

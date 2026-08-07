@@ -1105,6 +1105,34 @@ Two constraints, both enforced rather than assumed:
   inverse move through the same path to put the page back. `/councils` is
   exactly as it was.
 
+- **Sections can be added and removed, not only moved** (Phase B3). Both go
+  through B2's propose → preview → publish path; neither is instant. Adding is
+  treated with the same weight as removing because it renumbers and re-tones
+  everything after it, which nobody can check without looking at the page.
+
+  A new section is **genuinely empty** — every string `""`, rendered as the
+  site's own pending frame. That is the content-honesty rule, not a styling
+  choice: a "Feature One / Feature Two" starter template reads as copy someone
+  else began, and this project has twice published invented text by accident.
+  Item counts are fixed at creation, matching what the rest of the site uses.
+
+  New sections are always appended at the end, above the closing form, and
+  moved into place with the arrows B2 already proved. The layout is chosen from
+  a grid of names and plain descriptions — the same choose-by-looking the icon
+  picker uses — never a list of internal type names.
+
+  Two things came out of building it. `ordinal()` stopped at twelve, which was
+  the longest page anyone had written by hand; the first added section past
+  that would have shown a bare numeral among the spelled words, so it now runs
+  to twenty. And `FeatureGrid` was the one section component with no
+  unfilled-cell state at all — it required its features — so it gained the
+  same labelled frame the other grids already had.
+
+  Summaries name what is happening: "Removed “Benefits”", "Added a new Feature
+  grid section at the end of the page", and both together with a move
+  alongside. For a removal the naming is the point — the summary is read
+  before anyone opens the preview, so it has to convey the stakes.
+
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —
 UX/UI" by Margarita Kvasova). Grid, colour, type, background rhythm and

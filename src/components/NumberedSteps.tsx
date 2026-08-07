@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Placeholder, SectionHeader, type Tone } from "@/components/ui";
 
 export type Step = { title: string; body: string };
@@ -20,9 +21,9 @@ export function NumberedSteps({
 }: {
   index: string;
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   intro?: string;
-  steps?: Step[];
+  steps?: (Step | null)[];
   count?: number;
   tone?: Tone;
 }) {

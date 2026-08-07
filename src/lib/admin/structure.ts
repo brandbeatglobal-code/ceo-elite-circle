@@ -1,4 +1,5 @@
 import { contentFile } from "@/lib/admin/registry";
+import { sectionTypeSpec } from "@/lib/admin/sectionTypes";
 import {
   commitFiles,
   commitsAhead,
@@ -52,7 +53,9 @@ export type PendingState =
   | { ok: true; pending: Pending | null }
   | { ok: false; error: string };
 
-function sectionsOf(raw: string): { id: string; title: string }[] | null {
+export type SectionRef = { id: string; title: string; type: string };
+
+function sectionsOf(raw: string): SectionRef[] | null {
   try {
     const data = JSON.parse(raw) as { sections?: unknown };
     if (!Array.isArray(data.sections)) return null;
@@ -60,12 +63,83 @@ function sectionsOf(raw: string): { id: string; title: string }[] | null {
       const o = (s ?? {}) as Record<string, unknown>;
       return {
         id: typeof o.id === "string" ? o.id : "",
-        title: typeof o.title === "string" ? o.title : "Untitled section",
+        title: typeof o.title === "string" ? o.title : "",
+        type: typeof o.type === "string" ? o.type : "",
       };
     });
   } catch {
     return null;
   }
+}
+
+/**
+ * How to refer to a section in a sentence.
+ *
+ * A section that has been given a headline is called by it. A brand-new one has
+ * none — by design — so it is called by its layout instead: "a new Feature grid
+ * section". Naming it "Untitled" would be accurate and useless; naming the
+ * layout tells the reader what is actually about to appear on the page.
+ */
+function nameOf(s: SectionRef): string {
+  if (s.title.trim()) return `“${s.title.trim()}”`;
+  const spec = sectionTypeSpec(s.type);
+  return spec ? `a new ${spec.label} section` : "a new section";
+}
+
+function list(names: string[]): string {
+  if (names.length <= 1) return names[0] ?? "";
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
+/**
+ * What this change does, in words, for adds and removes as well as moves.
+ *
+ * The summary is read before anyone clicks through to the preview, so for a
+ * removal it has to name what is going — that is the whole point of showing it
+ * first. A generic "the page changed" would be worse than nothing, because it
+ * reads as reassurance.
+ */
+export function describeSectionChange(
+  before: SectionRef[],
+  after: SectionRef[],
+): string {
+  const beforeIds = before.map((s) => s.id);
+  const afterIds = after.map((s) => s.id);
+  const added = after.filter((s) => !beforeIds.includes(s.id));
+  const removed = before.filter((s) => !afterIds.includes(s.id));
+
+  // Positions among the sections that exist on both sides — so a move is still
+  // reported as a move even when something was added or removed alongside it.
+  const common = before.filter((s) => afterIds.includes(s.id)).map((s) => s.id);
+  const commonAfter = after.filter((s) => beforeIds.includes(s.id)).map((s) => s.id);
+  const reordered = common.some((id, i) => commonAfter[i] !== id);
+
+  const parts: string[] = [];
+  if (added.length) {
+    parts.push(`Added ${list(added.map(nameOf))} at the end of the page`);
+  }
+  if (removed.length) {
+    parts.push(`Removed ${list(removed.map(nameOf))}`);
+  }
+  if (reordered) {
+    // `describeReorder` already writes a whole sentence — "X and Y swapped
+    // positions" — so it is used as written. Prefixing it produced "Moved X
+    // and Y swapped positions", which is what happens when two sentence
+    // builders both think they are the one starting the sentence.
+    parts.push(
+      describeReorder(
+        before.filter((s) => afterIds.includes(s.id)),
+        after.filter((s) => beforeIds.includes(s.id)),
+      ).replace(/\.$/, ""),
+    );
+  }
+  if (!parts.length) return "No change to this page's sections.";
+
+  const tail =
+    added.length || removed.length
+      ? ` The page now has ${after.length} section${after.length === 1 ? "" : "s"}, and the numbering and backgrounds after any change have moved with it.`
+      : "";
+  return `${parts.join(". ")}.${tail}`;
 }
 
 /**
@@ -158,7 +232,7 @@ export async function pendingFor(page: string): Promise<PendingState> {
       compareUrl: compareUrl(branch),
       summary:
         beforeSections && afterSections
-          ? describeReorder(beforeSections, afterSections)
+          ? describeSectionChange(beforeSections, afterSections)
           : null,
     },
   };

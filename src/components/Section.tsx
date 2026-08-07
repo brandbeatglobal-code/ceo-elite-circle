@@ -17,7 +17,7 @@ export function Section({
 }: {
   index: string;
   eyebrow?: string;
-  title: string;
+  title: ReactNode;
   children?: ReactNode;
   tone?: Tone;
   link?: { href: string; label: string };
@@ -39,7 +39,7 @@ export function Section({
       <div className="wrap">
         <SectionHeader
           index={index}
-          eyebrow={eyebrow ?? title}
+          eyebrow={eyebrow ?? ""}
           link={link}
           tone={tone}
         />

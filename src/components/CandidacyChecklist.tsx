@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Icon, type IconKey } from "@/components/Icons";
 import {
   BulletLabel,
@@ -38,9 +39,9 @@ export function CandidacyChecklist({
 }: {
   index: string;
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   intro?: string;
-  criteria?: Criterion[];
+  criteria?: (Criterion | null)[];
   tone?: Tone;
 }) {
   const dark = tone !== "cream";
