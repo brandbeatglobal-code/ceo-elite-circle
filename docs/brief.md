@@ -1072,6 +1072,39 @@ Two constraints, both enforced rather than assumed:
   council names the form's dropdown reads used to be `councils.councils.items`
   and now have to be found in the array, which `councilNames()` does.
 
+- **Structural changes are proposed, previewed and published** (Phase B2).
+  Moving a section no longer writes to `main`. It commits to
+  `admin/structure/{page}`, Vercel builds that branch as a preview by itself,
+  and publishing is a merge. One branch per page, so a second move extends the
+  first rather than competing with it.
+
+  Sections carry a permanent id, which is what makes the change describable:
+  the panel says "“The Councils” and “Purpose” swapped positions" rather than
+  showing six positions changing. Minted deterministically, which paid for
+  itself when a stray `git checkout` reverted the migration and re-running it
+  produced byte-identical ids.
+
+  **A page with something genuinely pending refuses content saves**, with the
+  preview link in the message — a refusal, not a warning, because an edit to
+  `main` while a branch is open is a second version of the same file rather
+  than a merge into it, and this project has reconciled exactly that by hand
+  twice. Other pages are untouched.
+
+  Two things were learned by running it for real rather than against the
+  stand-in. Vercel's preview host is **not computable** — the alias for
+  `admin/structure/councils` came back as `…-git-admi-526c90-…`, truncated
+  with a hash of Vercel's own — so the admin links to the deployment list
+  filtered to the branch, which always resolves. And **"pending" had to become
+  "ahead of `main`", not "exists"**: publish merges and then deletes, the
+  delete can fail alone, and a leftover branch containing nothing new would
+  otherwise lock the page's text for a change already live.
+
+  Proven end to end on the real repository: a branch created and pushed, a real
+  Vercel preview showing "The Councils" first with its number and background
+  already changed, a merge to `main`, production serving the reorder, then the
+  inverse move through the same path to put the page back. `/councils` is
+  exactly as it was.
+
 ## Design reference
 The layout system is taken from a Behance case study ("Spectra Eye Clinic —
 UX/UI" by Margarita Kvasova). Grid, colour, type, background rhythm and

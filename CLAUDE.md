@@ -980,12 +980,15 @@ is meant to sit on it unchanged.
 - **A change is committed to `admin/structure/{page}`**, one branch per page at
   a deterministic name. A second proposal for the same page is another commit
   on the branch already there, never a rival branch.
-- **The branch's existence is the pending-state record.** There is no second
-  flag anywhere — no file, no field, no cache. Two records of one fact can
-  disagree, and this one gates every content save on that page, so a stale
-  flag would either block edits it should not or allow edits it should not.
-  Publish and discard cannot drift from git because they *are* the git
-  operation.
+- **The branch is the pending-state record — but the test is whether it is
+  *ahead*, not whether it exists.** There is no second flag anywhere: two
+  records of one fact can disagree, and this one gates every content save on
+  the page. What "pending" means, though, is `commitsAhead(branch) > 0`.
+  Publishing is a merge *then* a delete, and the delete is the step that can
+  fail on its own — leaving a branch that holds nothing `main` has not already
+  got. Treating that as pending would lock a page's text for a change that is
+  already live. This is not hypothetical: the environment used to verify this
+  cannot delete refs at all, so the state was reached on the first real run.
 - **Vercel previews the branch by itself.** Nothing was built for that. The
   admin links to the deployment list filtered to the branch rather than to the
   preview host directly: the alias is `{project}-git-{branch}-{team}`, which
