@@ -47,6 +47,32 @@ export type FetchedFile =
 
 export type FetchedHead = { ok: true; sha: string } | { ok: false; error: string };
 
+/**
+ * A deployment that is not production may not write to the production branch.
+ *
+ * The password split in `auth.ts` stops the live panel and a preview panel
+ * sharing a way in; this stops them sharing a *destination*. A preview build
+ * carries the same `GITHUB_TOKEN`, so without this it would commit to `main`
+ * exactly like the real thing — the separate password would be theatre.
+ *
+ * So: off production, every write is refused unless `GITHUB_BRANCH` names some
+ * branch other than `main`. Set it on the preview environment and the panel is
+ * fully usable against a sandbox branch — commits, uploads, structural
+ * branches and their merges all land there, because every one of those paths
+ * is defined in terms of `BRANCH`. Leave it unset and the preview panel reads
+ * but cannot write, which is a safe and legible failure rather than a silent
+ * write to the live site.
+ */
+function sandboxViolation(): string | null {
+  if (process.env.VERCEL_ENV === "production") return null;
+  if (BRANCH !== "main") return null;
+  return (
+    "This is a preview of the admin, and previews are not allowed to write to the live site. " +
+    "It needs GITHUB_BRANCH set to a sandbox branch before anything here can be saved. " +
+    "Nothing has been changed."
+  );
+}
+
 const NO_TOKEN =
   "Saving is not configured yet: this site has no GitHub token set, so there is nowhere to commit the change. Nothing has been altered.";
 const REFUSED =
@@ -177,6 +203,8 @@ export async function commitFiles(
    *  passes its own branch so the change lands there and nowhere else. */
   targetBranch: string = BRANCH,
 ): Promise<CommitResult> {
+  const sandbox = sandboxViolation();
+  if (sandbox) return { ok: false, error: sandbox };
   const token = process.env.GITHUB_TOKEN;
   if (!token) return { ok: false, error: NO_TOKEN };
   const h = headers(token);
@@ -296,6 +324,8 @@ export async function commitFile(
    */
   knownSha?: string,
 ): Promise<CommitResult> {
+  const sandbox = sandboxViolation();
+  if (sandbox) return { ok: false, error: sandbox };
   const token = process.env.GITHUB_TOKEN;
   if (!token) return { ok: false, error: NO_TOKEN };
 
@@ -396,9 +426,30 @@ export async function commitFile(
  * only one of them.
  * ------------------------------------------------------------------ */
 
-/** One pending structural branch per page, at a name derived from the page. */
+/**
+ * One pending structural branch per page, at a name derived from the page —
+ * and, off production, from the branch being written to as well.
+ *
+ * A preview deployment runs the same code against a sandbox branch, so without
+ * the second part it would create and merge `admin/structure/councils`: the
+ * exact ref production uses. Two deployments would then share one pending
+ * state, a preview's Discard would throw away a real pending change, and a
+ * publish would merge a sandbox's work into the live page. Naming the base
+ * into the branch keeps them from ever meeting.
+ */
 export function structureBranchName(page: string): string {
-  return `admin/structure/${page}`;
+  if (BRANCH === "main") return `admin/structure/${page}`;
+  return `admin/structure/${BRANCH.replace(/[^a-zA-Z0-9._-]+/g, "-")}/${page}`;
+}
+
+/** Where a save actually lands — `main` in production, a sandbox elsewhere. */
+export function targetBranchLabel(): string {
+  return BRANCH;
+}
+
+/** Is this deployment writing somewhere other than the live branch? */
+export function isSandboxTarget(): boolean {
+  return BRANCH !== "main";
 }
 
 export type BranchState =
@@ -436,6 +487,8 @@ export async function createBranch(
   branch: string,
   sha: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  const sandbox = sandboxViolation();
+  if (sandbox) return { ok: false, error: sandbox };
   const token = process.env.GITHUB_TOKEN;
   if (!token) return { ok: false, error: NO_TOKEN };
   try {
@@ -459,6 +512,8 @@ export async function createBranch(
 export async function deleteBranch(
   branch: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  const sandbox = sandboxViolation();
+  if (sandbox) return { ok: false, error: sandbox };
   const token = process.env.GITHUB_TOKEN;
   if (!token) return { ok: false, error: NO_TOKEN };
   try {
@@ -493,6 +548,8 @@ export async function mergeBranch(
   branch: string,
   message: string,
 ): Promise<MergeResult> {
+  const sandbox = sandboxViolation();
+  if (sandbox) return { ok: false, conflict: false, error: sandbox };
   const token = process.env.GITHUB_TOKEN;
   if (!token) return { ok: false, conflict: false, error: NO_TOKEN };
   try {

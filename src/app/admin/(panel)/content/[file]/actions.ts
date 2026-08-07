@@ -9,6 +9,8 @@ import { editBase } from "@/lib/admin/content";
 import {
   commitFile,
   commitFiles,
+  isSandboxTarget,
+  targetBranchLabel,
   readBranch,
   readFile,
   structureBranchName,
@@ -106,7 +108,9 @@ export async function saveField(
 
   return {
     status: "saved",
-    message: `Saved as commit ${commit.sha}. This will appear on the live site in about a minute, once the deploy finishes.`,
+    message: isSandboxTarget()
+      ? `Saved as commit ${commit.sha} on ${targetBranchLabel()}. This is a preview of the admin — the change is on that branch and not on the live site.`
+      : `Saved as commit ${commit.sha}. This will appear on the live site in about a minute, once the deploy finishes.`,
   };
 }
 

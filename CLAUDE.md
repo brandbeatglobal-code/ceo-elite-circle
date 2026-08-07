@@ -23,12 +23,36 @@ admin's; two are the forms'.
 | Variable | Default | Unset |
 | --- | --- | --- |
 | `ADMIN_PASSWORD` | none | every `/admin` route, login included, serves the site's 404 |
+| `ADMIN_PREVIEW_PASSWORD` | none | the same 404, but only on non-production deployments |
 | `GITHUB_TOKEN` | none | the panel renders from the deployment's own copy with a visible note, and every save refuses with a message rather than silently doing nothing |
 | `GITHUB_REPO` | `brandbeatglobal-code/ceo-elite-circle` | — |
 | `GITHUB_BRANCH` | `main` | — |
 | `GITHUB_API_BASE` | `https://api.github.com` | — |
 | `RESEND_API_KEY` | none | every form refuses to send, with a message saying so — never a false confirmation |
 | `RESEND_API_BASE` | `https://api.resend.com` | — |
+
+**Production and previews do not share a way in, or a destination.** A
+deployment reads `ADMIN_PASSWORD` when `VERCEL_ENV === "production"` and
+`ADMIN_PREVIEW_PASSWORD` otherwise — never both, in either direction. So the
+real password is never typed into a preview URL (those hostnames are guessable,
+long-lived and shared around), and the sandbox password cannot open the live
+panel even if the variable is set there by mistake.
+
+That alone would be theatre, because a preview carries the same `GITHUB_TOKEN`
+and would commit to `main` exactly like the real thing. So off production
+**every write is refused unless `GITHUB_BRANCH` names a branch other than
+`main`** (`sandboxViolation()` in `github.ts`, checked in all six write paths).
+Set it on the preview environment and the panel is fully usable against a
+sandbox branch — text, photographs, structural branches and their merges all
+land there, because every one of those paths is defined in terms of `BRANCH`.
+Leave it unset and the preview panel reads but cannot write, which is a legible
+failure rather than a silent write to the live site.
+
+Structural branch names carry the base branch off production —
+`admin/structure/{page}` on `main`, `admin/structure/{base}/{page}` elsewhere.
+Without that a preview would create and merge the very ref production uses: one
+shared pending state, a preview's Discard throwing away a real pending change,
+a preview's Publish merging sandbox work into the live page.
 
 The three secrets are set only in Vercel's dashboard, never in the repo, and a
 redeploy is needed to pick any of them up. The GitHub token is a fine-grained

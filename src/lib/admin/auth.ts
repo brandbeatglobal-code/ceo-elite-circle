@@ -20,8 +20,40 @@ import { notFound, redirect } from "next/navigation";
 export const SESSION_COOKIE = "cec_admin_session";
 const SESSION_HOURS = 24;
 
+/**
+ * Is this the deployment the public visits?
+ *
+ * Vercel sets `VERCEL_ENV` to `production`, `preview` or `development`. Absent
+ * — running locally with `next start` — this reads as *not* production, which
+ * is the safe direction: it means a local run can use the sandbox password and
+ * can never be mistaken for the live site.
+ */
+export function isProduction(): boolean {
+  return process.env.VERCEL_ENV === "production";
+}
+
+/**
+ * The password this deployment accepts, and there is only ever one.
+ *
+ * Production takes `ADMIN_PASSWORD` and nothing else. Every other deployment —
+ * a branch preview, a local build — takes `ADMIN_PREVIEW_PASSWORD` and nothing
+ * else. They do not overlap in either direction, on purpose:
+ *
+ * - The real password is never typed into a preview URL. Preview hostnames are
+ *   guessable, long-lived and shared around; a password entered on one is a
+ *   password that has been somewhere it was never meant to go.
+ * - The sandbox password cannot open the live panel, even if someone sets the
+ *   variable on production by mistake. `isProduction()` decides which name is
+ *   read, so the other one is not consulted at all.
+ *
+ * Both are unset by default, and an unset password means the whole admin is
+ * the site's 404 — so a preview with no sandbox password configured simply has
+ * no admin, which is the right default for a throwaway build.
+ */
 function password(): string | null {
-  const p = process.env.ADMIN_PASSWORD;
+  const p = isProduction()
+    ? process.env.ADMIN_PASSWORD
+    : process.env.ADMIN_PREVIEW_PASSWORD;
   return p && p.length > 0 ? p : null;
 }
 
